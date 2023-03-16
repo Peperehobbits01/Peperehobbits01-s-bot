@@ -1,0 +1,69 @@
+const Discord = require("discord.js")
+
+module.exports = {
+
+    name: "kick",
+    description: "Expulse les personnes ne respectant pas les règles.",
+    permission: Discord.PermissionFlagsBits.KickMembers,
+    dm: false,
+    category: "🛡・Modération",
+    options: [
+        {
+            type: "user",
+            name: "membre",
+            description: "Le membre à kick",
+            required: true,
+            autocomplete: false
+        }, {
+            type: "string",
+            name: "raison",
+            description: "La raison de l'expulsion",
+            required: true,
+            autocomplete: false
+        }
+    ],
+
+    async run(bot, message, args, db) {
+
+        let user = args.getUser("membre")
+        if(!user) return message.reply("Pas de membre à expulsé!")
+        let member = message.guild.members.cache.get(user.id)
+        if(!member) return message.reply("Pas de membre à expulsé.")
+
+        let reason = args.getString("raison")
+        if(!reason) reason = "Non respect du règlement! (raison auto ajoutée)";
+
+        if(message.user.id === user.id) return message.reply("Tu ne peux pas t'expulsé!")
+        if((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peux pas être banni!")
+        if(member && !member.kickable) return message.reply("Je ne peux l'expulsé!")
+        if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulsé!")
+
+        const iphone = new Discord.EmbedBuilder()
+        .setTitle(`Vous avez été expulsée ! `)
+        .setDescription(`${message.user.tag} vous a expulsée sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
+        .setColor(bot.color)
+        .setTimestamp()
+        await user.send({embeds: [iphone]})
+
+        await message.deferReply()
+
+        //try {await user.send(`Tu as été expulsé/kick du serveur ${message.guild.name} par ${message.user.tag} pour la raison : ${reason}`)} catch(err) {}
+
+        const iphonee = new Discord.EmbedBuilder()
+        .setTitle("Informations du kick")
+        .setDescription(`Vous avez kick ${user.tag} pour la raison : \`${reason}\` avec succès !`)
+        .setColor(bot.color)
+        .setTimestamp()
+        await message.followUp({embeds: [iphonee], ephemeral : false})
+
+        //await message.reply(`${message.user} a expulsé/kick ${user.tag}`)
+
+        await member.kick(reason)
+
+        let ID = await bot.function.createId("KICK")
+ 
+        db.query(`INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+        
+    }
+}
+
