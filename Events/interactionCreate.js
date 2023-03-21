@@ -72,4 +72,18 @@ module.exports = async (bot, interaction, client, inter) => {
         await interaction.deferUpdate()
         await interaction.editReply({embeds: [PingEmbed], components: [reloadPing]})
     }
+
+    if(interaction.customId === "help") {
+
+    let menuOptions = []
+        commandCategories.forEach(category => {
+            menuOptions.push({ label: category, value: category.toUpperCase() })
+    })
+
+    let menu = new Discord.SelectMenuBuilder()
+                    .setCustomId("help")
+                    .setOptions(menuOptions)
+
+    let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
+    }
 }

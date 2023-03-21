@@ -22,6 +22,7 @@ bot.buttons = new Discord.Collection()
 bot.color = "#fcff00";
 bot.function = {
     createId: require("./Fonctions/createId"),
+    levenshteinDistance: require("./Fonctions/levenshteinDistance")
 }
 
 bot.login(config.token)

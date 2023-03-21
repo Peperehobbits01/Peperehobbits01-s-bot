@@ -1,66 +1,134 @@
-const Discord = require("discord.js")
+const Discord = require('discord.js');
+const config = require('../config')
+const { levenshteinDistance } = require('../Fonctions/levenshteinDistance')
 
 module.exports = {
 
     name: "help",
-    description: "Affiche toute les commandes du bot.",
+    description: "Obtenez de l'aide",
+    dm: false,
     permission: "Aucune",
     category: "📚・Informations",
-    dm: false,
     options: [
         {
             type: "string",
             name: "commande",
-            description: "La commande à afficher",
+            description: "La commande à rechercher",
             required: false,
-            autocomplete: true
+            autocomplete: false
         }
     ],
 
     async run(bot, message, args) {
 
-        let command;
-        if(args.getString("commande")) {
-            command = bot.commands.get(args.getString("commande"));
-            if(!command) return message.reply("Cette commande n'héxiste pas !")
-        }
+        const commande = args.getString('commande');
 
-        if(!command) {
-
-
-            let categories = [];
+        if(!commande) {
+            let categories = []
+            let cat = []
             bot.commands.forEach(command => {
-                if(!categories.includes(command.category)) categories.push(command.category)
+                if(!cat.includes(command.category)) cat.push(command.category)
+
+                const categoriesExistante = categories.some(category => category.value === command.category.toLowerCase() && category.label === command.category)
+
+                if(!categoriesExistante) categories.push({ label: command.category, value: command.category.toLowerCase() })
             })
 
-            let Embed = new Discord.EmbedBuilder()
-            .setColor(bot.color)
-            .setTitle(`Commande de Peperehobbits01's Bot`)
-            .setThumbnail(bot.user.displayAvatarURL({dynamic : true}))
-            .setDescription(`Commande disponible : \`${bot.commands.size}\`\nCatégories disponibles : \`${categories.length}\``)
-            .setTimestamp()
-            .setFooter({text : "Peperehobbits01's Bot instance",})
+            let commands = bot.commands.filter(command => {
+                if(command.permission === "Aucune") {
+                    return true;
+                } else {
+                    return message.member.permissions.has(command.permission);
+                }
+            });
 
-            await categories.sort().forEach(async cat => {
-
-                let commands = bot.commands.filter(cmd => cmd.category === cat)
-                Embed.addFields({name: `${cat}`, value: `${commands.map(cmd => `\`${cmd.name}\` : ${cmd.description}`).join("\n")}`})
+            let commandCategories = []
+            commands.forEach(command => {
+                if (!commandCategories.includes(command.category)) {
+                    commandCategories.push(command.category)
+                }
             })
 
-            await message.reply({embeds : [Embed]})
+            let menuOptions = []
+            commandCategories.forEach(category => {
+                menuOptions.push({ label: category, value: category.toUpperCase() })
+            })
 
+            let menu = new Discord.SelectMenuBuilder()
+                .setCustomId("help")
+                .setOptions(menuOptions)
 
+            let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
+
+            let EmbedHelp = new Discord.EmbedBuilder()
+                .setAuthor({ name: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setColor(bot.color).setTitle(`Menu help`)
+                .setDescription(`
+                Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
+                **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**
+
+                Catégories : \`${commandCategories.length}\`
+                Commandes : \`${commands.size}\`
+                `)
+                .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()
+                .setFooter({ text: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+            message.reply({ embeds: [EmbedHelp], components: [menuRow] }).then(msg => {
+
+                const collector = msg.createMessageComponentCollector()
+
+                collector.on('collect', async interaction => {
+                    if (interaction.isSelectMenu(customId === "help")) {
+                        if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu déroulent !`, ephemeral: true})
+                        const category = interaction.values[0];
+                        const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
+                        const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n')
+
+                        const nouvelEmbed = new Discord.EmbedBuilder()
+                            .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
+                            .setDescription(`${commandString}`)
+                            .setColor(bot.color)
+                            .setFooter({ text: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                            .setTimestamp()
+                            .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+                            .setAuthor({ name: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+                        interaction.update({ embeds: [nouvelEmbed], components: [menuRow] })
+                    }
+                })
+            })
         } else {
 
-            let Embed = new Discord.EmbedBuilder()
+            const commandes = []
+            bot.commands.forEach(command => {
+                commandes.push(command.name)
+            })
+
+            let minDistance = Number.MAX_SAFE_INTEGER;
+            let commandeProche = "";
+
+            commandes.forEach((word) => {
+                const distance = levenshteinDistance(word, commande);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    commandeProche = word;
+                }
+            });
+
+            const command = bot.commands.get(commandeProche)
+            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, ephemeral: true})
+
+            let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commande ${command.name}`)
-            .setThumbnail(bot.user.displayAvatarURL({dynamic : true}))
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requise : \`${typeof command.permission !== "hight" ? command.permisions : new Discord.PermissionsBitField(command.permissions).toArray(false)}\`\n Catégorie : \`${command.category}\``)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nUtilisation : \`${command.usage}\`\nDM autorisé : \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setTimestamp()
-            .setFooter({text : "Peperehobbits01's Bot instance"})
+            .setFooter({text: `Peperehobbits01's bot instance'`})
 
-            await message.reply({embeds : [Embed]})
+            await message.reply({embeds: [EmbedCommande], ephemeral: true})
         }
     }
 }
