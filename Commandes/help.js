@@ -15,7 +15,7 @@ module.exports = {
             name: "commande",
             description: "La commande à rechercher",
             required: false,
-            autocomplete: false
+            autocomplete: true
         }
     ],
 
@@ -128,7 +128,7 @@ module.exports = {
             .setTimestamp()
             .setFooter({text: `Peperehobbits01's bot instance'`})
 
-            await message.reply({embeds: [EmbedCommande], ephemeral: true})
+            await message.reply({embeds: [EmbedCommande], ephemeral: false})
         }
     }
 }
