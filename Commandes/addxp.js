@@ -10,7 +10,7 @@ category: "📊・Système d'expérience",
 options: [
     {
       type: "number",
-      name: "Expérience",
+      name: "xp",
       description: "le nombre d'expérience a ajoutée",
       required: true,
       autocomplete: false
@@ -27,7 +27,7 @@ options: [
 
     let user = args.getUser("membre")
     let xp = db.query(`SELECT level FROM xp WHERE guild = '${message.guild.id}' AND user = '${user.id}'`)
-    let xptoadd = args.getNumber("Epérience")
+    let xptoadd = args.getNumber("xp")
     if(!xptoadd) return message.reply("le nombre d'expérience a ajoutée est vide ou invalide!")
 
     let Embed = new EmbedBuilder()

@@ -10,7 +10,7 @@ module.exports = {
   options: [
     {
       type: "number",
-      name: "Expérience",
+      name: "xp",
       description: "Le nombre d'expériencea à retirée",
       required: true,
       autocomplete: true,
@@ -28,7 +28,7 @@ module.exports = {
 
     db.query(`SELECT * FROM xp WHERE guild = '${message.guild.id}' AND user = '${user.id}'`, async (err, req) => {
       let level = req[0].level
-      let xptoremove = args.getNumber("Expérience")
+      let xptoremove = args.getNumber("xp")
 
       if (level <= 0) {
         db.query(`UPDATE xp SET level = '0' WHERE guild = '${message.guild.id}' AND user = '${user.id}'`)

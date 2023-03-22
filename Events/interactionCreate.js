@@ -8,7 +8,7 @@ module.exports = async (bot, interaction, client, inter) => {
 
         if(interaction.commandName === "help") {
 
-            let choices = bot.commands.filter(cmd => cmd.name.includes(entry)) 
+            let choices = bot.commands.filter(cmd => cmd.name.includes(entry))
             await interaction.respond(entry === "" ? bot.commands.map(cmd => ({name: cmd.name, value: cmd.name})) : choices.map(choices => ({name: choices.name, value: choices.name})))
         }
 
@@ -35,7 +35,7 @@ module.exports = async (bot, interaction, client, inter) => {
             if(!role) return;
             await interaction.member.roles.add(role)
 
-            await interaction.reply({content: "Vous avez bien accépté le réglement", ephemeral: true})
+            await interaction.reply({content: "Vous avez bien acceptée le règlement", ephemeral: true})
     
         }
     }
@@ -85,5 +85,21 @@ module.exports = async (bot, interaction, client, inter) => {
                     .setOptions(menuOptions)
 
     let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
+    if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+    }
+
+    if(interaction.customId === "unwarn") {
+
+    const unwarn = new Discord.ActionRowBuilder()
+                .addComponents(
+                    new Discord.ButtonBuilder()
+                        .setCustomId("unwarn")
+                        .setEmoji()
+                        .setLabel("Retirée l'avertisement")
+                        .setStyle(Discord.ButtonStyle.Success)
+                )
+
+    db.query(`DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+    if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true})
     }
 }

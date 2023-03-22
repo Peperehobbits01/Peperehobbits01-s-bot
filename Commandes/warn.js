@@ -35,12 +35,12 @@ module.exports = {
  
         if(message.user.id === user.id) return message.reply("Essaie pas de te warn ! ")
  
-        const iphone = new Discord.EmbedBuilder()
+        const Warn1 = new Discord.EmbedBuilder()
         .setTitle(`Vous avez été avertie ! `)
         .setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
         .setColor(bot.color)
         .setTimestamp()
-        await user.send({embeds: [iphone]})
+        await user.send({embeds: [Warn1]})
 
         let ID = await bot.function.createId("WARN")
  
@@ -48,14 +48,26 @@ module.exports = {
 
         await message.deferReply()
 
+        const unwarn = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId("unwarn")
+                    .setEmoji()
+                    .setLabel("Retirée l'avertisement")
+                    .setStyle(Discord.ButtonStyle.Success)
+            )
+
+        db.query(`DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+        if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true})
+
         /*try { await user.send(`${message.user.tag} vous a warn sur les serveur ${message.guild.name} pour la raison : \`${reason}\` ! `) } catch (err) {}*/
  
-        const iphonee = new Discord.EmbedBuilder()
+        const Warn2 = new Discord.EmbedBuilder()
         .setTitle("Informations du warn")
         .setDescription(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(bot.color)
         .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})
  
         /*await message.reply(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)*/
  

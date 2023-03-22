@@ -80,7 +80,7 @@ module.exports = {
 
                 collector.on('collect', async interaction => {
                     if (interaction.isSelectMenu(customId === "help")) {
-                        if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu déroulent !`, ephemeral: true})
+                        if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
                         const category = interaction.values[0];
                         const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
                         const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n')
