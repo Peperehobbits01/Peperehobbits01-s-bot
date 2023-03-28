@@ -33,23 +33,19 @@ module.exports = async(bot, message) => {
         }
     })
 
-    const channelId = '1060534092321521694';
-    const channel = await client.channels.fetch(channelId);
+    const channel = await bot.channels.fetch('1060534092321521694');
+    const messages = await channel.messages.fetch({ limit: 2 });
+    const lastMessage = messages.first();
+    const previousMessage = messages.last();
 
-    if (channel.type === 'text') {
-
-        const messages = await channel.messages.fetch({ limit: 2 });
-        const lastMessage = messages.first();
-        const previousMessage = messages.last();
-
-        if (!isNaN(lastMessage.content) && !isNaN(previousMessage.content)) {
+    if (!isNaN(lastMessage.content) && !isNaN(previousMessage.content)) {
           const currentNumber = parseInt(lastMessage.content);
           const previousNumber = parseInt(previousMessage.content);
-            if (currentNumber === previousNumber + 1) {}
-            if (currentNumber !== previousNumber + 1) {
-                console.log(`Le dernier message est un nombre (${currentNumber}) mais le message précédent n'est pas le nombre précédent plus 1.`);
-                await lastMessage.delete();
-              }
+            if (currentNumber === previousNumber + 1) {
+            } else {
+                if (currentNumber !== previousNumber + 1) {
+                    await lastMessage.delete();
+             }
         }
     }
 }
