@@ -12,8 +12,8 @@ module.exports = {
   async run(bot, message, args) {
  
     let Modal = new Discord.ModalBuilder()
-    .setCustomId('report')
-    .setTitle('NOM-BOT - Say')
+    .setCustomId('reporte')
+    .setTitle('Message que je dit')
  
     let question1 = new Discord.TextInputBuilder()
     .setCustomId('saychat')

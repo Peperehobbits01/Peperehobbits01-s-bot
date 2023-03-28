@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 
-module.exports = async (bot, interaction, client, inter) => {
+module.exports = async (bot, interaction, client, inter, db) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
 
