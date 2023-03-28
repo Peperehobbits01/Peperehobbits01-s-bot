@@ -35,7 +35,7 @@ module.exports = {
       let whatToSay = reponse.fields.getTextInputValue('saychat')
   
       const EmbedSay = new Discord.EmbedBuilder()
-      .setColor('#ca2d2d')
+      .setColor('#2ca117')
       .setDescription(`**Votre texte s'est envoyé correctement.**`)
 
       await message.channel.send({ content: whatToSay });

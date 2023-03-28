@@ -35,7 +35,7 @@ module.exports = {
       let whatToReport = reponse.fields.getTextInputValue('sayreport')
 
       const EmbedReport = new Discord.EmbedBuilder()
-      .setColor('#ca2d2d')
+      .setColor('##2ca117')
       .setDescription(`**Votre report s'est envoyé correctement.**`)
 
       let channel = message.guild.channels.cache.get('1073882868733972502');
@@ -46,7 +46,7 @@ module.exports = {
       .setDescription(`${whatToReport}`)
       .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-      await channel.send({embeds: EmbedwhatToReport });
+      await channel.send({embeds: [EmbedwhatToReport], ephemeral: false});
 
       await reponse.reply({embeds: [EmbedReport], ephemeral: true})
 
