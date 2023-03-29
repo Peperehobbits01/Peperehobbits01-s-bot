@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 
-module.exports = async (bot, interaction, client, inter, db) => {
+module.exports = async (bot, interaction, client, inter, db, message) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
 
@@ -75,17 +75,11 @@ module.exports = async (bot, interaction, client, inter, db) => {
 
     if(interaction.customId === "help") {
 
-    let menuOptions = []
-        commandCategories.forEach(category => {
-            menuOptions.push({ label: category, value: category.toUpperCase() })
-    })
-
     let menu = new Discord.SelectMenuBuilder()
                     .setCustomId("help")
-                    .setOptions(menuOptions)
 
     let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
-    if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+
     }
 
     if(interaction.customId === "unwarn") {

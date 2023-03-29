@@ -80,7 +80,7 @@ module.exports = {
 
                 collector.on('collect', async interaction => {
                     if (interaction.isSelectMenu(customId === "help")) {
-                        if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+                        if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
                         const category = interaction.values[0];
                         const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
                         const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n')
@@ -92,9 +92,8 @@ module.exports = {
                             .setFooter({ text: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp()
                             .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
-                            .setAuthor({ name: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-                        interaction.update({ embeds: [nouvelEmbed], components: [menuRow] })
+                        message.update({ embeds: [nouvelEmbed], components: [menuRow] })
                     }
                 })
             })
@@ -123,7 +122,7 @@ module.exports = {
             let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nUtilisation : \`${command.usage}\`\nDM autorisé : \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nDM autorisé : \`${command.dm ? "Oui" : "Non"}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setTimestamp()
             .setFooter({text: `Peperehobbits01's bot instance'`})
