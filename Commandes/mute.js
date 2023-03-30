@@ -51,24 +51,22 @@ module.exports = {
         if(message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le mute!")
         if(member.isCommunicationDisabled()) return message.reply("Il est déjà muet!")
 
-        const iphone = new Discord.EmbedBuilder()
+        const Mute1 = new Discord.EmbedBuilder()
         .setTitle(`Vous avez été mute ! `)
         .setDescription(`${message.user.tag} vous a mute sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il dureras :  \`${time}\` ! `)
         .setColor(bot.color)
-        .setTimestamp()
-        await user.send({embeds: [iphone]})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        await user.send({embeds: [Mute1]})
 
         await message.deferReply()
-        //try {await user.send(`Tu as été mute du serveur ${message.guild.name} par ${message.user.tag} pendant ${time} pour la raison : ${reason}`)} catch(err) {}
 
-        const iphonee = new Discord.EmbedBuilder()
+        const Mute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du mute")
         .setDescription(`Vous avez mute ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        //await message.reply(`${message.user} a rendu muet ${user.tag} pendant ${time}.`)
+        await message.followUp({embeds: [Mute2], ephemeral : false})
 
         let ID = await bot.function.createId("MUTE")
  

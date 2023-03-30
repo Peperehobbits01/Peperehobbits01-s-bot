@@ -42,7 +42,8 @@ module.exports = {
 
     const successEmbed = new Discord.EmbedBuilder()
       .setColor(bot.color)
-      .setDescription(`Félicitations ${newWinnersList} ! Vous êtes les nouveaux gagnants !`);
+      .setDescription(`Félicitations ${newWinnersList} ! Vous êtes les nouveaux gagnants !`)
+      .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) });
 
     await interaction.reply({ embeds: [successEmbed] });
   },

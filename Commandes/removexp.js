@@ -37,7 +37,7 @@ module.exports = {
         let embed = new EmbedBuilder()
           .setTitle("Niveau retirer")
           .setDescription(`Aucun niveau on été retirer à ${user}, car il est déjà niveau 0`)
-          .setFooter({text: `Peperehobbits's Bot instance`})
+          .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
         message.reply({ embeds: [embed] })
       } else {
@@ -49,12 +49,12 @@ module.exports = {
         db.query(`UPDATE xp SET xp = '${level * 1000 - xpleavetoremove}' WHERE guild = '${message.guild.id}' AND user = '${user.id}' `)
         if(xp < 0);
 
-        let Embed = new EmbedBuilder()
+        let xpremove = new EmbedBuilder()
           .setTitle("Niveau retirer")
           .setDescription(`\`${xptoremove} niveaux\` on été retirer à ${user} par ${message.user}`)
-          .setFooter({text: `Peperehobbits's Bot instance`})
+          .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        message.reply({ embeds: [Embed] })
+        message.reply({ embeds: [xpremove] })
       }
     })
   }

@@ -42,12 +42,12 @@ module.exports = {
 
         //try {await user.send(`Tu as été expulsé/kick du serveur ${message.guild.name} par ${message.user.tag} pour la raison : ${reason}`)} catch(err) {}
 
-        const iphonee = new Discord.EmbedBuilder()
+        const Note1 = new Discord.EmbedBuilder()
         .setTitle("Informations de la note")
         .setDescription(`Vous avez mis une note à ${user.tag} et voici sa note : \`${reason}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        await message.followUp({embeds: [Note1], ephemeral : false})
 
         //await message.reply(`${message.user} a expulsé/kick ${user.tag}`)
 

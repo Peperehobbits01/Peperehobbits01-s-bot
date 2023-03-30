@@ -28,13 +28,13 @@ module.exports = {
         let i = 0;
         userInv.forEach(inv => i += inv.uses);
 
-        const embed = new Discord.EmbedBuilder()
+        const invitations = new Discord.EmbedBuilder()
             .setColor(0x2f3136)
             .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true }) })
             .setTitle("Nombre d'invitations d'utilisateurs")
             .setDescription(`${user.tag} a **${i}** invitations.`)
-            .setTimestamp();
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) });
 
-        await interaction.reply({ embeds: [embed], ephemeral: false });
+        await interaction.reply({ embeds: [invitations], ephemeral: false });
     }
 }

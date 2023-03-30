@@ -39,23 +39,23 @@ module.exports = {
         if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le bannir!")
         if((await message.guild.bans.fetch()).get(user.id)) return message.reply("Il est déjà banni!")
 
-        const iphone = new Discord.EmbedBuilder()
+        const Ban1 = new Discord.EmbedBuilder()
         .setTitle(`Vous avez été bannis ! `)
         .setDescription(`${message.user.tag} vous a bannis sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
         .setColor(bot.color)
-        .setTimestamp()
-        await user.send({embeds: [iphone]})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        await user.send({embeds: [Ban1]})
 
         await message.deferReply()
             
         //try {await user.send(`Tu as été banni du serveur ${message.guild.name} par ${message.user.tag} pour la raison : ${reason}`)} catch(err) {}
 
-        const iphonee = new Discord.EmbedBuilder()
+        const Ban2 = new Discord.EmbedBuilder()
         .setTitle("Informations du ban")
         .setDescription(`Vous avez ban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        await message.followUp({embeds: [Ban2], ephemeral : false})
 
         await message.guild.bans.create(user.id, {reason: reason})
 

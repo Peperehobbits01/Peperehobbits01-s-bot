@@ -35,12 +35,12 @@ module.exports = {
             SendMessages: true
           })
 
-          let Embed = new EmbedBuilder()
+          let Unlock = new EmbedBuilder()
             .setColor(bot.color)
             .setTitle("Inforamtion unlock")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
-            .setFooter({text: `Peperehobbits01's Bot instance`})
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-            await message.reply({embeds: [Embed], ephemeral: false})
+            await message.reply({embeds: [Unlock], ephemeral: false})
     }
 }

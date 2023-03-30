@@ -46,24 +46,24 @@ module.exports = {
         if(!(await message.guild.bans.fetch()).get(user.id)) return message.reply("Il est déjà débanni!")
         
         try{
-            const iphone = new Discord.EmbedBuilder()
+            const Unban1 = new Discord.EmbedBuilder()
             .setTitle("Informations du débanisement")
             .setDescription(`Vous avez été débannis par ${message.user.tag} pour la raison : \`${reason}\` avec succès !`)
             .setColor(bot.color)
-            .setTimestamp()
-            await user.send({embeds: [iphone]})
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+            await user.send({embeds: [Unban1]})
         }catch(err) {}
 
         await message.deferReply()
-        //try {await user.send(`Tu as été débanni par ${message.user.tag} pour la raison ${reason}!`)} catch (err) {}
 
-        let iphonee = new EmbedBuilder()
+        let Unban2 = new EmbedBuilder()
         .setColor(bot.color)
         .setTitle("Inforamtion débanisement")
         .setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-        .setFooter({text: `Peperehobbits01's Bot instance`})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [iphonee], ephemeral: false})
+        await message.followUp({embeds: [Unban2], ephemeral: false})
 
         db.query(`SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`, async (err, req) => {
             if (req.length < 1) return message.reply('Aucune banisement pour ce membre/ID du ban invalide');

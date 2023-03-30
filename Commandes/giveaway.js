@@ -39,13 +39,13 @@ module.exports = {
   let durationMs = ms(duration);
   let endTime = Date.now() + durationMs;
 
-    const embed = new Discord.EmbedBuilder()
+    const offrir = new Discord.EmbedBuilder()
       .setColor(bot.color)
       .setTitle(`Giveaway: ${prize}`)
       .setDescription(`Réagissez avec 🎉 pour participer !\Duration: **${duration}**\nNombre de gagnant: **${winners}**`)
       .setTimestamp(endTime);
 
-    const message = await interaction.reply({ embeds: [embed], fetchReply: true });
+    const message = await interaction.reply({ embeds: [offrir], fetchReply: true });
     await message.react('🎉');
 
     const updateInterval = setInterval(() => {

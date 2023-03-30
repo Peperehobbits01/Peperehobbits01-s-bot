@@ -61,8 +61,7 @@ module.exports = {
             let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
 
             let EmbedHelp = new Discord.EmbedBuilder()
-                .setAuthor({ name: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-                .setColor(bot.color).setTitle(`Menu help`)
+                .setColor(bot.color).setTitle(`Menu d'aide'`)
                 .setDescription(`
                 Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
                 **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**
@@ -72,7 +71,7 @@ module.exports = {
                 `)
                 .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()
-                .setFooter({ text: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
             message.reply({ embeds: [EmbedHelp], components: [menuRow] }).then(msg => {
 
@@ -89,7 +88,7 @@ module.exports = {
                             .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
                             .setDescription(`${commandString}`)
                             .setColor(bot.color)
-                            .setFooter({ text: bot.user.username, iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp()
                             .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
 
@@ -124,8 +123,7 @@ module.exports = {
             .setTitle(`Commande ${command.name}`)
             .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nDM autorisé : \`${command.dm ? "Oui" : "Non"}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
-            .setTimestamp()
-            .setFooter({text: `Peperehobbits01's bot instance'`})
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
             await message.reply({embeds: [EmbedCommande], ephemeral: false})
         }

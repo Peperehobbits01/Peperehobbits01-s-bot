@@ -46,7 +46,7 @@ module.exports = {
     
      let msg = args.getString("question")
      
-    const embed = new Discord.EmbedBuilder()
+    const Ask = new Discord.EmbedBuilder()
       .setTitle('🎱  Je réponds à tes questions  🎱')
       .setDescription(`
 Question de ${message.user} \`\`\`${msg}\`\`\`
@@ -56,6 +56,7 @@ Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\`
       .setTimestamp()
       .setFooter({ text: bot.user.username, iconURL: bot.user.avatarURL({ dynamic: true }) })
       .setColor(bot.color);
-      await message.reply({embeds: [embed]})
+
+      await message.reply({embeds: [Ask]})
   }
 };

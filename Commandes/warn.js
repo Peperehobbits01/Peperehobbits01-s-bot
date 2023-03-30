@@ -48,28 +48,31 @@ module.exports = {
 
         await message.deferReply()
 
-        //const unwarn = new Discord.ActionRowBuilder()
-            //.addComponents(
-                //new Discord.ButtonBuilder()
-                    //.setCustomId("unwarn")
-                    //.setEmoji()
-                    //.setLabel("Retirée l'avertisement")
-                    //.setStyle(Discord.ButtonStyle.Success)
-            //)
+        const unwarn = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId("unwarn")
+                    .setLabel("Retirée l'avertisement")
+                    .setStyle(Discord.ButtonStyle.Success)
+            )
 
-        //db.query(`DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-        //if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+        let id = args.get('id').value
 
-        /*try { await user.send(`${message.user.tag} vous a warn sur les serveur ${message.guild.name} pour la raison : \`${reason}\` ! `) } catch (err) {}*/
+        db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
+             if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+
+             db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+
+        })
+        if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
  
         const Warn2 = new Discord.EmbedBuilder()
         .setTitle("Informations du warn")
         .setDescription(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [Warn2], ephemeral : false})
- 
-        /*await message.reply(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)*/
- 
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+        await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})
+
     }       
 }

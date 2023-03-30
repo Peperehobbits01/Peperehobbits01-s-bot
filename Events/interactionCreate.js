@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 
-module.exports = async (bot, interaction, client, inter, db, message) => {
+module.exports = async (bot, interaction, inter, db, message) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
 
@@ -43,16 +43,16 @@ module.exports = async (bot, interaction, client, inter, db, message) => {
     if(interaction.customId === "ping") {
 
         let reloadPing = new Discord.ActionRowBuilder()
-        .addComponents(
-            new Discord.ButtonBuilder()
-                .setCustomId("ping")
-                .setEmoji("🔄")
-                .setLabel("Actualiser")
-                .setStyle(Discord.ButtonStyle.Success)
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId("ping")
+                    .setEmoji("🔄")
+                    .setLabel("Actualiser")
+                    .setStyle(Discord.ButtonStyle.Success)
         )
         const pingUser = Date.now() - interaction.createdTimestamp;
             let emojiUser;
-            if(pingUser < 200) { emojiUser = "🟢" } 
+            if(pingUser < 200) { emojiUser = "🟢" }
             else if (pingUser < 400 && pingUser > 200) { emojiUser = "🟠" }
             else if(pingUser > 400) {emojiUser = "🔴" };
             // Ping de l'API de discord
@@ -82,18 +82,15 @@ module.exports = async (bot, interaction, client, inter, db, message) => {
 
     }
 
-    if(interaction.customId === "unwarn") {
+    if (interaction.isButton()) {
+        if(interaction.customId === "unwarn") {
 
-    const unwarn = new Discord.ActionRowBuilder()
-                .addComponents(
-                    new Discord.ButtonBuilder()
-                        .setCustomId("unwarn")
-                        .setEmoji()
-                        .setLabel("Retirée l'avertisement")
-                        .setStyle(Discord.ButtonStyle.Success)
-                )
+            db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
+                 if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
 
-    db.query(`DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-    if(interaction.user.id !== message.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+                 db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+            })
+            if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+        }
     }
 }

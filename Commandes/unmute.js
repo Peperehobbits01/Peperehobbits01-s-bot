@@ -47,26 +47,25 @@ module.exports = {
         if(message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le demute!")
         if(!member.isCommunicationDisabled()) return message.reply("Il est déjà demute!")
 
-        //try {await user.send(`Tu as été demute par ${message.user.tag} puor la raison ${reason}`)} catch (err) {}
         try{
-            const iphone = new Discord.EmbedBuilder()
+            const Unmute1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été retirée du silence ! `)
             .setDescription(`${message.user.tag} vous a retirée du silence sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
             .setColor(bot.color)
-            .setTimestamp()
-            await user.send({embeds: [iphone]})
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+            await user.send({embeds: [Unmute1]})
         }catch(err) {}
 
         await message.deferReply()
 
-        //await message.reply(`${message.user} a demute ${user.tag}`)
-
-        const iphonee = new Discord.EmbedBuilder()
+        const Unmute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du unmute")
         .setDescription(`Vous avez unmute ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+        await message.followUp({embeds: [Unmute2], ephemeral : false})
 
         db.query(`SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`, async (err, req) => {
             if (req.length < 1) return message.reply('Aucune mise en silence pour ce membre/ID du mute invalide');

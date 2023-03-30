@@ -38,23 +38,25 @@ module.exports = {
         if(member && !member.kickable) return message.reply("Je ne peux l'expulsé!")
         if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulsé!")
 
-        const iphone = new Discord.EmbedBuilder()
+        const Kick1 = new Discord.EmbedBuilder()
         .setTitle(`Vous avez été expulsée ! `)
         .setDescription(`${message.user.tag} vous a expulsée sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
         .setColor(bot.color)
-        .setTimestamp()
-        await user.send({embeds: [iphone]})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+        await user.send({embeds: [Kick1]})
 
         await message.deferReply()
 
         //try {await user.send(`Tu as été expulsé/kick du serveur ${message.guild.name} par ${message.user.tag} pour la raison : ${reason}`)} catch(err) {}
 
-        const iphonee = new Discord.EmbedBuilder()
+        const Kick2 = new Discord.EmbedBuilder()
         .setTitle("Informations du kick")
         .setDescription(`Vous avez kick ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(bot.color)
-        .setTimestamp()
-        await message.followUp({embeds: [iphonee], ephemeral : false})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+        await message.followUp({embeds: [Kick2], ephemeral : false})
 
         //await message.reply(`${message.user} a expulsé/kick ${user.tag}`)
 

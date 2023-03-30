@@ -41,12 +41,12 @@ module.exports = {
         if(activity === "Streaming") await bot.user.setActivity(statut, {type: Discord.ActivityType[activity], url: args.getString("lien")})
         await bot.user.setActivity(statut, {type: Discord.ActivityType[activity], url: args.getString("lien") ? args.getString("lien") : null})
 
-        let Embed = new EmbedBuilder()
+        let Setstatut = new EmbedBuilder()
         .setColor(bot.color)
         .setTitle("ℹ️ Information changement du statut ℹ️")
         .setDescription(`Activité : ${activity}\nStatut : ${statut}`)
-        .setFooter({text: "Peperehobbits01's Bot instance"})
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        message.reply({ embeds: [Embed] })
+        message.reply({ embeds: [Setstatut] })
     }
 }

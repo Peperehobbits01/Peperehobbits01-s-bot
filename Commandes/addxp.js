@@ -30,11 +30,11 @@ options: [
     let xptoadd = args.getNumber("xp")
     if(!xptoadd) return message.reply("le nombre d'expérience a ajoutée est vide ou invalide!")
 
-    let Embed = new EmbedBuilder()
+    let xpadd = new EmbedBuilder()
           .setColor(bot.color)
           .setTitle("Expérience ajoutée")
           .setDescription(`\`${xptoadd} expérience\` on été ajoutée à ${user} par ${message.user}`)
-          .setThumbnail("Peperehobbits's Bot instance")
+          .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
     if((level + 1) * 1000 <= xp) {
 
@@ -52,7 +52,7 @@ options: [
 
       db.query(`UPDATE xp SET xp = '${xp + xptoadd}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`)
 
-      message.reply({ embeds: [Embed] })
+      message.reply({ embeds: [xpadd] })
     }
   }
 }
