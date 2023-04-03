@@ -39,7 +39,7 @@ module.exports = {
         .setTitle(`Vous avez été avertie ! `)
         .setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
         .setColor(bot.color)
-        .setTimestamp()
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
         await user.send({embeds: [Warn1]})
 
         let ID = await bot.function.createId("WARN")

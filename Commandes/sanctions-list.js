@@ -32,7 +32,7 @@ module.exports = {
             if(req.length < 1) console.log("Pas de note")
             await req.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
-            let sanction = new Discord.EmbedBuilder()
+            let Embed = new Discord.EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Infractons de ${user.tag}`)
             .setThumbnail(user.displayAvatarURL({dynamic: true}))
@@ -89,7 +89,7 @@ module.exports = {
                         
                             }
                     
-                            await message.followUp({embeds: [sanction]})
+                            await message.followUp({embeds: [Embed]})
                         })
                     })
                 })
