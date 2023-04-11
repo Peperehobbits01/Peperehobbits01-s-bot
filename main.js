@@ -4,18 +4,6 @@ const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
 const loadDatabase = require("./Loaders/loadDatabase")
 const config = require("./Config")
-const { Client, GatewayIntentBits } = require('discord.js');
-
-global.client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.MessageContent
-    ],
-   disableMentions: 'everyone',
-});
 
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
@@ -26,7 +14,7 @@ bot.function = {
 }
 
 bot.login(config.token)
-loadCommands(bot)
+loadCommands(bot, process.cwd() + '/Commandes');
 loadEvents(bot)
 
 require(`./anti-crash.js`)();

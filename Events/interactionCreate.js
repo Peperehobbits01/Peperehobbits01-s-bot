@@ -2,6 +2,13 @@ const Discord = require("discord.js")
 
 module.exports = async (bot, interaction, inter, db, message) => {
 
+    if(interaction.type === Discord.InteractionType.ApplicationCommand) {
+
+        const command = bot.commands.get(interaction.commandName);
+        command.run(bot, interaction, interaction.options, bot.db)
+
+    }
+
     if(interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
 
         let entry = interaction.options.getFocused()
@@ -19,13 +26,6 @@ module.exports = async (bot, interaction, inter, db, message) => {
             await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({name: c, value: c})))
         }
 
-    }
-
-    if(interaction.type === Discord.InteractionType.ApplicationCommand) {
-
-        let command = require(`../Commandes/${interaction.commandName}`)
-        command.run(bot, interaction, interaction.options, bot.db)
-        
     }
 
     if (interaction.isButton()) {
