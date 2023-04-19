@@ -74,7 +74,7 @@ module.exports = {
       .setColor('#3dffcc')
       .setDescription(`✅ Votre embed à été envoyer avec succès !`)
  
-      if(!couleur) couleur = '#000001'
+      if(!couleur) couleur = bot.color
       if(!footer) footer = ' '
       if(!titre) titre = ' '
       if(!description) description = ' '

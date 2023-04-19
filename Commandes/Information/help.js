@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { levenshteinDistance } = require('.../Fonctions/levenshteinDistance')
+const { levenshteinDistance } = require('../../Fonctions/levenshteinDistance')
 
 module.exports = {
 
@@ -74,7 +74,7 @@ module.exports = {
 
             message.reply({ embeds: [EmbedHelp], components: [menuRow] }).then(msg => {
 
-                const collector = msg.createMessageComponentCollector()
+                const collector = message.createMessageComponentCollector()
 
                 collector.on('collect', async interaction => {
                     if (interaction.isSelectMenu(customId === "help")) {

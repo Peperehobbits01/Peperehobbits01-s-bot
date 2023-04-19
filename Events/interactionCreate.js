@@ -75,11 +75,27 @@ module.exports = async (bot, interaction, inter, db, message) => {
 
     if(interaction.customId === "help") {
 
-    let menu = new Discord.SelectMenuBuilder()
-                    .setCustomId("help")
 
-    let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
+        const collector = message.createMessageComponentCollector()
 
+            collector.on('collect', async interaction => {
+                if (interaction.isSelectMenu(customId === "help")) {
+                if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+                const category = interaction.values[0];
+                const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
+                const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n')
+
+                const nouvelEmbed = new Discord.EmbedBuilder()
+                    .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
+                    .setDescription(`${commandString}`)
+                    .setColor(bot.color)
+                    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                    .setTimestamp()
+                    .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+
+                message.update({ embeds: [nouvelEmbed], components: [menuRow] })
+            }
+        })
     }
 
     if (interaction.isButton()) {
