@@ -60,7 +60,7 @@ module.exports = {
             let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
 
             let EmbedHelp = new Discord.EmbedBuilder()
-                .setColor(bot.color).setTitle(`Menu d'aide'`)
+                .setColor(bot.color).setTitle(`Menu d'aide  `)
                 .setDescription(`
                 Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
                 **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**

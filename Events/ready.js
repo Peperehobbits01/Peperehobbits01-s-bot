@@ -12,7 +12,7 @@ module.exports = async bot => {
 
     await loadSlashCommand(bot)
 
-    bot.user.setPresence({activities: [{name: "la version 1.3.6",type: ActivityType.Watching}],status:"online"})
+    bot.user.setPresence({activities: [{name: "la version 1.3.8",type: ActivityType.Watching}],status:"online"})
 
     console.log(`Je suis connecté à ${bot.user.tag}!`)
 }

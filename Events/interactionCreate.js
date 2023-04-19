@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 
-module.exports = async (bot, interaction, inter, db, message) => {
+module.exports = async (bot, interaction, inter, message) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommand) {
 
@@ -26,18 +26,6 @@ module.exports = async (bot, interaction, inter, db, message) => {
             await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({name: c, value: c})))
         }
 
-    }
-
-    if (interaction.isButton()) {
-        if (interaction.customId === "rule") {
-                    
-            let role = "931457929431908376"
-            if(!role) return;
-            await interaction.member.roles.add(role)
-
-            await interaction.reply({content: "Vous avez bien acceptée le règlement", ephemeral: true})
-    
-        }
     }
 
     if(interaction.customId === "ping") {
@@ -75,7 +63,6 @@ module.exports = async (bot, interaction, inter, db, message) => {
 
     if(interaction.customId === "help") {
 
-
         const collector = message.createMessageComponentCollector()
 
             collector.on('collect', async interaction => {
@@ -101,6 +88,7 @@ module.exports = async (bot, interaction, inter, db, message) => {
     if (interaction.isButton()) {
         if(interaction.customId === "unwarn") {
 
+            let db = bot.db;
             db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
                  if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
 

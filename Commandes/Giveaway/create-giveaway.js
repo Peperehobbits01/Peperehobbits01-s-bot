@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const ms = require('ms');
 
 module.exports = {
-  name: 'giveaway',
+  name: 'create-giveaway',
   description: 'Lancer un giveaway',
   permission : Discord.PermissionFlagsBits.Administrator,
   dm: false,
@@ -57,7 +57,7 @@ module.exports = {
         return;
       }
       embed.setDescription(`Réagissez avec 🎉 pour participer !\nduration: **${duration}**\nNombre de winners: **${winners}**\nTemps restant: **${ms(timeLeftMs, { long: true })}**`);
-      message.edit({ embeds: [embed] });
+      message.edit({ embeds: [updateInterval] });
     }, 20000 && 25000)
 
     setTimeout(async () => {

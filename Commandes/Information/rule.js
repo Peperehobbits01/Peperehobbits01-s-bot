@@ -21,13 +21,7 @@ module.exports = {
         .setColor(bot.color)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        const rulebtn = new Discord.ActionRowBuilder().addComponents(new Discord.ButtonBuilder()
-        .setCustomId("rule")
-        .setLabel("Accepter le réglement")
-        .setStyle(Discord.ButtonStyle.Primary)
-        .setEmoji("✅"))
-
         await message.reply({ embeds: [rulecheck], ephemeral: true})
-        await message.channel.send({ embeds: [rule], components: [rulebtn] })
+        await message.channel.send({ embeds: [rule]})
       }
 }
