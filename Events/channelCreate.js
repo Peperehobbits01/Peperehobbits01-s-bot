@@ -8,7 +8,7 @@ module.exports = async(bot, channel) => {
     const CreateChannel = new Discord.EmbedBuilder()
     .setColor(bot.color)
     .setTitle(`Nouveau salon par ${channel.author}`)
-    .setDescription(`Name : ${channel.name}\nPermissions : ${channel.permissionsFor(channel.guild.author).toArray().join(", ")}`)
+    .setDescription(`Nom : ${channel.name}\nID :\nUtilisateur : ${channel.author.id}\nSalon : ${channel.id}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
     logsChannel.send({ embeds: [CreateChannel] })

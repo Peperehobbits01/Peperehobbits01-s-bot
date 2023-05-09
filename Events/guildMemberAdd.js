@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const Canvas = require("canvas");
 
 module.exports = async (bot, member, guild) => {
 
@@ -7,13 +8,33 @@ module.exports = async (bot, member, guild) => {
     let role = "931457929431908376"
     await member.roles.add(role)
 
-    const logsChannel = member.guild.channels.cache.get("931457930660835333")
+    const WelcomeChannel = "931457930325270614"
 
-    const logsnewmember = new Discord.EmbedBuilder()
+    const WelcomeImage = await new Canvas.Welcome()
+    .setUsername(member.user.username)
+    .setDiscriminator(member.user.discriminator)
+    .setGuildName(member.guild.name)
+    .setAvatar(member.user.displayAvatarURL({ dynamic: true }))
+    .setColor("border", bot.color)
+    .setColor("username-box", "#DAAB3A")
+    .setColor("discriminator-box", "#FFFF00")
+    .setColor("message-box", "#B67332")
+    .setColor("title", "B67332")
+    .setColor("avatar", bot.color)
+    .setBackgroundColor()
+    .toAttachment();
+
+    const attachment = new Discord.Attachment(WelcomeImage.toBuffer(), "welcome-image.png");
+
+    message.WelcomeChannel.send(attachment);
+
+    const logsChannel = "931457930660835333"
+
+    const logsNewMember = new Discord.EmbedBuilder()
     .setColor(bot.color)
     .setTitle("Nouveau membre sur le serveur")
     .setDescription(`${member.user.tag} a rejoint le serveur.`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-    logsChannel.send({ embeds: [logsnewmember] })
+    logsChannel.send({ embeds: [logsNewMember] })
 }

@@ -12,38 +12,38 @@ module.exports = async(bot, oldState, newState) => {
     db.query(`INSERT INTO voicestateupdate (guild, user, channel, time) VALUES ('${newState.channel.guildId}', '${user.id}', '${newState.channel.id}', '0')`)
     console.log(`User ${user.username} has joined voice channel ${newState.channel.name}`);
 
-    const embed = new Discord.EmbedBuilder()
+    const JoinCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
     .setTitle(`${user.username} à rejoint un vocal`)
-    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur = ${user.id}\nSalon = ${oldState.channel.id}`)
+    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur : ${user.id}\nSalon : ${oldState.channel.id}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-    await logschannel.send({embeds: [embed]})
+    await logsChannel.send({embeds: [JoinCall]})
 
   } else if (oldState.channel && !newState.channel) {
 
     db.query(`DELETE INTO voicestateupdate WHERE guild = '${oldState.channel.guildId}' AND user = '${user.id}'`)
     console.log(`User ${user.username} has left voice channel ${oldState.channel.name}`);
 
-    const embed = new Discord.EmbedBuilder()
+    const LeaveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
     .setTitle(`${user.username} à quittée un vocal`)
-    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur = ${user.id}\nSalon = ${oldState.channel.id}`)
+    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur : ${user.id}\nSalon : ${oldState.channel.id}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-    await logschannel.send({embeds: [embed]})
+    await logsChannel.send({embeds: [LeaveCall]})
 
   } else if (oldState.channel !== newState.channel) {
 
     db.query(`UPDATE voicestateupdate SET channel = '${newState.channel.id}' WHERE guild = '${newState.channel.guildId}', AND user = '${user.id}' AND time = '0'`)
     console.log(`User ${user.username} has switched from voice channel ${oldState.channel.name} to ${newState.channel.name}`);
 
-    const embed = new Discord.EmbedBuilder()
+    const MooveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
     .setTitle(`${user.username} à changée de vocal`)
-    .setDescription(`**Salon**\n${oldState.channel} et maintenant ${newState.channel}\n**ID**\nUtilisateur = ${user.id}\nAncien salon = ${oldState.channel.id}\nNouveau salon = ${newState.channel.id}`)
+    .setDescription(`**Salon**\n${oldState.channel} et maintenant ${newState.channel}\n**ID**\nUtilisateur : ${user.id}\nAncien salon : ${oldState.channel.id}\nNouveau salon : ${newState.channel.id}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-    await logschannel.send({embeds: [embed]})
+    await logsChannel.send({embeds: [MooveCall]})
   }
 };
