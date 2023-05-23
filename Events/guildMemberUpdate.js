@@ -32,6 +32,18 @@ module.exports = async(bot, oldMember, newMember) => {
 
             logsChannel.send({ embeds: [addRoles] })
     }
+  }
 
+  if(!guild.oldMember.name && guild.newMember.name) {
+
+    const logsChannel = "931457930660835333"
+
+    const updateName = new Discord.EmbedBuilder()
+        .setColor(bot.color)
+        .setTitle("Un membre a changée de pseudonyme")
+        .setDescription(`Nouveau pseudo : ${guild.newMember.name}\nAncien pseudo : ${guild.oldMember.name}\nID du membre : ${guild.newMember.id}`)
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+        logsChannel.send({ embeds: [updateName] })
   }
 }

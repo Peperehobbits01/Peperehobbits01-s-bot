@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const time = require("ms");
+const ms = require("ms");
 
 module.exports = async(bot, oldState, newState) => {
 
@@ -9,7 +9,7 @@ module.exports = async(bot, oldState, newState) => {
   
   if (!oldState.channel && newState.channel) {
 
-    db.query(`INSERT INTO voicestateupdate (guild, user, channel, time) VALUES ('${newState.channel.guildId}', '${user.id}', '${newState.channel.id}', '0')`)
+    db.query(`INSERT INTO voicestateupdate (user, channel, time) VALUES ('${user.id}', '${newState.channel.id}', '0')`)
     console.log(`User ${user.username} has joined voice channel ${newState.channel.name}`);
 
     const JoinCall = new Discord.EmbedBuilder()
@@ -22,7 +22,7 @@ module.exports = async(bot, oldState, newState) => {
 
   } else if (oldState.channel && !newState.channel) {
 
-    db.query(`DELETE INTO voicestateupdate WHERE guild = '${oldState.channel.guildId}' AND user = '${user.id}'`)
+    db.query(`DELETE INTO voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${user.id}'`)
     console.log(`User ${user.username} has left voice channel ${oldState.channel.name}`);
 
     const LeaveCall = new Discord.EmbedBuilder()
@@ -35,7 +35,7 @@ module.exports = async(bot, oldState, newState) => {
 
   } else if (oldState.channel !== newState.channel) {
 
-    db.query(`UPDATE voicestateupdate SET channel = '${newState.channel.id}' WHERE guild = '${newState.channel.guildId}', AND user = '${user.id}' AND time = '0'`)
+    db.query(`UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${user.id}' AND time = '0'`)
     console.log(`User ${user.username} has switched from voice channel ${oldState.channel.name} to ${newState.channel.name}`);
 
     const MooveCall = new Discord.EmbedBuilder()

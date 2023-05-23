@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { EmbedBuilder, ApplicationCommandOptionType, AttachmentBuilder, PermissionsBitField } = require('discord.js')
 
 module.exports = {
   name: 'removexp',
@@ -11,7 +10,7 @@ module.exports = {
     {
       type: "number",
       name: "xp",
-      description: "Le nombre d'expériencea à retirée",
+      description: "Le nombre d'expérience à retirée",
       required: true,
       autocomplete: true,
     },
@@ -24,6 +23,7 @@ module.exports = {
     }
   ],
   async run(bot, message, args, db) {
+
     let user = args.getUser("membre")
 
     db.query(`SELECT * FROM xp WHERE guild = '${message.guild.id}' AND user = '${user.id}'`, async (err, req) => {
@@ -34,12 +34,13 @@ module.exports = {
         db.query(`UPDATE xp SET level = '0' WHERE guild = '${message.guild.id}' AND user = '${user.id}'`)
         db.query(`UPDATE xp SET xp = '0' WHERE guild = '${message.guild.id}' AND user = '${user.id}'`)
 
-        let embed = new EmbedBuilder()
+        let xpRemoveError = new Discord.EmbedBuilder()
+          .setColor(bot.color)
           .setTitle("Niveau retirer")
           .setDescription(`Aucun niveau on été retirer à ${user}, car il est déjà niveau 0`)
           .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        message.reply({ embeds: [embed] })
+        message.reply({ embeds: [xpRemoveError] })
       } else {
         db.query(`UPDATE xp SET xp = '${xp - xptoremove}' WHERE guild = '${message.guild.id}' AND user = '${user.id}' `)
         let xpleavetoremove = xp
@@ -49,12 +50,13 @@ module.exports = {
         db.query(`UPDATE xp SET xp = '${level * 1000 - xpleavetoremove}' WHERE guild = '${message.guild.id}' AND user = '${user.id}' `)
         if(xp < 0);
 
-        let xpremove = new EmbedBuilder()
+        let xpRemove = new Discord.EmbedBuilder()
+          .setColor(bot.color)
           .setTitle("Niveau retirer")
           .setDescription(`\`${xptoremove} niveaux\` on été retirer à ${user} par ${message.user}`)
           .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        message.reply({ embeds: [xpremove] })
+        message.reply({ embeds: [xpRemove] })
       }
     })
   }

@@ -20,6 +20,6 @@ module.exports = {
     let message = await interaction.channel.messages.fetch(messageId);
 
     await messageId.delete();
-    await interaction.reply("Le giveaway a été arrêté");
+    await interaction.send("Le giveaway a été interrompue!");
   },
 };

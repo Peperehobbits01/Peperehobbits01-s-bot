@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
 name: "addxp",
@@ -30,7 +29,7 @@ options: [
     let xptoadd = args.getNumber("xp")
     if(!xptoadd) return message.reply("le nombre d'expérience a ajoutée est vide ou invalide!")
 
-    let xpadd = new EmbedBuilder()
+    let xpadd = new Discord.EmbedBuilder()
           .setColor(bot.color)
           .setTitle("Expérience ajoutée")
           .setDescription(`\`${xptoadd} expérience\` on été ajoutée à ${user} par ${message.user}`)
