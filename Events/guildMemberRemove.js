@@ -4,14 +4,11 @@ module.exports = async (bot, member, guild) => {
 
     const logsChannel = "931457930660835333"
 
-    if (guild.members.size && !guild.members.size) {
+    const removeMember = new Discord.EmbedBuilder()
+        .setColor(bot.color)
+        .setTitle("Un membre a quittée le serveur")
+        .setDescription(`Le membre ${member.username} , ${member.tag}\nID ${member.id}\nRejoint le ${member.guild.join.timedAt}`)
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        const removeMember = new Discord.EmbedBuilder()
-            .setColor(bot.color)
-            .setTitle("Un membre a quittée le serveur")
-            .setDescription(`Le membre ${member.username} , ${member.tag}\nID ${member.id}\nRejoint le ${member.guild.join.timedAt}`)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-
-            logsChannel.send({ embeds: [removeMember] })
-    }
+        logsChannel.send({ embeds: [removeMember] })
 }
