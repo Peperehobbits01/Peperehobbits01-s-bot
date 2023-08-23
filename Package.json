@@ -11,7 +11,7 @@
   "dependencies": {
     "@discordjs/rest": "^1.2.0",
     "canvas": "^2.11.2",
-    "discord-canvas-easy": "^3.2.0",
+    "discord-canvas-easy": "^3.2.1",
     "discord-giveaway-easy": "^3.0.0",
     "discord-player": "^5.3.2",
     "discord-rpc": "^4.0.1",
