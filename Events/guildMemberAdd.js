@@ -4,8 +4,6 @@ module.exports = async (bot, member, guild) => {
 
     if(member.guild.id !== ("931457929431908373")) return;
     bot.channels.cache.get("931457930325270614").send(`Bienvenue à <@${member.id}>, il vient d'arrivée sur le serveur!`)
-    let role = "931457929431908376"
-    await member.roles.add(role)
 
     const logsChannel = "931457930660835333"
 

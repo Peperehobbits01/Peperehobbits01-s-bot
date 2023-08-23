@@ -47,29 +47,27 @@ module.exports = {
                 let rank = leaderboard.findIndex(r => r.user === user.id) + 1
                 let need = (level + 1) * 1000;
 
-                const imagePath = '../../Minecraft_logo.jpg';
-                const canvas = Canvas.createCanvas(700, 250)
+                const imagePath = 'C:/Users/Uylem/Desktop/Peperehobbits01-s-bot/Image/Niveau.jpg';
+                const canvas = Canvas.createCanvas(1080, 608)
                 const context = canvas.getContext("2d")
                 const background = await Canvas.loadImage(imagePath)
                 context.drawImage(background, 0, 0, canvas.width, canvas.height);
                 context.strokeStyle = '#08490c';
                 context.strokeRect(0, 0, canvas.width, canvas.height);
-                const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: 'jpg' }));
+                const avatar = await Canvas.loadImage(user.displayAvatarURL({ format: 'jpg' }));
 	            context.beginPath();
 	            context.arc(125, 125, 100, 0, Math.PI * 2, true);
 	            context.closePath();
 	            context.clip();
                 context.font = '60px sans-serif';
                 context.fillStyle = '#ffffff';
-                context.fillText(member.displayName, canvas.width / 2.5, canvas.height / 1.8);
+                context.fillText(user.displayName, canvas.width / 2.5, canvas.height / 1.8);
                 context.font = '28px sans-serif';
 	            context.fillStyle = '#ffffff';
 	            context.fillText('Welcome to the server,', canvas.width / 2.5, canvas.height / 3.5);
-                context.font = applyText(canvas, `${member.displayName}!`);
+                context.font = applyText(canvas, `${user.displayName}!`);
                 context.fillStyle = '#ffffff';
-                context.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
-
-                const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'rank.png');
+                context.fillText(`${user.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
 
                 //let Card = await new Canvas.rank()
                 //.setBackground("https://minecraft.fr/wp-content/uploads/2021/12/iris-avec-complementary-shader.jpg")
