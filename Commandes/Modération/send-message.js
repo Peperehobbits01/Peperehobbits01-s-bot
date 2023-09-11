@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { EmbedBuilder, TextInputBuilder, ModalBuilder, ActionRowBuilder, TextInputStyle } = require("discord.js")
  
 module.exports = {
  
@@ -20,7 +19,7 @@ module.exports = {
     .setLabel("Que dois-je dire ?!")
     .setRequired(true)
     .setPlaceholder('Indiquez la description ici')
-    .setStyle(TextInputStyle.Paragraph)
+    .setStyle(Discord.TextInputStyle.Paragraph)
   
     let ActionRow1 = new Discord.ActionRowBuilder().addComponents(question1);
  

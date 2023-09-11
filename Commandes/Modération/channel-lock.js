@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     name: "channel-lock",
@@ -35,7 +34,7 @@ module.exports = {
             SendMessages: false
           })
         
-          let Lock = new EmbedBuilder()
+          let Lock = new Discord.EmbedBuilder()
             .setColor(bot.color)
             .setTitle("Inforamtion lock")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)

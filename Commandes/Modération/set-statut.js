@@ -1,10 +1,9 @@
-const { PermissionFlagsBits, ActivityType, EmbedBuilder } = require("discord.js")
 const Discord = require("discord.js")
 
 module.exports = {
     name: "set-statut",
     description: "Permet de mettre un statut et une activité à votre bot",
-    permission: PermissionFlagsBits.Administrator,
+    permission: Discord.PermissionFlagsBits.Administrator,
     dm: false,
     category: "🛡・Modération",
     options:[
@@ -41,7 +40,7 @@ module.exports = {
         if(activity === "Streaming") await bot.user.setActivity(statut, {type: Discord.ActivityType[activity], url: args.getString("lien")})
         await bot.user.setActivity(statut, {type: Discord.ActivityType[activity], url: args.getString("lien") ? args.getString("lien") : null})
 
-        let Setstatut = new EmbedBuilder()
+        let Setstatut = new Discord.EmbedBuilder()
         .setColor(bot.color)
         .setTitle("ℹ️ Information changement du statut ℹ️")
         .setDescription(`Activité : ${activity}\nStatut : ${statut}`)

@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
 
@@ -57,7 +56,7 @@ module.exports = {
 
         await message.deferReply()
 
-        let Unban2 = new EmbedBuilder()
+        let Unban2 = new Discord.EmbedBuilder()
         .setColor(bot.color)
         .setTitle("Inforamtion débanisement")
         .setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)

@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { EmbedBuilder, TextInputBuilder, ModalBuilder, ActionRowBuilder, TextInputStyle } = require("discord.js")
  
 module.exports = {
  
@@ -20,35 +19,35 @@ module.exports = {
         .setLabel('Quelle couleur voulez-vous mettre ?')
         .setRequired(false)
         .setPlaceholder('Dans ce format : #3dffcc (facultatif)')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
 
     let question2 = new Discord.TextInputBuilder()
         .setCustomId('url')
         .setLabel('Quelle liens voulez-vous mettre ?')
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
 
     let question3 = new Discord.TextInputBuilder()
         .setCustomId('titre')
         .setLabel('Quel titre voulez-vous mettre ?')
         .setRequired(true)
         .setPlaceholder('Ecrit ici...')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
  
     let question4 = new Discord.TextInputBuilder()
         .setCustomId('description')
         .setLabel("Quelle description voulez-vous mettre ?")
         .setRequired(true)
         .setPlaceholder('Ecrit ici...')
-        .setStyle(TextInputStyle.Paragraph)
+        .setStyle(Discord.TextInputStyle.Paragraph)
 
     let question5 = new Discord.TextInputBuilder()
         .setCustomId('fields')
         .setLabel("Quelle fields voulez-vous mettre ?")
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Paragraph)
+        .setStyle(Discord.TextInputStyle.Paragraph)
  
     let ActionRow1 = new Discord.ActionRowBuilder().addComponents(question1);
     let ActionRow2 = new Discord.ActionRowBuilder().addComponents(question2);
@@ -69,35 +68,35 @@ module.exports = {
         .setLabel('Quelle footer voulez-vous mettre ?')
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
 
     let question7 = new Discord.TextInputBuilder()
         .setCustomId('thumbnail')
         .setLabel("Quelle thumbnail voulez-vous mettre ?")
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Paragraph)
+        .setStyle(Discord.TextInputStyle.Paragraph)
 
     let question8 = new Discord.TextInputBuilder()
         .setCustomId('footer')
         .setLabel('Quelle footer voulez-vous mettre ?')
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
 
     let question9 = new Discord.TextInputBuilder()
         .setCustomId('Image')
         .setLabel("Quelle image voulez-vous mettre ?")
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Paragraph)
+        .setStyle(Discord.TextInputStyle.Paragraph)
 
     let question10 = new Discord.TextInputBuilder()
         .setCustomId('video')
         .setLabel("Quelle vidéo voulez-vous mettre ?")
         .setRequired(false)
         .setPlaceholder('Ecrit ici... (facultatif)')
-        .setStyle(TextInputStyle.Paragraph)
+        .setStyle(Discord.TextInputStyle.Paragraph)
 
     let ActionRow6 = new Discord.ActionRowBuilder().addComponents(question6);
     let ActionRow7 = new Discord.ActionRowBuilder().addComponents(question7);
@@ -118,7 +117,7 @@ module.exports = {
         .setLabel('Voulez-vous mettre le timestamp ?')
         .setRequired(false)
         .setPlaceholder('oui/non (facultatif)')
-        .setStyle(TextInputStyle.Short)
+        .setStyle(Discord.TextInputStyle.Short)
 
     let ActionRow11 = new Discord.ActionRowBuilder().addComponents(question11);
 
