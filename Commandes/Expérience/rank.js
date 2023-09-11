@@ -58,7 +58,7 @@ module.exports = {
                 ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
         
                 const member = user.id
-                const status = member ? member.presence ? member.presence.status : "offline" : "offline";
+                const status = member ? member.presence ? member.presence.status : "online" : "offline";
                 const badges = await user.fetchFlags()
                 const badge = badges.toArray().filter(b => b !== "BotHTTPInteractions" && b !== "Quarantined" && b !== "Spammer" && b !== "TeamPseudoUser" && b !== "VerifiedBot");
         
@@ -105,13 +105,13 @@ module.exports = {
         
                 //Level + Rang
                 ctx.font = '36px "Futura Book"'
-                ctx.fillStyle = "#08490c"
+                ctx.fillStyle = "#ffffff"
                 ctx.fillText(`Level : ${level}`, 275, 150)
                 rank === 1 ? ctx.fillText(`Rang : ${rank}er`, 520, 150) : ctx.fillText(`Rang : ${rank}ème`, 475, 150)
         
                 //Tag de l'utilisateur
                 ctx.font = '36px "Futura Book"'
-                ctx.fillStyle = "#08490c"
+                ctx.fillStyle = "#ffffff"
                 ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 210)
         
                 //Badge de l'utilisateur                    
@@ -120,56 +120,56 @@ module.exports = {
                     for(let i = 0; i < badge.length; i++) {
         
                         if(badge[i] === "HypeSquadOnlineHouse1") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911154868748318.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad1.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "HypeSquadOnlineHouse2") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911240319324240.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad2.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "HypeSquadOnlineHouse3") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911094319804476.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad3.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Staff") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885910656325410827.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Staff.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Partner") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911476580253806.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Partner.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Hypesquad") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911355142569985.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad4.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "BugHunterLevel1") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885910368336117902.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/BugHunter1.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "BugHunterLevel2") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885910424506204160.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/BugHunter2.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "PremiumEarlySupporter") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885910855571619872.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/PremiumEarlySupport.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "VerifiedDeveloper") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/885911544884498492.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/VerifiedDeveloper.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "CertifiedModerator") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/1057351259109200053.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/CertifiedModerator.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "ActiveDeveloper") {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/1057351487937851432.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/ActiveDeveloper.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(i === (badge.length - 1)) {
                             if((await guild.fetchOwner()).id === user.id) {
-                                const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/832979220387856385.png?v=1")
+                                const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/OwnerServer.png`)
                                 ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                             }
                             if(member && member.premiumSinceTimestamp !== null) {
@@ -183,16 +183,16 @@ module.exports = {
                             }
                             if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
                                 if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
-                                    const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+3) * 50, 220, 72, 50)
-                                } else if((await guild.fetchOwner()).id === this.user.id && member && member.premiumSinceTimestamp === null) {
-                                    const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                                } else if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp === null) {
+                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
-                                } else if((await guild.fetchOwner()).id !== this.user.id && member && member.premiumSinceTimestamp !== null) {
-                                    const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                                } else if((await guild.fetchOwner()).id !== user.id && member && member.premiumSinceTimestamp !== null) {
+                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
                                 } else {
-                                    const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+1) * 50, 220, 72, 50)
                                 }
                             }
@@ -202,30 +202,30 @@ module.exports = {
                 } else {
                     
                     if((await guild.fetchOwner()).id === user.id) {
-                        const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/832979220387856385.png?v=1")
+                        const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/OwnerServer.png`)
                         ctx.drawImage(b, 275, 220, 50, 50)
                     }
                     if(member && member.premiumSinceTimestamp !== null) {
                         if((await guild.fetchOwner()).id === user.id) {
-                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
+                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `../Peperehobbits01-s-bot/Assets/NitroBoost9.png`)
                             ctx.drawImage(b, 275 + 50, 220, 50, 50)
                         } else {
-                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
+                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `../Peperehobbits01-s-bot/Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `../Peperehobbits01-s-bot/Assets/NitroBoost9.png`)
                             ctx.drawImage(b, 275, 220, 50, 50)
                         }
                     }
                     if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
                         if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                             ctx.drawImage(b, 275 + 100, 220, 72, 50)
                         } else if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp === null) {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                             ctx.drawImage(b, 275 + 50, 220, 72, 50)
                         } else if((await guild.fetchOwner()).id !== user.id && member && member.premiumSinceTimestamp !== null) {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                             ctx.drawImage(b, 275 + 50, 220, 72, 50)
                         } else {
-                            const b = await Canvas.loadImage("https://cdn.discordapp.com/emojis/838059673700663316.png?v=1")
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
                             ctx.drawImage(b, 275, 220, 72, 50)
                         }
                     }
@@ -247,20 +247,7 @@ module.exports = {
                 const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: 'png'}) : user.displayAvatarURL({extension: 'png'}) : user.displayAvatarURL({extension: 'png'}))
                 ctx.drawImage(avatar, 60, 50, 200, 200)
 
-                //let Card = await new Canvas.rank()
-                //.setBackground("https://minecraft.fr/wp-content/uploads/2021/12/iris-avec-complementary-shader.jpg")
-                //.setBot(bot)
-                //.setColorFont("#08490c")
-                //.setRank(rank)
-                //.setUser(user)
-                //.setColorProgressBar("#ff0000")
-                //.setGuild(message.guild)
-                //.setXp(xp)
-                //.setLevel(level)
-                //.setXpNeed(need)
-                //.toCard()
-
-                await message.followUp({files: [new Discord.AttachmentBuilder(Image.toBuffer(), {name: "rank.png"})]})
+                await message.followUp({files: [new Discord.AttachmentBuilder(canvas.toBuffer(), {name: "rank.png"})]})
             })
         })
     }
