@@ -1,7 +1,7 @@
 const Discord = require('discord.js')
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord.js')
-const config = require('../config')
+const config = require('../Config.js')
 
 module.exports = async bot => {
 
