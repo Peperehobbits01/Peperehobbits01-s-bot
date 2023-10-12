@@ -40,7 +40,7 @@ module.exports = {
                 for(let i = 0; i < leaderboard; i++) {
     
                     const member = guild.members.cache.get(leaderboard[i].user.id)
-                    const status = member ? member.presence ? member.presence.status : "offline" : "offline";
+                    const status = member ? member.presence.status : "offline";
     
                     ctx.beginPath();
                     ctx.arc(104, (74 + (i * 128)), 47, 0, 2 * Math.PI, true);
@@ -84,7 +84,7 @@ module.exports = {
                     if(i <= 4) {
     
                         const member = guild.members.cache.get(leaderboard[i].user.id)
-                        const status = member ? member.presence ? member.presence.status : "offline" : "offline";
+                        const status = member ? member.presence.status : "offline";
     
                         ctx.beginPath();
                         ctx.arc(104, (84 + (i <= 4 ? i : i - 5) * 128), 47, 0, 2 * Math.PI, true);

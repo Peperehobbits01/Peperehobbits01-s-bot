@@ -57,8 +57,8 @@ module.exports = {
                 const opacity = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/leaderboard_black.png`)
                 ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
         
-                const member = user.id
-                const status = member ? member.presence ? member.presence.status : "online" : "offline";
+                const member = message.guild.members.cache.get(user.id);
+                const status = member ? member.presence.status : "offline";
                 const badges = await user.fetchFlags()
                 const badge = badges.toArray().filter(b => b !== "BotHTTPInteractions" && b !== "Quarantined" && b !== "Spammer" && b !== "TeamPseudoUser" && b !== "VerifiedBot");
         
@@ -165,6 +165,10 @@ module.exports = {
                         }
                         if(badge[i] === "ActiveDeveloper") {
                             const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/ActiveDeveloper.png`)
+                            ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
+                        }
+                        if(badge[i] === "OldUserName") {
+                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/OldUserNameBadge.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(i === (badge.length - 1)) {
