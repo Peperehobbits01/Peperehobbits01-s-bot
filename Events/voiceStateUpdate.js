@@ -4,45 +4,54 @@ const ms = require("ms");
 module.exports = async(bot, oldState, newState) => {
 
   const db = bot.db;
-  const user = oldState.member.user;
-  const logsChannel = "931457930660835333"
-  
-  if (!oldState.channel && newState.channel) {
+  const oldChannel = oldState.channel;
+  const newChannel = newState.channel;
+  const logsChannel = "931457930660835333";
 
-    db.query(`INSERT INTO voicestateupdate (user, channel, time) VALUES ('${user.id}', '${newState.channel.id}', '0')`)
-    console.log(`User ${user.username} has joined voice channel ${newState.channel.name}`);
+  if (oldChannel === newChannel) {
+    return;
+  }
+  
+  if (!oldChannel && newChannel) {
+
+    //db.query(`INSERT INTO voicestateupdate (user, channel, time) VALUES ('${user.id}', '${newState.channel.id}', '0')`)
 
     const JoinCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${user.username} à rejoint un vocal`)
-    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur : ${user.id}\nSalon : ${oldState.channel.id}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${newState.member.user.displayName} à rejoint un vocal`)
+    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${newState.member.user.displayName}\nSalon : ${oldChannel}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTimestamp()
 
     await logsChannel.send({embeds: [JoinCall]})
 
-  } else if (oldState.channel && !newState.channel) {
+  }
+  
+  if (oldChannel && !newChannel) {
 
-    db.query(`DELETE INTO voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${user.id}'`)
-    console.log(`User ${user.username} has left voice channel ${oldState.channel.name}`);
+    //db.query(`DELETE INTO voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${user.id}'`)
 
     const LeaveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${user.username} à quittée un vocal`)
-    .setDescription(`**Salon**\n${oldState.channel}\n**ID**\nUtilisateur : ${user.id}\nSalon : ${oldState.channel.id}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${oldState.member.user.displayName} à quittée un vocal`)
+    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${oldState.member.user.displayName}\nSalon : ${oldChannel.name}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.oldState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTimestamp()
 
     await logsChannel.send({embeds: [LeaveCall]})
 
-  } else if (oldState.channel !== newState.channel) {
+  }
+  
+  if (oldChannel && newChannel) {
 
-    db.query(`UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${user.id}' AND time = '0'`)
-    console.log(`User ${user.username} has switched from voice channel ${oldState.channel.name} to ${newState.channel.name}`);
+    //db.query(`UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${user.id}' AND time = '0'`)
 
     const MooveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${user.username} à changée de vocal`)
-    .setDescription(`**Salon**\n${oldState.channel} et maintenant ${newState.channel}\n**ID**\nUtilisateur : ${user.id}\nAncien salon : ${oldState.channel.id}\nNouveau salon : ${newState.channel.id}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${newState.member.user.displayName} à changée de vocal`)
+    .setDescription(`**Salon**\n${oldChannel.name} et maintenant ${newChannel.name}\n**ID**\nUtilisateur : ${newState.member.user.displayName}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTimestamp()
 
     await logsChannel.send({embeds: [MooveCall]})
   }
