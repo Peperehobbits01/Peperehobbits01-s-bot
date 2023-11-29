@@ -4,7 +4,7 @@ const { levenshteinDistance } = require('../../Fonctions/levenshteinDistance')
 module.exports = {
 
     name: "help",
-    description: "Obtenez de l'aide",
+    description: "Affiche les commandes du bot",
     dm: false,
     permission: "Aucune",
     category: "📚・Informations",
@@ -18,7 +18,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args) {
+    async run(bot, message, args, interaction) {
 
         const commande = args.getString('commande');
 
@@ -53,7 +53,7 @@ module.exports = {
                 menuOptions.push({ label: category, value: category.toUpperCase() })
             })
 
-            let menu = new Discord.SelectMenuBuilder()
+            let menu = new Discord.StringSelectMenuBuilder()
                 .setCustomId("help")
                 .setOptions(menuOptions)
 
@@ -120,7 +120,7 @@ module.exports = {
             let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nDM autorisé : \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 

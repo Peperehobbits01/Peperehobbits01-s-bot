@@ -18,9 +18,9 @@ module.exports = async(bot, oldState, newState) => {
 
     const JoinCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${newState.member.user.displayName} à rejoint un vocal`)
-    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${newState.member.user.displayName}\nSalon : ${oldChannel}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${newState.user} à rejoint un vocal`)
+    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${newState.user}\nSalon : ${oldChannel}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
     .setTimestamp()
 
     await logsChannel.send({embeds: [JoinCall]})
@@ -33,9 +33,9 @@ module.exports = async(bot, oldState, newState) => {
 
     const LeaveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${oldState.member.user.displayName} à quittée un vocal`)
-    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${oldState.member.user.displayName}\nSalon : ${oldChannel.name}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.oldState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${oldState.user} à quittée un vocal`)
+    .setDescription(`**Salon**\n${oldChannel}\n**ID**\nUtilisateur : ${oldState.user}\nSalon : ${oldChannel.name}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.oldState.user.displayAvatarURL({ dynamic: true }) })
     .setTimestamp()
 
     await logsChannel.send({embeds: [LeaveCall]})
@@ -48,9 +48,9 @@ module.exports = async(bot, oldState, newState) => {
 
     const MooveCall = new Discord.EmbedBuilder()
     .setColor(bot.color)
-    .setTitle(`${newState.member.user.displayName} à changée de vocal`)
-    .setDescription(`**Salon**\n${oldChannel.name} et maintenant ${newChannel.name}\n**ID**\nUtilisateur : ${newState.member.user.displayName}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.member.user.displayAvatarURL({ dynamic: true }) })
+    .setTitle(`${newState.user} à changée de vocal`)
+    .setDescription(`**Salon**\n${oldChannel.name} et maintenant ${newChannel.name}\n**ID**\nUtilisateur : ${newState.user}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}`)
+    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
     .setTimestamp()
 
     await logsChannel.send({embeds: [MooveCall]})
