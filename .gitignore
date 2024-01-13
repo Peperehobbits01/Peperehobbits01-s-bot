@@ -1,0 +1,6 @@
+node_modules/canvas/build/Release/librsvg-2.so.2
+node_modules/
+/shelf/
+workspace.xml
+Loaders/loadDatabase.js
+Config.js
