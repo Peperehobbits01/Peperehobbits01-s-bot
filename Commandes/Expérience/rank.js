@@ -54,7 +54,7 @@ module.exports = {
                 const background = await Canvas.loadImage('../../Assets/Niveau.jpg')
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-                const opacity = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/leaderboard_black.png`)
+                const opacity = await Canvas.loadImage(`../../Assets/leaderboard_black.png`)
                 ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
         
                 const member = message.guild.members.cache.get(user.id);
