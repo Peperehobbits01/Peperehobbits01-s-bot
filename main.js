@@ -8,8 +8,9 @@ bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.color = "#fcff00";
 bot.function = {
-    createId: require("./Fonctions/createId"),
-    levenshteinDistance: require("./Fonctions/levenshteinDistance")
+    createId: require("./Fonctions/createId.js"),
+    levenshteinDistance: require("./Fonctions/levenshteinDistance.js"),
+    databaseConnect : require("./Fonctions/databaseConnect.js")
 }
 
 bot.login(config.token)

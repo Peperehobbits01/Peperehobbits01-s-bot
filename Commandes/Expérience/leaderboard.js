@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
+const { executeQuery } = require(`../../Fonctions/databaseConnect.js`);
 
 module.exports = {
 
@@ -9,23 +10,24 @@ module.exports = {
     dm: false,
     category: "📊・Système d'expérience",
 
-    async run(bot, message, args, db) {
+    async run(bot, message) {
 
-        db.query(`SELECT * FROM xp WHERE guild = '${message.guildId}'`, async (err, req) => {
+        const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'` 
+        const results = executeQuery(querySearch)
 
-            if(req.length < 1) return message.reply("Cet utilisateur n'a parlée sur se serveur!")
+        if(results.length < 1) return message.reply("Cet utilisateur n'a parlée sur se serveur!")
 
-            await message.deferReply()
+        await message.deferReply()
 
-            const calculXp = (xp, level) => {
-                let xptotal = 0;
-                for(let i = 0; i < level + 1; i++) xptotal += i * 1000
-                xptotal += xp;
-                return xptotal;
-            }
+        const calculXp = (xp, level) => {
+            let xptotal = 0;
+            for(let i = 0; i < level + 1; i++) xptotal += i * 1000
+            xptotal += xp;
+            return xptotal;
+        }
 
-            let leaderboard = await req.sort((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
-    
+        let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
+        
             const canvas = Canvas.createCanvas(1280, 700);
             const ctx = canvas.getContext("2d");
     
@@ -40,7 +42,7 @@ module.exports = {
                 for(let i = 0; i < leaderboard; i++) {
     
                     const member = guild.members.cache.get(leaderboard[i].user.id)
-                    const status = member ? member.presence.status : "offline";
+                    const status = member?.presence?.status ?? "offline";
     
                     ctx.beginPath();
                     ctx.arc(104, (74 + (i * 128)), 47, 0, 2 * Math.PI, true);
@@ -84,7 +86,7 @@ module.exports = {
                     if(i <= 4) {
     
                         const member = guild.members.cache.get(leaderboard[i].user.id)
-                        const status = member ? member.presence.status : "offline";
+                        const status = member?.presence?.status ?? "offline";
     
                         ctx.beginPath();
                         ctx.arc(104, (84 + (i <= 4 ? i : i - 5) * 128), 47, 0, 2 * Math.PI, true);
@@ -162,7 +164,6 @@ module.exports = {
                 }
             }    
 
-            await message.followUp({files: [new Discord.AttachmentBuilder(canvas.toBuffer(), {name: "leaderboard.png"})]})
-        })
+        await message.followUp({files: [new Discord.AttachmentBuilder(canvas.toBuffer(), {name: "leaderboard.png"})]})
     }
 }
