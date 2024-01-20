@@ -50,11 +50,11 @@ module.exports = {
 
                 const canvas = Canvas.createCanvas(800, 300)
                 const ctx = canvas.getContext("2d")
-        
-                const background = await Canvas.loadImage('../../Assets/Niveau.jpg')
+            
+                const background = await Canvas.loadImage('Assets/Niveau.jpg')
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-                const opacity = await Canvas.loadImage(`../../Assets/leaderboard_black.png`)
+                const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
                 ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
         
                 const member = message.guild.members.cache.get(user.id);
@@ -120,60 +120,60 @@ module.exports = {
                     for(let i = 0; i < badge.length; i++) {
         
                         if(badge[i] === "HypeSquadOnlineHouse1") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad1.png`)
+                            const b = await Canvas.loadImage(`Assets/Hypesquad1.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "HypeSquadOnlineHouse2") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad2.png`)
+                            const b = await Canvas.loadImage(`Assets/Hypesquad2.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "HypeSquadOnlineHouse3") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad3.png`)
+                            const b = await Canvas.loadImage(`Assets/Hypesquad3.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Staff") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Staff.png`)
+                            const b = await Canvas.loadImage(`Assets/Staff.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Partner") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Partner.png`)
+                            const b = await Canvas.loadImage(`Assets/Partner.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "Hypesquad") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/Hypesquad4.png`)
+                            const b = await Canvas.loadImage(`Assets/Hypesquad4.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "BugHunterLevel1") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/BugHunter1.png`)
+                            const b = await Canvas.loadImage(`Assets/BugHunter1.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "BugHunterLevel2") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/BugHunter2.png`)
+                            const b = await Canvas.loadImage(`Assets/BugHunter2.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "PremiumEarlySupporter") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/PremiumEarlySupport.png`)
+                            const b = await Canvas.loadImage(`Assets/PremiumEarlySupport.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "VerifiedDeveloper") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/VerifiedDeveloper.png`)
+                            const b = await Canvas.loadImage(`Assets/VerifiedDeveloper.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "CertifiedModerator") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/CertifiedModerator.png`)
+                            const b = await Canvas.loadImage(`Assets/CertifiedModerator.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "ActiveDeveloper") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/ActiveDeveloper.png`)
+                            const b = await Canvas.loadImage(`Assets/ActiveDeveloper.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(badge[i] === "OldUserName") {
-                            const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/OldUserNameBadge.png`)
+                            const b = await Canvas.loadImage(`Assets/OldUserNameBadge.png`)
                             ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
                         }
                         if(i === (badge.length - 1)) {
                             if((await guild.fetchOwner()).id === user.id) {
-                                const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/OwnerServer.png`)
+                                const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
                                 ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                             }
                             if(member && member.premiumSinceTimestamp !== null) {
@@ -187,16 +187,16 @@ module.exports = {
                             }
                             if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
                                 if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
-                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
+                                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+3) * 50, 220, 72, 50)
                                 } else if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp === null) {
-                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
+                                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
                                 } else if((await guild.fetchOwner()).id !== user.id && member && member.premiumSinceTimestamp !== null) {
-                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
+                                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
                                 } else {
-                                    const b = await Canvas.loadImage(`../Peperehobbits01-s-bot/Assets/NitroBadge.png`)
+                                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                                     ctx.drawImage(b, 275 + (i+1) * 50, 220, 72, 50)
                                 }
                             }
