@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require("../../Fonctions/databaseConnect.js")
 
 module.exports = {
 
@@ -23,7 +24,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
 
         let user = args.getUser("membre")
         if(!user) return message.reply("Pas de membre à notée!")
@@ -40,8 +41,6 @@ module.exports = {
 
         await message.deferReply()
 
-        //try {await user.send(`Tu as été expulsé/kick du serveur ${message.guild.name} par ${message.user.tag} pour la raison : ${reason}`)} catch(err) {}
-
         const Note1 = new Discord.EmbedBuilder()
         .setTitle("Informations de la note")
         .setDescription(`Vous avez mis une note à ${user.tag} et voici sa note : \`${reason}\` avec succès !`)
@@ -49,11 +48,10 @@ module.exports = {
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
         await message.followUp({embeds: [Note1], ephemeral : false})
 
-        //await message.reply(`${message.user} a expulsé/kick ${user.tag}`)
-
         let ID = await bot.function.createId("NOTE")
  
-        db.query(`INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+        const queryNoteAdd = `INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+        await executeQuery(queryNoteAdd)
         
     }
 }

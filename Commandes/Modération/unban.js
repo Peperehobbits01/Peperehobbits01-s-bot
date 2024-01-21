@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 
@@ -29,7 +30,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
 
         
 
@@ -64,11 +65,12 @@ module.exports = {
 
         await message.followUp({embeds: [Unban2], ephemeral: false})
 
-        db.query(`SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`, async (err, req) => {
-            if (req.length < 1) return message.reply('Aucune banisement pour ce membre/ID du ban invalide');
+        const querySearch = `SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`
+        const results = await executeQuery(querySearch)
+        if(results.length < 1) return message.reply('Aucune banisement pour ce membre/ID du ban invalide');
     
-           db.query(`DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`)
-        })
+        const queryBanRemove = `DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`
+        await executeQuery(queryBanRemove)
             
         await message.guild.members.unban(user, reason)
     }

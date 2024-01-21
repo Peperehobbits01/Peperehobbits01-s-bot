@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
-const ms = require("ms")
+const ms = require("ms");
+const { executeQuery } = require("../../Fonctions/databaseConnect");
 
 module.exports = {
 
@@ -30,7 +31,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
 
         let user = args.getUser("membre");
         if(!user) return message.reply("Aucun membre sélectionnée!")
@@ -67,11 +68,12 @@ module.exports = {
 
         await message.followUp({embeds: [Unmute2], ephemeral : false})
 
-        db.query(`SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`, async (err, req) => {
-            if (req.length < 1) return message.reply('Aucune mise en silence pour ce membre/ID du mute invalide');
+        const querySearch = `SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`
+        const results = await executeQuery(querySearch)
+        if (results.length < 1) return message.reply('Aucune mise en silence pour ce membre/ID du mute invalide');
 
-           db.query(`DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`)
-        })
+        const queryMuteRemove = `DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`
+        await executeQuery(queryMuteRemove)
 
         await member.timeout(null, reason)
     }

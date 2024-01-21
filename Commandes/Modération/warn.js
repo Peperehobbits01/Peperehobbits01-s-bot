@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require("../../Fonctions/databaseConnect.js")
  
 module.exports = {
  
@@ -23,7 +24,7 @@ module.exports = {
         }
     ],
  
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
  
         let user = args.getUser("membre")
         if(!user) return message.reply("Aucun utilisateur sélectionnée!")
@@ -44,27 +45,28 @@ module.exports = {
 
         let ID = await bot.function.createId("WARN")
  
-        db.query(`INSERT INTO warn (guild, user, author, warn, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+        const queryWarnAdd = `INSERT INTO warn (guild, user, author, warn, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+        await executeQuery(queryWarnAdd)
 
         await message.deferReply()
 
-        const unwarn = new Discord.ActionRowBuilder()
-            .addComponents(
-                new Discord.ButtonBuilder()
-                    .setCustomId("unwarn")
-                    .setLabel("Retirée l'avertisement")
-                    .setStyle(Discord.ButtonStyle.Success)
-            )
+        //const unwarn = new Discord.ActionRowBuilder()
+        //    .addComponents(
+        //        new Discord.ButtonBuilder()
+        //            .setCustomId("unwarn")
+        //            .setLabel("Retirée l'avertisement")
+        //            .setStyle(Discord.ButtonStyle.Success)
+        //    )
 
-        let id = args.get('id').value
+        //let id = args.get('id').value
 
-        db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
-             if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+        //db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
+             //if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
 
-             db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+            // db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
 
-        })
-        if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+        //})
+        //if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
  
         const Warn2 = new Discord.EmbedBuilder()
         .setTitle("Informations du warn")
@@ -72,7 +74,7 @@ module.exports = {
         .setColor(bot.color)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})
+        await message.followUp({embeds: [Warn2], ephemeral : false})
 
     }       
 }

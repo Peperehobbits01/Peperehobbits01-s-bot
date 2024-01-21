@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { executeQuery } = require('../../Fonctions/databaseConnect');
 
 module.exports = {
 
@@ -25,7 +26,7 @@ module.exports = {
 
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
         
         try{ 
         
@@ -41,11 +42,13 @@ module.exports = {
         if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply('Tu ne peux pas supprimer les avertissements de ce membre');
         if ((await message.guild.members.fetchMe()).roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply('Le bot ne peut pas supprimer les avertissements de ce membre');
 
-        db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
-            if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+        const querySearch = `SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`
+        const results = await executeQuery(querySearch)
 
-           db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-        })
+        if (results.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+
+        const queryWarnRemove = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
+        await executeQuery(queryWarnRemove)
 
         const unwarn1 = new Discord.EmbedBuilder()
         .setTitle(`Un avertisement a été retirée! `)

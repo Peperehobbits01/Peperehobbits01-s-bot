@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require("../../Fonctions/databaseConnect.js")
 
 module.exports = {
 
@@ -64,7 +65,8 @@ module.exports = {
 
         let ID = await bot.function.createId("KICK")
  
-        db.query(`INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+        const queryKickAdd = `INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+        await executeQuery(queryKickAdd)
         
     }
 }

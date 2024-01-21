@@ -1,5 +1,5 @@
 node_modules/
 /shelf/
-Loaders/loadDatabase.js
 Config.js
 git-filter-repo
+Fonctions/databaseConnect

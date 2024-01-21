@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const ms = require("ms")
+const { executeQuery } = require("../../Fonctions/databaseConnect.js")
 
 module.exports = {
 
@@ -70,7 +71,8 @@ module.exports = {
 
         let ID = await bot.function.createId("MUTE")
  
-        db.query(`INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${time}')`)
+        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${time}')`
+        await executeQuery(queryMuteAdd)
 
         await member.timeout(ms(time), reason)
     }
