@@ -35,13 +35,16 @@ module.exports = {
         if (!reason) reason = "Pas de raison fournie !"
  
         if(message.user.id === user.id) return message.reply("Essaie pas de te warn ! ")
- 
-        const Warn1 = new Discord.EmbedBuilder()
-        .setTitle(`Vous avez été avertie ! `)
-        .setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-        .setColor(bot.color)
-        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-        await user.send({embeds: [Warn1]})
+
+        try{
+            const Warn1 = new Discord.EmbedBuilder()
+            .setTitle(`Vous avez été avertie ! `)
+            .setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
+            .setColor(bot.color)
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+
+            await user.send({embeds: [Warn1]})
+        }catch(err) {}
 
         let ID = await bot.function.createId("WARN")
  
