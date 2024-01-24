@@ -32,8 +32,6 @@ module.exports = {
 
     async run(bot, message, args) {
 
-        
-
         let user = args.getUser("utilisateur")
         if(!user) return message.reply("Aucun utilisateur sélectionnée!")
 

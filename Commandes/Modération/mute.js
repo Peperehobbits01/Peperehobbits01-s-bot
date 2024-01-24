@@ -52,12 +52,15 @@ module.exports = {
         if(message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le mute!")
         if(member.isCommunicationDisabled()) return message.reply("Il est déjà muet!")
 
-        const Mute1 = new Discord.EmbedBuilder()
-        .setTitle(`Vous avez été mute ! `)
-        .setDescription(`${message.user.tag} vous a mute sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il dureras :  \`${time}\` ! `)
-        .setColor(bot.color)
-        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-        await user.send({embeds: [Mute1]})
+        try{
+            const Mute1 = new Discord.EmbedBuilder()
+            .setTitle(`Vous avez été mute ! `)
+            .setDescription(`${message.user.tag} vous a mute sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il dureras :  \`${time}\` ! `)
+            .setColor(bot.color)
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            
+            await user.send({embeds: [Mute1]})
+        }catch(err) {}
 
         await message.deferReply()
 

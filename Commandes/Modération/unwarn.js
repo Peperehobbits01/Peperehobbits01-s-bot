@@ -49,14 +49,16 @@ module.exports = {
 
         const queryWarnRemove = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
         await executeQuery(queryWarnRemove)
-
-        const unwarn1 = new Discord.EmbedBuilder()
-        .setTitle(`Un avertisement a été retirée! `)
-        .setDescription(`${message.user.tag} vous a retirée un avertisement sur le serveur ${message.guild.name} ! `)
-        .setColor(bot.color)
-        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-
-        await user.send({embeds: [unwarn1]})
+        
+        try{
+            const unwarn1 = new Discord.EmbedBuilder()
+            .setTitle(`Un avertisement a été retirée! `)
+            .setDescription(`${message.user.tag} vous a retirée un avertisement sur le serveur ${message.guild.name} ! `)
+            .setColor(bot.color)
+            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    
+            await user.send({embeds: [unwarn1]})
+        }catch(err) {}
 
         await message.deferReply()
 
