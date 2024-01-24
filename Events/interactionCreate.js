@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require("../Fonctions/databaseConnect.js") 
 
 module.exports = async (bot, interaction, inter, message) => {
 
@@ -26,51 +27,31 @@ module.exports = async (bot, interaction, inter, message) => {
             await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({name: c, value: c})))
         }
 
+        if(interaction.commandName === "addxp") {
+
+            let choices = ["Level", "Xp"]
+            let sortie = choices.filter(c => c.includes(entry))
+            await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({name: c, value: c})))
+        }
+
+        if(interaction.commandName === "clearxp") {
+
+            let choices = ["Level", "Xp", "Tout effacer"]
+            let sortie = choices.filter(c => c.includes(entry))
+            await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({name: c, value: c})))
+        }
+
     }
-
-    if(interaction.customId === "ping") {
-
-        let reloadPing = new Discord.ActionRowBuilder()
-            .addComponents(
-                new Discord.ButtonBuilder()
-                    .setCustomId("ping")
-                    .setEmoji("🔄")
-                    .setLabel("Actualiser")
-                    .setStyle(Discord.ButtonStyle.Success)
-        )
-        const pingUser = Date.now() - interaction.createdTimestamp;
-            let emojiUser;
-            if(pingUser < 200) { emojiUser = "🟢" }
-            else if (pingUser < 400 && pingUser > 200) { emojiUser = "🟠" }
-            else if(pingUser > 400) {emojiUser = "🔴" };
-            // Ping de l'API de discord
-            const APIPing = bot.ws.ping;
-            let APIemoji;
-            if(APIPing < 200) { APIemoji = "🟢" }
-            else if(APIPing < 400 && APIPing > 200) { APIemoji = "🟠" }
-            else if(APIPing > 400) {APIemoji = "🔴" }
-
-        let PingEmbed = new Discord.EmbedBuilder()
-            .setTitle("Pong !")
-            .setDescription(`
-            \`${emojiUser}\` Pong ! | Votre ping : **${pingUser}ms**
-            \`${APIemoji}\` Pong ! | API Discord ping : **${APIPing}ms**`)
-            .setColor(bot.color)
-
-        await interaction.deferUpdate()
-        await interaction.editReply({embeds: [PingEmbed], components: [reloadPing]})
-    }
-
 
     if (interaction.customId === "unwarn") {
         if(interaction.isButton()) {
 
-            let db = bot.db;
-            db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
-                 if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+            const queryUnwarnSearch = `SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`
+            const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
+            if (ResultsUnwarn.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn')
 
-                 db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-            })
+            const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
+            await executeQuery(queryUnwarnDelete)
             if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
         }
     }

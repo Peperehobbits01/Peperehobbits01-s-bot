@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const timedAt = require("discord.js")
 
 module.exports = async (bot, member) => {
 
