@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 const { executeQuery } = require("../Fonctions/databaseConnect.js") 
 
-module.exports = async (bot, interaction, inter, message) => {
+module.exports = async (bot, interaction, message) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommand) {
 
@@ -46,13 +46,38 @@ module.exports = async (bot, interaction, inter, message) => {
     if (interaction.customId === "unwarn") {
         if(interaction.isButton()) {
 
-            const queryUnwarnSearch = `SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`
-            const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
-            if (ResultsUnwarn.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn')
+            //if(!interaction.user.id.hasPermission("MANAGE_MESSAGES")) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
 
-            const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
+            const queryUnwarnSearch = `SELECT * FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}"`
+            const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
+            if (ResultsUnwarn.length < 1) return interaction.reply('Aucune avertissements pour ce membre/ID du warn')
+
+            const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
             await executeQuery(queryUnwarnDelete)
-            if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+        }
+    }
+
+    if (interaction.customId === "help") {
+        if(interaction.isSelectMenu()) {
+            const collector = interaction.createMessageComponentCollector()
+
+            collector.on('collect', async interaction => {
+
+            if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+            const category = interaction.values[0];
+            const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
+            const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n')
+
+            const nouvelEmbed = new Discord.EmbedBuilder()
+                .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
+                .setDescription(`${commandString}`)
+                .setColor(bot.color)
+                .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setTimestamp()
+                .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+                
+            interaction.update({ embeds: [nouvelEmbed], components: [menuRow] })
+            })
         }
     }
 }

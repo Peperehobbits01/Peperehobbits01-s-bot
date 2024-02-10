@@ -43,6 +43,9 @@ node main
 │   guildMemberUpdate.js
 │   Config.js
 │
+├───Assets
+│       Assets that are used in the bot for commands like /rank.
+│
 ├───Commands
 │   │
 │   ├───Expérience

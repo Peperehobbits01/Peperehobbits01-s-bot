@@ -36,19 +36,22 @@ module.exports = async(bot, message) => {
         }
     }
 
-//    const channel = bot.channels.fetch('1060534092321521694');
-//    const messages = await channel.messages.fetch({ limit: 2 });
-//    const lastMessage = messages.first();
-//    const previousMessage = messages.last();
+    const channel = bot.channels.fetch('1060534092321521694');
+    const messages = await channel.messages.fetch({ limit: 2 });
+    const lastMessage = messages.first();
+    const previousMessage = messages.last();
 
-//    if (!isNaN(lastMessage.content) && !isNaN(previousMessage.content)) {
-//        const currentNumber = parseInt(lastMessage.content);
-//        const previousNumber = parseInt(previousMessage.content);
-//    if (currentNumber === previousNumber + 1) {
-//        } else {
-//            if (currentNumber !== previousNumber + 1) {
-//                await lastMessage.delete();
-//            }
-//        }
-//    }
+    if(isNaN(lastMessage) && isNaN(previousMessage)) {
+        const currentNumber = parseInt(lastMessage);
+        const previousNumber = parseInt(previousMessage);
+    if(currentNumber === previousNumber + 1) {
+        return;
+    } else if(currentNumber > previousNumber + 1) {
+            await lastMessage.delete();
+        } else if(currentNumber < previousNumber + 1) {
+            await lastMessage.delete();
+        }
+    } else if(!isNaN(lastMessage) && isNaN(previousMessage)) {
+        await lastMessage.delete();
+    }
 }
