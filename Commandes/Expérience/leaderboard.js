@@ -13,9 +13,9 @@ module.exports = {
     async run(bot, message) {
 
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'` 
-        const results = executeQuery(querySearch)
+        const results = await executeQuery(querySearch)
 
-        if(results.length < 1) return message.reply("Cet utilisateur n'a parlée sur se serveur!")
+        if(results.length < 1) return message.reply("Aucun utilisateur enregistrée sur ce serveur!")
 
         await message.deferReply()
 
