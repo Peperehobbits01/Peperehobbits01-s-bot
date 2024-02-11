@@ -40,7 +40,6 @@ node main
 │   package.json
 │   README.md
 │   anti-crash.js
-│   guildMemberUpdate.js
 │   Config.js
 │
 ├───Assets
@@ -77,5 +76,7 @@ node main
 # Requirements
 
 ### Node.js
+
+La version 20.x est requise pour faire fonctionner le bot.
 
 Le reste bientôt...
