@@ -18,7 +18,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, interaction) {
+    async run(bot, message, args) {
 
         const commande = args.getString('commande');
 
