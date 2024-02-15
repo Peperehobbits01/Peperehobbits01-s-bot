@@ -6,11 +6,11 @@ module.exports = async(bot, oldState, newState, user) => {
 
   const oldChannel = oldState.channel;
   const newChannel = newState.channel;
-  const logsChannel = "931457930660835333"
+  const logsChannel = oldState.guild.channels.cache.get("1201547807132225669")
   
   if (!oldChannel && newChannel) {
 
-    const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${user.id}', '${newState.channel.id}', '0')`
+    const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${newState.user.id}', '${newState.channel.id}', '0')`
     await executeQuery(queryJoinCall)
 
     const JoinCall = new Discord.EmbedBuilder()
@@ -26,7 +26,7 @@ module.exports = async(bot, oldState, newState, user) => {
 
   if (oldChannel && !newChannel) {
 
-    const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${user.id}'`
+    const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${oldState.user.id}'`
     await executeQuery(queryLeaveCall)
 
     const LeaveCall = new Discord.EmbedBuilder()
@@ -42,7 +42,7 @@ module.exports = async(bot, oldState, newState, user) => {
   
   if (oldChannel && newChannel) {
 
-    const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${user.id}' AND time = '0'`
+    const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${newState.user.id}' AND time = '0'`
     await executeQuery(queryMooveCall)
 
     const MooveCall = new Discord.EmbedBuilder()

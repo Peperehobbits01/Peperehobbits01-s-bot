@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 
 module.exports = async (bot, user) => {
 
-    const logsChannel = "931457930660835333"
+    const logsChannel = user.guild.channels.cache.get("931457930660835333")
 
     const removeMember = new Discord.EmbedBuilder()
         .setColor(bot.color)
