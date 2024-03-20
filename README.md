@@ -93,11 +93,3 @@ node main
         The loaders that load the events and commands files.
 
 ```
-
-# Requirements
-
-### Node.js
-
-La version 20.x est requise pour faire fonctionner le bot.
-
-Le reste bientôt...
