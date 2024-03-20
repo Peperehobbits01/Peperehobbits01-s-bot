@@ -53,23 +53,13 @@ module.exports = {
 
         await message.deferReply()
 
-        //const unwarn = new Discord.ActionRowBuilder()
-        //    .addComponents(
-        //        new Discord.ButtonBuilder()
-        //            .setCustomId("unwarn")
-        //            .setLabel("Retirée l'avertisement")
-        //            .setStyle(Discord.ButtonStyle.Success)
-        //    )
-
-        //let id = args.get('id').value
-
-        //db.query(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, async (err, req) => {
-             //if (req.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
-
-            // db.query(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-
-        //})
-        //if(message.user.id !== message.user.id) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+        const unwarn = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId("unwarn")
+                    .setLabel("Retirée l'avertisement")
+                    .setStyle(Discord.ButtonStyle.Danger)
+            )
  
         const Warn2 = new Discord.EmbedBuilder()
         .setTitle("Informations du warn")
@@ -77,7 +67,7 @@ module.exports = {
         .setColor(bot.color)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Warn2], ephemeral : false})
+        await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})
 
     }       
 }
