@@ -1,5 +1,26 @@
 # Installation of development environnement
 
+## Requirements to run/program the software
+
+| Software           | Version          | More information             |
+| ------------------ | ---------------- | ---------------------------- |
+| Node.js            | 20.x or higher   | Bundles javaScript and npm   |
+| MySQL              | 8.2.x or higher  | The database of the bot      |
+| git                | 2.25.1 or higher | Commands for Github          |
+
+### All the dependecies in the packages.json files.
+
+## Recommanded to run/program the software
+
+| Software           | Version          | More information             |
+| ------------------ | ---------------- | ---------------------------- |
+| phpMyAdmin         | 5.2.1 or higher  | Interface for MySQL          |
+| XAMPP              | 8.2.4 or higher  | Bundles MysQL and phpMyAdmin |
+| Visual Studio Code | 1.86.2 or higher | Recommended IDE              |
+
+### Recommanded extention in the .vscode folder for Visual Studio Code users.
+
+
 #### After pulling the repo, install dependencies (add the '-D' argument to install dev dependencies) :
 
 ```
