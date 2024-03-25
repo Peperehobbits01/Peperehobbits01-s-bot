@@ -5,7 +5,7 @@ module.exports = async (bot, member) => {
     if(member.guild.id !== ("931457929431908373")) return;
     bot.channels.cache.get("931457930325270614").send(`Bienvenue à <@${member.id}>, il vient d'arrivée sur le serveur!`)
 
-    const logsChannel = member.guild.channels.cache.get("931457930660835333")
+    const logsChannel = member.guild.channels.cache.get("1153677499771928596")
 
     const logsNewMember = new Discord.EmbedBuilder()
     .setColor(bot.color)
