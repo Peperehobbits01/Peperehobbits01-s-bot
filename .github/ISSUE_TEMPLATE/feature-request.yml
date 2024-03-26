@@ -1,0 +1,35 @@
+name: Feature request
+description: Request a new feature
+title: "[Feature]: "
+labels: [enhancement]
+assignees:
+  - 
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature?
+      description: Please describe the feature you are requesting in detail
+      placeholder: describe....
+    validations:
+      required: true
+
+  - type: dropdown
+    id: system
+    attributes:
+      label: System
+      description: Please select the system that the requested feature pertains to.
+      options:
+        - "Giveaway System"
+        - "Fun System"
+        - "Modération System"
+        - "Expérience System"
+        - "Logs System"
+        - "Other components of the software"
+    validations:
+      required: true
