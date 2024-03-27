@@ -2,7 +2,7 @@ name: Feature request
 description: Request a new feature
 title: "[Feature]: "
 labels: [enhancement]
-assignees:
+assignees: Peperehobbit01
   - 
 body:
   - type: markdown
