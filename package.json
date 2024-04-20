@@ -12,9 +12,10 @@
   },
   "scripts": {
     "start": "npx ts-node .",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
+    "discord.js": "^14.14.1",
     "dotenv": "^16.4.5"
   }
 }
