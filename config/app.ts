@@ -9,7 +9,7 @@ export default {
     /**
      * Token used to interact with Discord.
      **/
-    token: env('TOKEN'),
+    token: env('TOKEN', null),
 
     /**
     * Lang used by the application.
