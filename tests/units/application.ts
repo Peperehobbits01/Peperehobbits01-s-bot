@@ -5,9 +5,7 @@ describe('Application', () => {
     it('should not allow direct instantiation of Application', () => {
         expect(() => {
             // @ts-ignore
-            if(new Application() instanceof Application) {
-                throw new Error();
-            }
+            new Application();
         }).toThrow();
     })
 
