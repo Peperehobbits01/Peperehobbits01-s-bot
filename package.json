@@ -1,0 +1,30 @@
+{
+  "name": "peperehobbits01-s-bot",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build" : "tsc",
+    "dev" : "ts-node src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peperehobbits01/Peperehobbits01-s-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Peperehobbits01/Peperehobbits01-s-bot/issues"
+  },
+  "homepage": "https://github.com/Peperehobbits01/Peperehobbits01-s-bot#readme",
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
