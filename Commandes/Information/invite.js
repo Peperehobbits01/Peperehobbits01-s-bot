@@ -18,7 +18,7 @@ module.exports = {
     
     ],
     
-    run: async (bot, message) => {
+    run: async (bot, message, args) => {
       
         let user = args.getUser("membre")
         if(!user) return message.user.cache.get()
