@@ -58,8 +58,8 @@ module.exports = async (bot, interaction, message) => {
     }
 
     if (interaction.customId === "help") {
-        if(interaction.isSelectMenu()) {
-            const collector = interaction.createMessageComponentCollector()
+        if(interaction.isStringSelectMenu()) {
+            const collector = message.createMessageComponentCollector()
 
             collector.on('collect', async interaction => {
 
