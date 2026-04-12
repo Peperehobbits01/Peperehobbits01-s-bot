@@ -10,7 +10,8 @@ bot.color = "#fcff00";
 bot.function = {
     createId: require("./Fonctions/createId.js"),
     levenshteinDistance: require("./Fonctions/levenshteinDistance.js"),
-    databaseConnect : require("./Fonctions/databaseConnect.js")
+    databaseConnect : require("./Fonctions/databaseConnect.js"),
+    calculXp : require("./Fonctions/calculXp.js"),
 }
 
 bot.login(config.token)

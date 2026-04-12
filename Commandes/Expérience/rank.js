@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
 const { executeQuery } = require(`../../Fonctions/databaseConnect.js`);
+const { calculXp } = require("../../Fonctions/calculXp.js")
 
 module.exports = {
 
@@ -33,13 +34,6 @@ module.exports = {
         if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens ayant de l'xp!")
         
         await message.deferReply()
-
-        const calculXp = (xp, level) => {
-            let xptotal = 0;
-            for(let i = 0; i < level + 1; i++) xptotal += i * 1000
-            xptotal += xp;
-            return xptotal;
-        }
 
         let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
         let userInLeaderboard = results.find(u => u.user === user.id)
