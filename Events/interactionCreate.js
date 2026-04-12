@@ -62,19 +62,20 @@ module.exports = async (bot, interaction, message) => {
             const collector = interaction.channel.createMessageComponentCollector()
             collector.on('collect', async interaction => {
                 if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+
                 const category = interaction.values[0];
-                const categoryCommands = commands.filter(command => command.category.toLowerCase() === category)
+                const categoryCommands = bot.commands.filter(command => command.category.toUpperCase() === category)
                 const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
 
                 const nouvelEmbed = new Discord.EmbedBuilder()
                     .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
-                    .setDescription(`${commandString}`)
+                    .setDescription(commandString)
                     .setColor(bot.color)
                     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
                     .setTimestamp()
                     .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
             
-                interaction.update({ embeds: [nouvelEmbed], components: [menuRow] });
+                interaction.update({ embeds: [nouvelEmbed] });
             })
         }
     }
