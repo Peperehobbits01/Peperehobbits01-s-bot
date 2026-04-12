@@ -65,8 +65,8 @@ module.exports = {
             .setTitle("Erreur de la commande d'ajout dans le système d'expérience")
         ]})
 
-        const queryAddXpSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
-        const ResultsAddXpSearch = await executeQuery(queryAddXpSearch)
+        const queryAddXpSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
+        const ResultsAddXpSearch = (await executeQuery(queryAddXpSearch))[0]
 
         await message.deferReply()
 
@@ -110,9 +110,10 @@ module.exports = {
 
             }} else if(addingchoice === "Xp") {
 
-                for(let i = 0; i < ResultsAddXpSearch.length; i++) {
+                let xpcalcul =+ parseInt(ResultsAddXpSearch.xp) + parseInt(ToAdd);
 
-                    let xpcalcul =+ parseInt(ResultsAddXpSearch[i].ToAdd) + parseInt(ToAdd);
+                    const queryUpdateAddXp = `UPDATE xp SET xp = '${xpcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
+                    await executeQuery(queryUpdateAddXp)
 
                     const SuccesAddXp = new Discord.EmbedBuilder()
                         .setColor(bot.color)
@@ -121,11 +122,8 @@ module.exports = {
                         .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
                         .setTimestamp()
                         .setTitle("Niveaux ajouté")
-    
-                    const queryUpdateAddXp = `UPDATE xp SET xp = '${xpcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-                    await executeQuery(queryUpdateAddXp)
+
                     await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
-                }
             }
     }
 }

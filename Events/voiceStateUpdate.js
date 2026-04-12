@@ -7,7 +7,7 @@ module.exports = async(bot, oldState, newState, user) => {
   const oldChannel = oldState.channel;
   const newChannel = newState.channel;
   const logsChannel = oldState.guild.channels.cache.get("1201547807132225669")
-  
+
   if (!oldChannel && newChannel) {
 
     const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${newState.user.id}', '${newState.channel.id}', '0')`
