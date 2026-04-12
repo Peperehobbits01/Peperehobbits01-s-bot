@@ -21,11 +21,11 @@ module.exports = async(bot, message) => {
     if((level + 1) * 1000 <= xp) {
 
         const queryXpupdate = `UPDATE xp SET xp = '0', level = '${level + 1}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
-
         await executeQuery(queryXpupdate)
 
         let channel = message.guild.channels.cache.get('931457930505629733');
         channel.send(`Tu l'as fais ${message.author}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
+
     } else {
 
         let xptogive = Math.floor(Math.random() * 30) + 15;
