@@ -92,9 +92,7 @@ module.exports = {
 
             if(addingchoice === "Level") {
 
-            for(let i = 0; i < ResultsAddXpSearch.length; i++) {
-
-                let levelcalcul =+ parseInt(ResultsAddXpSearch[i].ToAdd) + parseInt(ToAdd);
+                let levelcalcul =+ parseInt(ResultsAddXpSearch.level) + parseInt(ToAdd);
 
                 const SuccesAddXp = new Discord.EmbedBuilder()
                     .setColor(bot.color)
@@ -108,7 +106,7 @@ module.exports = {
                 await executeQuery(queryUpdateAddXp)
                 await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
 
-            }} else if(addingchoice === "Xp") {
+            } else if(addingchoice === "Xp") {
 
                 let xpcalcul =+ parseInt(ResultsAddXpSearch.xp) + parseInt(ToAdd);
 
