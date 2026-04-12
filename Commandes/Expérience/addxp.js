@@ -16,7 +16,7 @@ module.exports = {
             required: true,
             autocomplete: false
         }, {
-            type: "String",
+            type: "string",
             name: "ajouter",
             description: "Choisir si l'on veut ajouter de l'expérience ou des niveaux au membres sélectionner.",
             required: true,
@@ -65,23 +65,32 @@ module.exports = {
             .setTitle("Erreur de la commande d'ajout dans le système d'expérience")
         ]})
 
-        const queryAddXpSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND  user '${member.id}'`
+        const queryAddXpSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
         const ResultsAddXpSearch = await executeQuery(queryAddXpSearch)
+
+        await message.deferReply()
 
         if(ResultsAddXpSearch.length < 1) {
             const queryAddMember = `INSERT INTO xp (guild, user, xp, level) VALUES '${message.guildId}', '${member.id}', '0', '0'`
             await executeQuery(queryAddMember)
-            message.reply({embeds: [
 
-                new Discord.EmbedBuilder()
-                .setColor(bot.color)
-                .setDescription("Le membre vient d'être enregistré dans la base de donnés car il n'y été pas. Veuiller réssayer !")
-                .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
-                .setTimestamp()
-                .setTitle("Erreur de la commande d'ajout dans le système d'expérience")
-        ]})
+            message.followUp({
+                embeds: [
 
-        if(addingchoice === "Level") {
+                    new Discord.EmbedBuilder()
+                        .setColor(bot.color)
+                        .setDescription("Le membre vient d'être enregistré dans la base de donnés car il n'y été pas. Veuiller réssayer !")
+                        .setFooter({
+                            text: `Gérée par l'instance de Peperehobbits01's bot`,
+                            iconURL: (bot.user.displayAvatarURL({dynamic: true}))
+                        })
+                        .setTimestamp()
+                        .setTitle("Erreur de la commande d'ajout dans le système d'expérience")
+                ]
+            })
+        }
+
+            if(addingchoice === "Level") {
 
             for(let i = 0; i < ResultsAddXpSearch.length; i++) {
 
@@ -97,14 +106,14 @@ module.exports = {
 
                 const queryUpdateAddXp = `UPDATE xp SET level = '${levelcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
                 await executeQuery(queryUpdateAddXp)
-                await message.reply({embeds: [SuccesAddXp], ephemeral: false})   
+                await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
 
             }} else if(addingchoice === "Xp") {
 
                 for(let i = 0; i < ResultsAddXpSearch.length; i++) {
 
                     let xpcalcul =+ parseInt(ResultsAddXpSearch[i].ToAdd) + parseInt(ToAdd);
-    
+
                     const SuccesAddXp = new Discord.EmbedBuilder()
                         .setColor(bot.color)
                         .setDescription(`${message.user} a ajouté ${ToAdd} expériences à ${member}.`)
@@ -115,9 +124,8 @@ module.exports = {
     
                     const queryUpdateAddXp = `UPDATE xp SET xp = '${xpcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
                     await executeQuery(queryUpdateAddXp)
-                    await message.reply({embeds: [SuccesAddXp], ephemeral: false})  
+                    await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
                 }
             }
-        }
     }
 }
