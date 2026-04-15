@@ -107,7 +107,7 @@ module.exports = {
         //Level + Rang
         ctx.font = '36px "Futura Book"'
         ctx.fillStyle = "#ffffff"
-        ctx.fillText(`Level : ${level}`, 275, 150)
+        ctx.fillText(`Niveau : ${level}`, 275, 150)
         rank === 1 ? ctx.fillText(`Rang : ${rank}er`, 520, 150) : ctx.fillText(`Rang : ${rank}ème`, 475, 150)
 
         //Tag de l'utilisateur
