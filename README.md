@@ -1,3 +1,7 @@
+# Presentation of Peperehobbits01's bot
+Peperehobbits01's bot is a Discord bot using discord.js to connect to Discord. It is mostly made for the Discord server
+of the youtubeur Peperehobbits01, but it can be used on other servers.
+
 # Installation of development environnement
 
 ## Requirements to run/program the software
