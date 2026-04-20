@@ -59,7 +59,9 @@ module.exports = async (bot, interaction, message) => {
 
     if (interaction.customId === "help") {
         if(interaction.isStringSelectMenu()) {
+          
             const collector = interaction.channel.createMessageComponentCollector()
+            
             collector.on('collect', async interaction => {
                 if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
 
