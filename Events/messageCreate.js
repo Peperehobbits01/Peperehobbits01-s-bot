@@ -33,23 +33,23 @@ module.exports = async(bot, message) => {
         await executeQuery(queryXpUpdate)
 
     }
-/*
-    const channel = bot.channels.fetch('1060534092321521694');
+
+    const channel = await bot.channels.fetch('1060534092321521694');
     const messages = await channel.messages.fetch({ limit: 2 });
     const lastMessage = messages.first();
     const previousMessage = messages.last();
+    const currentNumber = parseInt(lastMessage);
+    const previousNumber = parseInt(previousMessage);
 
-    if(isNaN(lastMessage) && isNaN(previousMessage)) {
-        const currentNumber = parseInt(lastMessage);
-        const previousNumber = parseInt(previousMessage);
     if(currentNumber === previousNumber + 1) {
         return;
-    } else if(currentNumber > previousNumber + 1) {
-            await lastMessage.delete();
-        } else if(currentNumber < previousNumber + 1) {
-            await lastMessage.delete();
-        }
-    } else if(!isNaN(lastMessage) && isNaN(previousMessage)) {
+    } else if(isNaN(currentNumber)) {
         await lastMessage.delete();
-    } */
+    } else if (currentNumber !== previousNumber + 1) {
+        await lastMessage.delete();
+    } else if (!isNaN(parseInt(message.content)) && (currentNumber > 0 && !isNaN(currentNumber))) {
+        return;
+    } else if (currentNumber > 0 && !isNaN(currentNumber)) {
+        await lastMessage.delete();
+    }
 }
