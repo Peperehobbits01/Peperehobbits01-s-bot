@@ -34,7 +34,7 @@ module.exports = async(bot, message) => {
 
     }
 
-    const channel = await bot.channels.fetch('1060534092321521694');
+    const channel = await bot.channels.fetch(process.env.COUNTING_CHANNEL);
     const messages = await channel.messages.fetch({ limit: 2 });
     const lastMessage = messages.first();
     const previousMessage = messages.last();

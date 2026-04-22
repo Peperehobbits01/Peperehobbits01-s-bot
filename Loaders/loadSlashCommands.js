@@ -1,7 +1,6 @@
 const Discord = require('discord.js')
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord.js')
-const config = require('../Config.js')
 
 module.exports = async bot => {
 
@@ -24,7 +23,7 @@ module.exports = async bot => {
         await commands.push(slashcommand);
     })
 
-    const rest = new REST({version: "10"}).setToken(config.token)
+    const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
 
     await rest.put(Routes.applicationCommands(bot.user.id), {body: commands})
     console.log("Les / Commandes sont crées avec succès!");

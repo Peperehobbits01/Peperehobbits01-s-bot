@@ -39,14 +39,7 @@ Not possible yet but will be introduced in the future.
 
 #### Config files :
 
-You have to create your own config.js file and adding your token of bot
-Here is what it should looks like :
-```javascript
-module.exports = {
-
-    "token" : "YourTokenHere"
-}
-```
+You have to copy the .env.example and name the copy .env, you can then put the values you want for each setting.
 #### To test the application :
 
 Simply run :
@@ -67,7 +60,7 @@ node main
 │   package.json
 │   README.md
 │   anti-crash.js
-│   Config.js
+│   .env.example
 │
 ├───Assets
 │       Assets that are used in the bot for commands like /rank.

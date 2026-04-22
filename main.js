@@ -1,8 +1,8 @@
 const Discord = require("discord.js")
+require("dotenv").config();
 const bot = new Discord.Client({intents:3276799})
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
-const config = require("./Config")
 
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
@@ -14,7 +14,7 @@ bot.function = {
     calculXp : require("./Fonctions/calculXp.js"),
 }
 
-bot.login(config.token)
+bot.login(process.env.TOKEN)
 loadCommands(bot, process.cwd() + '/Commandes');
 loadEvents(bot)
 
