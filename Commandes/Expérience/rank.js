@@ -31,7 +31,7 @@ module.exports = {
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
         const results = await executeQuery(querySearch);
 
-        if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens ayant de l'xp!")
+        if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens possèdent de l'expérience!")
         
         await message.deferReply()
 

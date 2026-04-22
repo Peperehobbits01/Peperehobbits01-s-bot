@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const { EmbedBuilder } = require('discord.js');
 const answers = [
   'Il est certain.',
   'C\'est décidément ainsi.',

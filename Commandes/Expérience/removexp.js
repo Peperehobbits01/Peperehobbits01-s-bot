@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { executeQuery } = require ("../../Fonctions/databaseConnect.js")
 
 module.exports = {
   name: 'removexp',
