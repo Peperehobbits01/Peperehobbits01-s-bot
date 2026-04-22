@@ -5,7 +5,7 @@ module.exports = {
     description: "Permet de mettre un statut et une activité à votre bot",
     permission: Discord.PermissionFlagsBits.Administrator,
     dm: false,
-    category: "🛡・Modération",
+    category: "📚・Informations",
     options:[
         {
             type: "string",
