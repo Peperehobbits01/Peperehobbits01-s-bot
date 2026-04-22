@@ -17,10 +17,10 @@ module.exports = async(bot, message) => {
 
     let level = parseInt(results[0].level)
     let xp = parseInt(results[0].xp)
+    let xptogive = Math.floor(Math.random() * 30) + 15;
 
     if((level + 1) * 1000 <= xp) {
 
-        let xptogive = Math.floor(Math.random() * 30) + 15;
         const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
         await executeQuery(queryXpupdate)
 
@@ -29,7 +29,6 @@ module.exports = async(bot, message) => {
 
     } else {
 
-        let xptogive = Math.floor(Math.random() * 30) + 15;
         const queryXpUpdate = `UPDATE xp SET xp = '${xp + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
         await executeQuery(queryXpUpdate)
 
