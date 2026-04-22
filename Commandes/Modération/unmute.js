@@ -52,7 +52,7 @@ module.exports = {
             const Unmute1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été retirée du silence ! `)
             .setDescription(`${message.user.tag} vous a retirée du silence sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
             await user.send({embeds: [Unmute1]})
@@ -63,7 +63,7 @@ module.exports = {
         const Unmute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du unmute")
         .setDescription(`Vous avez unmute ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
         await message.followUp({embeds: [Unmute2], ephemeral : false})

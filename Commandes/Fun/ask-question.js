@@ -55,7 +55,7 @@ Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\`
 `)
       .setTimestamp()
       .setFooter({ text: bot.user.username, iconURL: bot.user.avatarURL({ dynamic: true }) })
-      .setColor(bot.color);
+      .setColor(process.env.BOT_COLOR);
 
       await message.reply({embeds: [Ask]})
   }

@@ -47,7 +47,7 @@ module.exports = {
             const Unban1 = new Discord.EmbedBuilder()
             .setTitle("Informations du débanisement")
             .setDescription(`Vous avez été débannis par ${message.user.tag} pour la raison : \`${reason}\` avec succès !`)
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
             await user.send({embeds: [Unban1]})
@@ -56,7 +56,7 @@ module.exports = {
         await message.deferReply()
 
         let Unban2 = new Discord.EmbedBuilder()
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setTitle("Inforamtion débanisement")
         .setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

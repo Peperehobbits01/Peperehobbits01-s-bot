@@ -29,7 +29,7 @@ module.exports = {
         if(!member) return message.reply({embeds: [
 
             new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setDescription("Indiquer un membre !")
             .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
             .setTimestamp()
@@ -40,7 +40,7 @@ module.exports = {
         if(!clearchoice) return message.reply({embeds: [
 
             new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setDescription("Indiquer ce que vous voulez effacée !")
             .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
             .setTimestamp()
@@ -60,7 +60,7 @@ module.exports = {
             await executeQuery(queryLevelClear)
 
             const succesLevelClear = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle("Effacement des niveaux du membres réussite.")
             .setDescription(`Les niveaux du membre ${member.user.tag} ont bien été supprimée!`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
@@ -79,7 +79,7 @@ module.exports = {
             await executeQuery(queryXpClear)
 
             const succesXpClear = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle("Effacement de l'expérience du membres réussite.")
             .setDescription(`L'expérience du membre ${member.user.tag} a bien été supprimée!`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
@@ -98,7 +98,7 @@ module.exports = {
             await executeQuery(queryAllClear)
 
             const succesAllClear = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle("Effacement du membre de la base de donnée réussite.")
             .setDescription(`Le membre ${member.user.tag} a bien été effacer de la base de donnée!`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })

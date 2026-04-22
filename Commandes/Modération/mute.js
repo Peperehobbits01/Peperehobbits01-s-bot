@@ -56,7 +56,7 @@ module.exports = {
             const Mute1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été mute ! `)
             .setDescription(`${message.user.tag} vous a mute sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il dureras :  \`${time}\` ! `)
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
             
             await user.send({embeds: [Mute1]})
@@ -67,7 +67,7 @@ module.exports = {
         const Mute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du mute")
         .setDescription(`Vous avez mute ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
         await message.followUp({embeds: [Mute2], ephemeral : false})

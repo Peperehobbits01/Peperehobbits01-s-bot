@@ -38,7 +38,7 @@ module.exports = async(bot, oldMember, newMember) => {
     const logsChannel = oldMember.guild.channels.cache.get("1153675744917061732")
 
     const updateName = new Discord.EmbedBuilder()
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setTitle("Un membre a changée de pseudonyme")
         .setDescription(`Nouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

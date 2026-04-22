@@ -8,7 +8,7 @@ module.exports = async (bot, member) => {
     const logsChannel = member.guild.channels.cache.get("1153677499771928596")
 
     const logsNewMember = new Discord.EmbedBuilder()
-    .setColor(bot.color)
+    .setColor(process.env.BOT_COLOR)
     .setTitle("Nouveau membre sur le serveur")
     .setDescription(`${member.user.tag} a rejoint le serveur.`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

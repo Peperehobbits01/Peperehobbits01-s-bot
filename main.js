@@ -6,7 +6,6 @@ const loadEvents = require("./Loaders/loadEvents")
 
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
-bot.color = process.env.BOT_COLOR;
 bot.function = {
     createId: require("./Fonctions/createId.js"),
     levenshteinDistance: require("./Fonctions/levenshteinDistance.js"),

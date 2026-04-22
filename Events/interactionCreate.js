@@ -72,7 +72,7 @@ module.exports = async (bot, interaction, message) => {
                 const nouvelEmbed = new Discord.EmbedBuilder()
                     .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
                     .setDescription(commandString)
-                    .setColor(bot.color)
+                    .setColor(process.env.BOT_COLOR)
                     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
                     .setTimestamp()
                     .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))

@@ -36,7 +36,7 @@ module.exports = {
         if(!member) return message.reply({embeds: [
 
             new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setDescription("Indiquer un membre !")
             .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
             .setTimestamp()
@@ -47,7 +47,7 @@ module.exports = {
         if(!addingchoice) return message.reply({embeds: [
 
             new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setDescription("Indiquer un choix !")
             .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
             .setTimestamp()
@@ -58,7 +58,7 @@ module.exports = {
         if(!ToAdd) return message.reply({embeds: [
 
             new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setDescription("Indiquer combien de nievaux à ajouter !")
             .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
             .setTimestamp()
@@ -78,7 +78,7 @@ module.exports = {
                 embeds: [
 
                     new Discord.EmbedBuilder()
-                        .setColor(bot.color)
+                        .setColor(process.env.BOT_COLOR)
                         .setDescription("Le membre vient d'être enregistré dans la base de donnés car il n'y été pas. Veuiller réssayer !")
                         .setFooter({
                             text: `Gérée par l'instance de Peperehobbits01's bot`,
@@ -95,7 +95,7 @@ module.exports = {
                 let levelcalcul =+ parseInt(ResultsAddXpSearch.level) + parseInt(ToAdd);
 
                 const SuccesAddXp = new Discord.EmbedBuilder()
-                    .setColor(bot.color)
+                    .setColor(process.env.BOT_COLOR)
                     .setDescription(`${message.user} a ajouté ${ToAdd} niveaux à ${member}.`)
                     .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
                     .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
@@ -114,7 +114,7 @@ module.exports = {
                     await executeQuery(queryUpdateAddXp)
 
                     const SuccesAddXp = new Discord.EmbedBuilder()
-                        .setColor(bot.color)
+                        .setColor(process.env.BOT_COLOR)
                         .setDescription(`${message.user} a ajouté ${ToAdd} expériences à ${member}.`)
                         .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
                         .setThumbnail(member.user.displayAvatarURL({dynamic: true}))

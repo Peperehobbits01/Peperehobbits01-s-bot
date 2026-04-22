@@ -31,7 +31,7 @@ module.exports = {
 
     if (reactions.size <= winnersCount) {
       const errorEmbed = new Discord.EmbedBuilder()
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setDescription(`Il n'y a pas assez de participants pour choisir un nouveau gagnant.`);
 
       return await interaction.reply({ embeds: [errorEmbed] });
@@ -41,7 +41,7 @@ module.exports = {
     const newWinnersList = newWinners.map((user) => `<@${user.id}>`).join(", ");
 
     const successEmbed = new Discord.EmbedBuilder()
-      .setColor(bot.color)
+      .setColor(process.env.BOT_COLOR)
       .setDescription(`Félicitations ${newWinnersList} ! Vous êtes les nouveaux gagnants !`)
       .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) });
 

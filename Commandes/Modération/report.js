@@ -40,7 +40,7 @@ module.exports = {
       let channel = message.guild.channels.cache.get('1073882868733972502');
 
       const EmbedwhatToReport = new Discord.EmbedBuilder()
-      .setColor(bot.color)
+      .setColor(process.env.BOT_COLOR)
       .setTitle("Report sur le serveur")
       .setDescription(`${whatToReport}`)
       .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
