@@ -24,7 +24,7 @@ module.exports = async(bot, message) => {
         const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
         await executeQuery(queryXpupdate)
 
-        let channel = message.guild.channels.cache.get('931457930505629733');
+        let channel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
         channel.send(`Tu l'as fais ${message.author}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
 
     } else {
