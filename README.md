@@ -1,10 +1,11 @@
 # Presentation of Peperehobbits01's bot
-Peperehobbits01's bot is a Discord bot using discord.js to connect to Discord. It is mostly made for the Discord server
-of the youtubeur Peperehobbits01, but it can be used on other servers.
+Peperehobbits01's bot is a multipurpose Discord bot using discord.js to connect to Discord. It is mostly made for the Discord server
+of the youtubeur Peperehobbits01, but it is designed to be usable on other servers. No system can be disabled and it is not planned as a feature. So if a system isn't
+to your liking, I recommaned loking for an other Discord bot then Peperehobbits01's bot.
 
 ## Project status ⚠️
 
-Due to this project being my first, it has some major flaws in it's design, because it is easier to restart from scratch a 2.0.0 version has started developement with the help of a friend, Skudar, on a new branch in this repositories. That version is not intended for production use and his not ready at all and it is not recieving secrutiy updates consistantly because Skudar and I are not having enough time to work on the bot for know. If you really want to use this bot, I recommend using the 24w16a branch as I am still updating frequently to make sure it is having the lastest security patches and bug fixes, no new features are being introduced but if you find a bug, you can create a issue to report. I'll fix it when I can. If you have any questions, feel free to join my Discord server.
+Due to this project being my first, it has some major flaws in its design, because it is easier to restart from scratch a 2.0.0 version has started developement with the help of a friend, Skudar, on a new branch in this repositories. That version is not intended for production use and his not ready at all and it is not recieving secrutiy updates consistantly because Skudar and I are not having enough time to work on the bot for know. If you really want to use this bot, I recommend using the 24w16a branch as I am still updating it frequently to make sure it is having the lastest security patches and bug fixes, no new features are being introduced but if you find a bug, you can create a issue to report it. I'll fix it when I can. If you have any questions, feel free to join my Discord server.
 
 ## Requirements to run/program the software
 
@@ -22,10 +23,6 @@ Due to this project being my first, it has some major flaws in it's design, beca
 | ------------------ | ---------------- | ---------------------------- |
 | phpMyAdmin         | 5.2.1 or higher  | Interface for MySQL          |
 | XAMPP              | 8.2.4 or higher  | Bundles MysQL and phpMyAdmin |
-| Visual Studio Code | 1.86.2 or higher | Recommended IDE              |
-
-### Recommanded extention in the .vscode folder for Visual Studio Code users.
-
 
 #### After pulling the repo, install dependencies (add the '-D' argument to install dev dependencies) :
 
@@ -86,7 +83,7 @@ node main
 │       Discord related events.       
 │
 ├───Fonctions
-│       Foncitons fils required to run some commands.
+│       Fonctions files required to run some commands.
 │
 └───Loaders
         The loaders that load the events and commands files.
