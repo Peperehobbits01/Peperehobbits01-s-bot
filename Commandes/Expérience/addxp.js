@@ -30,7 +30,7 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
 
         let member = args.getMember("membre")
         if(!member) return message.reply({embeds: [
@@ -90,38 +90,38 @@ module.exports = {
             })
         }
 
-            if(addingchoice === "Level") {
+        if(addingchoice === "Level") {
 
-                let levelcalcul =+ parseInt(ResultsAddXpSearch.level) + parseInt(ToAdd);
+            let levelcalcul =+ parseInt(ResultsAddXpSearch.level) + parseInt(ToAdd);
 
-                const SuccesAddXp = new Discord.EmbedBuilder()
-                    .setColor(process.env.BOT_COLOR)
-                    .setDescription(`${message.user} a ajouté ${ToAdd} niveaux à ${member}.`)
-                    .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
-                    .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
-                    .setTimestamp()
-                    .setTitle("Niveaux ajouté")
+            const SuccesAddXp = new Discord.EmbedBuilder()
+                .setColor(process.env.BOT_COLOR)
+                .setDescription(`${message.user} a ajouté ${ToAdd} niveaux à ${member}.`)
+                .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
+                .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+                .setTimestamp()
+                .setTitle("Niveaux ajouté")
 
-                const queryUpdateAddXp = `UPDATE xp SET level = '${levelcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-                await executeQuery(queryUpdateAddXp)
-                await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
+            const queryUpdateAddXp = `UPDATE xp SET level = '${levelcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
+            await executeQuery(queryUpdateAddXp)
+            await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
 
-            } else if(addingchoice === "Xp") {
+        } else if(addingchoice === "Xp") {
 
-                let xpcalcul =+ parseInt(ResultsAddXpSearch.xp) + parseInt(ToAdd);
+            let xpcalcul =+ parseInt(ResultsAddXpSearch.xp) + parseInt(ToAdd);
 
-                    const queryUpdateAddXp = `UPDATE xp SET xp = '${xpcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-                    await executeQuery(queryUpdateAddXp)
+            const queryUpdateAddXp = `UPDATE xp SET xp = '${xpcalcul}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
+            await executeQuery(queryUpdateAddXp)
 
-                    const SuccesAddXp = new Discord.EmbedBuilder()
-                        .setColor(process.env.BOT_COLOR)
-                        .setDescription(`${message.user} a ajouté ${ToAdd} expériences à ${member}.`)
-                        .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
-                        .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
-                        .setTimestamp()
-                        .setTitle("Niveaux ajouté")
+            const SuccesAddXp = new Discord.EmbedBuilder()
+                .setColor(process.env.BOT_COLOR)
+                .setDescription(`${message.user} a ajouté ${ToAdd} expériences à ${member}.`)
+                .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
+                .setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+                .setTimestamp()
+                .setTitle("Niveaux ajouté")
 
-                    await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
-            }
+            await message.followUp({embeds: [SuccesAddXp], ephemeral: false})
+        }
     }
 }
