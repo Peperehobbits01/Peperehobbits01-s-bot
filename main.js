@@ -21,10 +21,10 @@ require(`./anti-crash.js`)();
 
 process.on('SIGINT', () => {
     console.log('\n[!] Réception de SIGINT. Déconnexion du bot...');
-    bot.destroy();
+    bot.destroy().then(r => console.log('\n[!] Réception de SIGINT. Déconnexion du bot réussie.'));
 });
 
 process.on('SIGTERM', () => {
     console.log('\n[!] Réception de SIGTERM. Déconnexion du bot...');
-    bot.destroy();
+    bot.destroy().then(r => console.log('\n[!] Réception de SIGTERM. Déconnexion du bot réussie.'));
 });
