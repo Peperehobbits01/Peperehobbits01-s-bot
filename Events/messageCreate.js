@@ -34,6 +34,7 @@ module.exports = async(bot, message) => {
 
     }
 
+    //TODO Fix edge case where when junk is thrown behind the number, the bot is getting confused and stops deleting wrong numbers.
     const channel = await bot.channels.fetch(process.env.COUNTING_CHANNEL);
     const messages = await channel.messages.fetch({ limit: 2 });
     const lastMessage = messages.first();
