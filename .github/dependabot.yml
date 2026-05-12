@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: nodejs
+  - package-ecosystem: node-js
     directory: "/"
     schedule:
       interval: daily
