@@ -40,6 +40,6 @@ module.exports = {
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
         
-            await message.reply({embeds: [Lock], ephemeral: false})
+            await message.reply({embeds: [Lock]})
     }
 }

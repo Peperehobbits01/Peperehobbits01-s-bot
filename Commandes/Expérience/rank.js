@@ -54,7 +54,7 @@ module.exports = {
 
         const member = message.guild.members.cache.get(user.id);
         const status = member?.presence?.status ?? "offline";
-        const badges = await user.fetchFlags()
+        const badges = await user.fetch()
         const badge = badges.toArray()
         .filter(b => b !== "BotHTTPInteractions" 
             && b !== "Quarantined" 

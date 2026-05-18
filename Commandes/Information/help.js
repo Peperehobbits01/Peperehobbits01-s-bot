@@ -95,7 +95,7 @@ module.exports = {
             });
 
             const command = bot.commands.get(commandeProche)
-            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, ephemeral: true})
+            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`}, {ephemeral: true})
 
             let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
@@ -104,7 +104,7 @@ module.exports = {
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-            await message.reply({embeds: [EmbedCommande], ephemeral: false})
+            await message.reply({embeds: [EmbedCommande]})
         }
     }
 }

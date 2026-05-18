@@ -46,7 +46,7 @@ module.exports = {
         .setDescription(`Vous avez mis une note à ${user.tag} et voici sa note : \`${reason}\` avec succès !`)
         .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-        await message.followUp({embeds: [Note1], ephemeral : false})
+        await message.followUp({embeds: [Note1]})
 
         let ID = await bot.function.createId("NOTE")
  

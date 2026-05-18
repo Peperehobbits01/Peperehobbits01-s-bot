@@ -36,10 +36,10 @@ module.exports = {
 
           let Unlock = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setTitle("Inforamtion unlock")
+            .setTitle("Information unlock")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-            await message.reply({embeds: [Unlock], ephemeral: false})
+            await message.reply({embeds: [Unlock]})
     }
 }

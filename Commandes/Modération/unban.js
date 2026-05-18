@@ -61,7 +61,7 @@ module.exports = {
         .setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Unban2], ephemeral: false})
+        await message.followUp({embeds: [Unban2]})
 
         const querySearch = `SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`
         const results = await executeQuery(querySearch)

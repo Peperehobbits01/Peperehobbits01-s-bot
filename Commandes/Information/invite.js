@@ -36,6 +36,6 @@ module.exports = {
             .setDescription(`${user.tag} a **${i}** invitations.`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) });
 
-        await message.reply({ embeds: [invitations], ephemeral: false });
+        await message.reply({ embeds: [invitations]});
     }
 }

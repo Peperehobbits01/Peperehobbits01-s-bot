@@ -66,7 +66,7 @@ module.exports = {
         .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Unmute2], ephemeral : false})
+        await message.followUp({embeds: [Unmute2]})
 
         const querySearch = `SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`
         const results = await executeQuery(querySearch)
