@@ -7,7 +7,7 @@
     "test": "node main"
   },
   "author": "",
-  "license": "ISC",
+  "license": "LGPL-3.0-or-later",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
     "canvas": "^3.2.3",
