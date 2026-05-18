@@ -58,6 +58,7 @@ node main
 │   README.md
 │   anti-crash.js
 │   .env.example
+│   peperehobbits01_s_bot.sql
 │
 ├───Assets
 │       Assets that are used in the bot for commands like /rank.
