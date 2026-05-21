@@ -1,5 +1,4 @@
 node_modules/
-git-filter-repo
 Fonctions/databaseConnect
 .idea
 .env
