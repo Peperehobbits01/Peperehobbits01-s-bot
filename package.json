@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^1.7.1",
+    "@discordjs/rest": "^2.6.1",
     "canvas": "^2.11.2",
     "discord-giveaway-easy": "^3.3.0",
     "discord-rpc": "^4.0.1",
