@@ -1,48 +1,67 @@
 const Discord = require('discord.js');
+const {channelTypeName} = require("../Fonctions/channelTypeName");
 
 module.exports = async(bot, oldMember, newMember) => {
 
-  const boosterChannel = oldMember.guild.channels.cache.get("931457930505629729")
+    const boosterChannel = oldMember.guild.channels.cache.get(process.env.BOOSTER_CHANNEL)
 
-  if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
     if (!oldMember.roles.cache.has("1056623425537445970") && newMember.roles.cache.has("1056623425537445970")) {
         boosterChannel.send(`Merci à ${newMember} pour avoir boost le serveur!`);
     }
 
-    const logsChannel = oldMember.guild.channels.cache.get("1153675744917061732")
+    const logsChannel = oldMember.guild.channels.cache.get(process.env.LOGS_CHANNEL_MEMBER)
 
-    if(oldMember.roles.cache.size && !newMember.roles.cache.size) {
+    const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
+    const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
 
-        const removeRoles = new Discord.EmbedBuilder()
-            .setColor("#d7342a")
-            .setTitle("Suppression d'un rôle")
-            .setDescription(`${newMember.user.tag} a perdu des rôles.`)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    const fetchedLogs = await oldMember.guild.fetchAuditLogs({
+        type: Discord.AuditLogEvent.guildMembers,
+        limit: 5,
+    });
 
-            logsChannel.send({ embeds: [removeRoles] })
+    const channelLog = fetchedLogs.entries.find(entry =>
+        entry.target?.id === oldMember.id
+    );
 
-    } else if(!oldMember && newMember) {
+    const executor = channelLog?.executor;
 
-        const addRoles = new Discord.EmbedBuilder()
-            .setColor("#d7342a")
-            .setTitle("Ajout d'un rôle")
-            .setDescription(`${newMember.user.tag} a des nouveaux rôles.`)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    if (addedRoles.size > 0) {
+        const addRolesEmbed = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic : true})})
+            .setDescription(`${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({ dynamic: true })
+            })
 
-            logsChannel.send({ embeds: [addRoles] })
+        logsChannel.send({ embeds: [addRolesEmbed] })
     }
-  }
 
-  if(oldMember.displayName !== newMember.displayName) {
+    if (removedRoles.size > 0) {
+        const removeRolesEmbed = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic : true})})
+            .setDescription(`${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({ dynamic: true })
+            })
 
-    const logsChannel = oldMember.guild.channels.cache.get("1153675744917061732")
+        logsChannel.send({ embeds: [removeRolesEmbed] })
 
-    const updateName = new Discord.EmbedBuilder()
-        .setColor(process.env.BOT_COLOR)
-        .setTitle("Un membre a changée de pseudonyme")
-        .setDescription(`Nouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
-        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+    if(oldMember.displayName !== newMember.displayName) {
 
-        logsChannel.send({ embeds: [updateName] })
+        const updateName = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic: true})})
+            .setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
+
+        logsChannel.send({embeds: [updateName]})
+    }
   }
 }
