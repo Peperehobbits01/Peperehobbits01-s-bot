@@ -13,7 +13,7 @@
     "canvas": "^2.11.2",
     "discord-giveaway-easy": "^3.3.0",
     "discord-rpc": "^4.0.1",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.26.4",
     "djs-voice": "^1.2.0",
     "dotenv": "^17.4.2",
     "ms": "^2.1.3",
