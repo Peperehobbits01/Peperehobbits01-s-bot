@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
 const { executeQuery } = require(`../../Fonctions/databaseConnect.js`);
+const { calculXp } = require("../../Fonctions/calculXp.js")
 
 module.exports = {
 
@@ -30,16 +31,9 @@ module.exports = {
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
         const results = await executeQuery(querySearch);
 
-        if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens ayant de l'xp!")
+        if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens possèdent de l'expérience!")
         
         await message.deferReply()
-
-        const calculXp = (xp, level) => {
-            let xptotal = 0;
-            for(let i = 0; i < level + 1; i++) xptotal += i * 1000
-            xptotal += xp;
-            return xptotal;
-        }
 
         let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
         let userInLeaderboard = results.find(u => u.user === user.id)
@@ -113,7 +107,7 @@ module.exports = {
         //Level + Rang
         ctx.font = '36px "Futura Book"'
         ctx.fillStyle = "#ffffff"
-        ctx.fillText(`Level : ${level}`, 275, 150)
+        ctx.fillText(`Niveau : ${level}`, 275, 150)
         rank === 1 ? ctx.fillText(`Rang : ${rank}er`, 520, 150) : ctx.fillText(`Rang : ${rank}ème`, 475, 150)
 
         //Tag de l'utilisateur

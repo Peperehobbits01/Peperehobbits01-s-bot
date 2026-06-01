@@ -35,7 +35,7 @@ module.exports = {
           })
         
           let Lock = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle("Inforamtion lock")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

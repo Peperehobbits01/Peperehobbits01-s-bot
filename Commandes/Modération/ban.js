@@ -43,7 +43,7 @@ module.exports = {
             const Ban1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été bannis ! `)
             .setDescription(`${message.user.tag} vous a bannis sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
             
             await user.send({embeds: [Ban1]})
@@ -54,7 +54,7 @@ module.exports = {
         const Ban2 = new Discord.EmbedBuilder()
         .setTitle("Informations du ban")
         .setDescription(`Vous avez ban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
         
         await message.followUp({embeds: [Ban2], ephemeral : false})

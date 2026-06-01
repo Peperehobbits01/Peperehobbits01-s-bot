@@ -7,14 +7,14 @@ module.exports = async(bot, oldState, newState, user) => {
   const oldChannel = oldState.channel;
   const newChannel = newState.channel;
   const logsChannel = oldState.guild.channels.cache.get("1201547807132225669")
-  
+
   if (!oldChannel && newChannel) {
 
     const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${newState.user.id}', '${newState.channel.id}', '0')`
     await executeQuery(queryJoinCall)
 
     const JoinCall = new Discord.EmbedBuilder()
-    .setColor(bot.color)
+    .setColor(process.env.BOT_COLOR)
     .setTitle(`${newState.user} à rejoint un vocal`)
     .setDescription(`**Salon**: ${oldChannel}\n**ID**\nUtilisateur : ${newState.user}\nSalon : ${oldChannel}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
@@ -30,7 +30,7 @@ module.exports = async(bot, oldState, newState, user) => {
     await executeQuery(queryLeaveCall)
 
     const LeaveCall = new Discord.EmbedBuilder()
-    .setColor(bot.color)
+    .setColor(process.env.BOT_COLOR)
     .setTitle(`${oldState.user} à quittée un vocal`)
     .setDescription(`**Salon**: ${oldChannel}\n**ID**\nUtilisateur : ${oldState.user}\nSalon : ${oldChannel.name}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.oldState.user.displayAvatarURL({ dynamic: true }) })
@@ -46,7 +46,7 @@ module.exports = async(bot, oldState, newState, user) => {
     await executeQuery(queryMooveCall)
 
     const MooveCall = new Discord.EmbedBuilder()
-    .setColor(bot.color)
+    .setColor(process.env.BOT_COLOR)
     .setTitle(`${newState.user} à changée de vocal`)
     .setDescription(`**Salon**: ${oldChannel.name} et maintenant ${newChannel.name}\n**ID**\nUtilisateur : ${newState.user}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}`)
     .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })

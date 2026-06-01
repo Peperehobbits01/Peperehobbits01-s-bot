@@ -60,7 +60,8 @@ module.exports = {
             let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
 
             let EmbedHelp = new Discord.EmbedBuilder()
-                .setColor(bot.color).setTitle(`Menu d'aide  `)
+                .setColor(process.env.BOT_COLOR)
+                .setTitle(`Menu d'aide  `)
                 .setDescription(`
                 Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
                 **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**
@@ -97,9 +98,9 @@ module.exports = {
             if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, ephemeral: true})
 
             let EmbedCommande = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${typeof command.permission !== "bigint" ? command.permission: new Discord.PermissionsBitField(command.permission).toArray(false)}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${(typeof command.permission === 'object' && command.permission !== null && command.permission.toArray) ? (command.permission.toArray(false).join(', ')) : `${command.permission}`}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 

@@ -40,7 +40,7 @@ module.exports = {
   let endTime = Date.now() + durationMs;
 
     const offrir = new Discord.EmbedBuilder()
-      .setColor(bot.color)
+      .setColor(process.env.BOT_COLOR)
       .setTitle(`Giveaway: ${prize}`)
       .setDescription(`Réagissez avec 🎉 pour participer !\Duration: **${duration}**\nNombre de gagnant: **${winners}**`)
       .setTimestamp(endTime);

@@ -33,7 +33,7 @@ module.exports = {
         await NoteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
         let Embed = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setTitle(`Infractons de ${user.tag}`)
             .setThumbnail(user.displayAvatarURL({dynamic: true}))
             .setTimestamp()

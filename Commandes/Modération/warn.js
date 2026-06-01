@@ -40,7 +40,7 @@ module.exports = {
             const Warn1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été avertie ! `)
             .setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
             await user.send({embeds: [Warn1]})
@@ -64,7 +64,7 @@ module.exports = {
         const Warn2 = new Discord.EmbedBuilder()
         .setTitle("Informations du warn")
         .setDescription(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
         await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})

@@ -30,7 +30,7 @@ module.exports = {
         userInv.forEach(inv => i += inv.uses);
 
         const invitations = new Discord.EmbedBuilder()
-            .setColor(bot.color)
+            .setColor(process.env.BOT_COLOR)
             .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true }) })
             .setTitle("Nombre d'invitations de l'utilisateur")
             .setDescription(`${user.tag} a **${i}** invitations.`)

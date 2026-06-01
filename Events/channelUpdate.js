@@ -7,7 +7,7 @@ module.exports = async(bot, oldChannel, newChannel, guild) => {
     if (oldChannel.guild !== newChannel.guild) {
 
         const UpdateChannel = new Discord.EmbedBuilder()
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setTitle(`Modification du salon ${oldChannel} par ${oldChannel.author}`)
         .setDescription(``)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

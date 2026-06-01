@@ -5,7 +5,7 @@ module.exports = {
     description: "Permet de mettre un statut et une activité à votre bot",
     permission: Discord.PermissionFlagsBits.Administrator,
     dm: false,
-    category: "🛡・Modération",
+    category: "📚・Informations",
     options:[
         {
             type: "string",
@@ -41,7 +41,7 @@ module.exports = {
         await bot.user.setActivity(statut, {type: Discord.ActivityType[activity], url: args.getString("lien") ? args.getString("lien") : null})
 
         let Setstatut = new Discord.EmbedBuilder()
-        .setColor(bot.color)
+        .setColor(process.env.BOT_COLOR)
         .setTitle("ℹ️ Information changement du statut ℹ️")
         .setDescription(`Activité : ${activity}\nStatut : ${statut}`)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })

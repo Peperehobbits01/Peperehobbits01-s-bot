@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const { EmbedBuilder } = require('discord.js');
 const answers = [
   'Il est certain.',
   'C\'est décidément ainsi.',
@@ -48,14 +47,10 @@ module.exports = {
      
     const Ask = new Discord.EmbedBuilder()
       .setTitle('🎱  Je réponds à tes questions  🎱')
-      .setDescription(`
-Question de ${message.user} \`\`\`${msg}\`\`\`
-Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\`
-
-`)
+      .setDescription(`Question de ${message.user} \`\`\`${msg}\`\`\`Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\``)
       .setTimestamp()
-      .setFooter({ text: bot.user.username, iconURL: bot.user.avatarURL({ dynamic: true }) })
-      .setColor(bot.color);
+      .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+      .setColor(process.env.BOT_COLOR);
 
       await message.reply({embeds: [Ask]})
   }
