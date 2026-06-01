@@ -1,11 +1,10 @@
 const Discord = require('discord.js');
-const {channelTypeName} = require("../Fonctions/channelTypeName");
 
 module.exports = async(bot, oldMember, newMember) => {
 
     const boosterChannel = oldMember.guild.channels.cache.get(process.env.BOOSTER_CHANNEL)
 
-    if (!oldMember.roles.cache.has("1056623425537445970") && newMember.roles.cache.has("1056623425537445970")) {
+    if (!oldMember.roles.cache.has(process.env.BOOSTER_ROLE) && newMember.roles.cache.has(process.env.BOOSTER_ROLE)) {
         boosterChannel.send(`Merci à ${newMember} pour avoir boost le serveur!`);
     }
 
