@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 
 module.exports = async (bot, message) => {
 
-    if(message.author.id === bot.user.id) return;
+    if(message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
     if(message.partial) return;
     const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
     const fetchedLogs = await message.guild.fetchAuditLogs({
