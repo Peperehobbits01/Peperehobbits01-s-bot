@@ -10,8 +10,8 @@ Due to this project being my first, it has some major flaws in its design. It is
 ## Requirements to run/program the software
 
 | Software           | Version          | More information             |
-| ------------------ | ---------------- | ---------------------------- |
-| Node.js            | 20.x or higher   | Bundles javaScript and npm   |
+| ------------------ |------------------| ---------------------------- |
+| Node.js            | 22.x or higher   | Bundles javaScript and npm   |
 | MySQL              | 8.2.x or higher  | The database of the bot      |
 | git                | 2.25.1 or higher | Commands for Github          |
 
