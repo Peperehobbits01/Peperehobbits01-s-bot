@@ -33,6 +33,7 @@ module.exports = async(bot, oldMember, newMember) => {
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
                 iconURL: bot.user.displayAvatarURL({ dynamic: true })
             })
+            .setTimestamp()
 
         logsChannel.send({ embeds: [addRolesEmbed] })
     }
@@ -46,6 +47,7 @@ module.exports = async(bot, oldMember, newMember) => {
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
                 iconURL: bot.user.displayAvatarURL({ dynamic: true })
             })
+            .setTimestamp()
 
         logsChannel.send({ embeds: [removeRolesEmbed] })
 
@@ -59,6 +61,7 @@ module.exports = async(bot, oldMember, newMember) => {
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
                 iconURL: bot.user.displayAvatarURL({dynamic: true})
             })
+            .setTimestamp()
 
         logsChannel.send({embeds: [updateName]})
     }
