@@ -151,7 +151,7 @@ module.exports = async(bot, oldChannel, newChannel) => {
             if (!oldOverwrite) {
                 const newAllow = overwrite.allow.toArray().join(', ') || 'Aucune';
                 const newDeny = overwrite.deny.toArray().join(', ') || 'Aucune';
-                permChanges.push(`✅ Ajout ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${newAllow}\n Interdit: ${newDeny}\`\`\``);
+                permChanges.push(`✅ Ajout de ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${newAllow}\n Interdit: ${newDeny}\`\`\``);
                 return;
             }
 
@@ -172,7 +172,7 @@ module.exports = async(bot, oldChannel, newChannel) => {
             if (removedDeny.length) changes.push(`- Interdit: ${removedDeny.join(', ')}`);
 
             if (changes.length) {
-                permChanges.push(`⚠️ Changement ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` ${changes.join('\n ')}\`\`\``);
+                permChanges.push(`⚠️ Changement pour ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` ${changes.join('\n ')}\`\`\``);
             }
         });
 
@@ -180,7 +180,7 @@ module.exports = async(bot, oldChannel, newChannel) => {
             if (!newPerms.get(overwrite.id)) {
                 const oldAllow = overwrite.allow.toArray().join(', ') || 'Aucune';
                 const oldDeny = overwrite.deny.toArray().join(', ') || 'Aucune';
-                permChanges.push(`⛔ Retrait ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${oldAllow}\n Interdit: ${oldDeny}\`\`\``);
+                permChanges.push(`⛔ Retrait de ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${oldAllow}\n Interdit: ${oldDeny}\`\`\``);
             }
         });
     }
