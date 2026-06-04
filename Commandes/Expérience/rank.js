@@ -63,8 +63,7 @@ module.exports = {
             && b !== "VerifiedBot"
         );
 
-        console.log(user)
-        const hasNitro = member && member.premiumType && member.premiumType > 0;
+        //const hasNitro = member && member.premiumType && member.premiumType > 0;
 
         if(xp > need) xp = need
         if(xp < 0) xp = 0
@@ -178,10 +177,10 @@ module.exports = {
                         ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                     }
 
-                    if(hasNitro) {
+                    /*if(hasNitro) {
                         const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                         ctx.drawImage(b, 275 + (i+1) * 50, 220, 72, 50)
-                    }
+                    }*/
                 }
             }
 
@@ -197,10 +196,10 @@ module.exports = {
                 ctx.drawImage(b, 275, 220, 50, 50)
             }
 
-            if(hasNitro) {
+            /*if(hasNitro) {
                 const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                 ctx.drawImage(b, 325, 220, 72, 50)
-            }
+            }*/
         }
 
         //Status
