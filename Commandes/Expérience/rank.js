@@ -54,8 +54,8 @@ module.exports = {
 
         const member = message.guild.members.cache.get(user.id);
         const status = member?.presence?.status ?? "offline";
-        const badges = await user.fetch()
-        const badge = badges.toArray()
+        const fetchedUser = await bot.users.fetch(user.id);
+        const badge = fetchedUser.flags.toArray()
         .filter(b => b !== "BotHTTPInteractions" 
             && b !== "Quarantined" 
             && b !== "Spammer" 
@@ -116,7 +116,7 @@ module.exports = {
         ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 210)
 
         //Badge de l'utilisateur                    
-        if(badges.bitfield !== 0) {
+        if(fetchedUser.flags.bitfield !== 0) {
                     
             for(let i = 0; i < badge.length; i++) {
                 let b;
@@ -179,7 +179,7 @@ module.exports = {
                             ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                         }
                     }
-                    if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
+        if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || fetchedUser.banner) {
                         if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
                             const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                             ctx.drawImage(b, 275 + (i+3) * 50, 220, 72, 50)
@@ -212,7 +212,7 @@ module.exports = {
                     ctx.drawImage(b, 275, 220, 50, 50)
                 }
             }
-            if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
+            if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || fetchedUser.banner) {
                 if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
                     const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
                     ctx.drawImage(b, 275 + 100, 220, 72, 50)
