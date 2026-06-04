@@ -23,9 +23,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelName = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le nom du salon ${oldChannel.name} a été changer par ${executor} en ${newChannel.name}\n\nAncien nom du salon : ${oldChannel.name}\nNouveau nom du salon : ${newChannel.name}\nType de salon : ${oldReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelName]})
@@ -35,9 +41,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelType = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le type du salon ${oldChannel.name} a été changer par ${executor} de ${oldReadableChannelType} à ${newReadableChannelType}\n\nNom du salon : ${oldChannel}\nAncien type du salon : ${oldReadableChannelType}\nNouveau type du salon : ${newReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelType]})
@@ -47,9 +59,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelParentID = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: "Impossible de trouver le pseudo", iconURL: bot.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: "Impossible de trouver le pseudo",
+                iconURL: bot.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le salon ${oldChannel.name} a été déplacé par un utilisateur de la catégorie ${oldChannel.parent} à la catégorie ${newChannel.parent}\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne catégorie du salon : ${oldChannel.parentId}\nNouvelle catégorie du salon : ${newChannel.parentId}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nAncienne catégorie : \`${oldChannel.parentId}\`\nNouvelle catégorie : \`${newChannel.parentId}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelParentID]})
@@ -57,17 +75,17 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
     if(oldChannel.topic !== newChannel.topic) {
 
-        /*if(oldChannel.topic === "null") {
-            oldChannel.topic = "Aucune description"
-        } else if (newChannel.topic === "null") {
-            newChannel.topic = "Aucune description"
-        }*/
-
         const UpdateChannelTopic = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le salon ${oldChannel.name} a vue sa description modifier par ${executor} de "${oldChannel.topic}" à "${newChannel.topic}"\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne description du salon : ${oldChannel.topic}\nNouvelle description du salon : ${newChannel.topic}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelTopic]})
@@ -77,9 +95,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelSlowModeON = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le salon ${oldChannel.name} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Oui\nDurée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelSlowModeON]})
@@ -87,9 +111,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelSlowModeOFF = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le salon ${oldChannel.name} n'est plus soumis  au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelSlowModeOFF]})
@@ -97,32 +127,87 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
         const UpdateChannelSlowModeChange = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le salon ${oldChannel.name} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne durée du mode lent : ${oldChannel.rateLimitPerUser}s\nNouvelle durée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelSlowModeChange]})
     }
-    //TODO permissionsOverwrites changes mentioning in embed.
-    if(oldChannel.permissionOverwrites !== newChannel.permissionOverwrites) {
 
-        const fetchedLogs = await oldChannel.guild.fetchAuditLogs({
-            type: Discord.AuditLogEvent.permissionOverwrites,
+    const oldPerms = oldChannel.permissionOverwrites.cache;
+    const newPerms = newChannel.permissionOverwrites.cache;
+    const permChanges = [];
+
+    if (oldPerms && newPerms) {
+        newPerms.forEach((overwrite) => {
+            const oldOverwrite = oldPerms.get(overwrite.id);
+            if (!oldOverwrite) {
+                const newAllow = overwrite.allow.toArray().join(', ') || 'Aucune';
+                const newDeny = overwrite.deny.toArray().join(', ') || 'Aucune';
+                permChanges.push(`✅ Ajout ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${newAllow}\n Interdit: ${newDeny}\`\`\``);
+                return;
+            }
+
+            const oldAllow = oldOverwrite.allow.toArray();
+            const newAllow = overwrite.allow.toArray();
+            const oldDeny = oldOverwrite.deny.toArray();
+            const newDeny = overwrite.deny.toArray();
+
+            const addedAllow = newAllow.filter(p => !oldAllow.includes(p));
+            const removedAllow = oldAllow.filter(p => !newAllow.includes(p));
+            const addedDeny = newDeny.filter(p => !oldDeny.includes(p));
+            const removedDeny = oldDeny.filter(p => !newDeny.includes(p));
+
+            const changes = [];
+            if (addedAllow.length) changes.push(`+ Autoriser: ${addedAllow.join(', ')}`);
+            if (removedAllow.length) changes.push(`- Autoriser: ${removedAllow.join(', ')}`);
+            if (addedDeny.length) changes.push(`+ Interdit: ${addedDeny.join(', ')}`);
+            if (removedDeny.length) changes.push(`- Interdit: ${removedDeny.join(', ')}`);
+
+            if (changes.length) {
+                permChanges.push(`⚠️ Changement ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` ${changes.join('\n ')}\`\`\``);
+            }
+        });
+
+        oldPerms.forEach((overwrite) => {
+            if (!newPerms.get(overwrite.id)) {
+                const oldAllow = overwrite.allow.toArray().join(', ') || 'Aucune';
+                const oldDeny = overwrite.deny.toArray().join(', ') || 'Aucune';
+                permChanges.push(`⛔ Retrait ${oldChannel.guild.roles.cache.get(overwrite.id)} :\n\`\`\` Autoriser: ${oldAllow}\n Interdit: ${oldDeny}\`\`\``);
+            }
+        });
+    }
+
+    if (permChanges.length > 0) {
+        const permissionsFetchedLogs = await oldChannel.guild.fetchAuditLogs({
+            type: Discord.AuditLogEvent.ChannelPermissionUpdates,
             limit: 5,
         });
 
-        const channelLog = fetchedLogs.entries.find(entry =>
+        const permissionsChannelLog = permissionsFetchedLogs.entries.find(entry =>
             entry.target?.id === oldChannel.id && Date.now() - entry.createdTimestamp < 5000
         );
 
-        const executorPermissions = channelLog?.executor;
+        const executorPermissions = permissionsChannelLog?.executor || executor;
 
         const UpdateChannelPermissions = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({ name: executorPermissions.displayName, iconURL : executorPermissions.displayAvatarURL({ dynamic : true})})
-            .setDescription(`Les permissions du salon ${oldChannel.name} ont été modifier par ${executorPermissions.displayName}.\n\nNom du salon : ${oldChannel.name}\nType du salon : ${oldReadableChannelType}\nAncienne permisions: ${oldPermsString}\n Nouvelle permissions: ${newPermsString}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executorPermissions.id}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's bot", iconURL: bot.user.displayAvatarURL({ dynamic : true})})
+            .setAuthor({
+                name: executorPermissions.displayName,
+                iconURL: executorPermissions.displayAvatarURL({dynamic: true})
+            })
+            .setDescription(`Les permissions du salon <#${oldChannel.id}> ont été modifiées par ${executorPermissions}.\n\nNom du salon : ${oldChannel.name}\nType du salon : ${oldReadableChannelType}\n\n${permChanges.join('\n')}\n`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await logsChannel.send({embeds: [UpdateChannelPermissions]})
@@ -134,9 +219,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
             const UpdateChannelNSFW = new Discord.EmbedBuilder()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+                .setAuthor({
+                    name: executor.displayName,
+                    iconURL: executor.displayAvatarURL({dynamic: true})
+                })
                 .setDescription(`Le salon ${oldChannel.name} vient d'être soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Oui\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-                .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setFooter({
+                    text: "Gérée par l'instance de Peperehobbits01's Bot",
+                    iconURL: bot.user.displayAvatarURL({dynamic: true})
+                })
                 .setTimestamp()
 
             await logsChannel.send({embeds: [UpdateChannelNSFW]})
@@ -144,9 +235,15 @@ module.exports = async(bot, oldChannel, newChannel) => {
 
             const UpdateChannelNSFW = new Discord.EmbedBuilder()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor({ name: executor.displayName, iconURL: executor.displayAvatarURL({ dynamic: true }) })
+                .setAuthor({
+                    name: executor.displayName,
+                    iconURL: executor.displayAvatarURL({dynamic: true})
+                })
                 .setDescription(`Le salon ${oldChannel.name} n'est plus soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Non\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-                .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setFooter({
+                    text: "Gérée par l'instance de Peperehobbits01's Bot",
+                    iconURL: bot.user.displayAvatarURL({dynamic: true})
+                })
                 .setTimestamp()
 
             await logsChannel.send({embeds: [UpdateChannelNSFW]})
