@@ -28,14 +28,17 @@ module.exports = {
             if(!user || !message.guild.members.cache.get(user?.id)) return message.reply("Aucun membre sélectionnée!")
         } else user = message.user;
 
-        const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
+        const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${user.id}'`
         const results = await executeQuery(querySearch);
 
         if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens possèdent de l'expérience!")
         
         await message.deferReply()
 
-        let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
+        const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
+        const resultsLeaderBoard = await executeQuery(querySearchLeaderBoard);
+
+        let leaderboard = resultsLeaderBoard.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
         let userInLeaderboard = results.find(u => u.user === user.id)
         let xp = parseInt(userInLeaderboard.xp)
         let level = parseInt(userInLeaderboard.level)
