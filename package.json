@@ -1,12 +1,12 @@
 {
   "name": "Peperehobbits01's-Bot",
-  "version": "24w16a",
+  "version": "26w26a",
   "description": "Bot de Peperehobbits01",
   "main": "main.js",
   "scripts": {
     "test": "node main"
   },
-  "author": "",
+  "author": "Peperehobbits01",
   "license": "LGPL-3.0-or-later",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
