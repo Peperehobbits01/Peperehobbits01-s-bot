@@ -91,7 +91,7 @@ module.exports = async(bot, oldChannel, newChannel) => {
         await logsChannel.send({embeds: [UpdateChannelTopic]})
     }
 
-    if (oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
+    if(oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
 
         const UpdateChannelSlowModeON = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
