@@ -4,6 +4,7 @@ module.exports = async(bot, message, oldMessage) => {
 
     if(message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
     if(message.partial) return;
+    if(message.content === oldMessage.content) return;
     const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE)
     const fetchedLogs = await message.guild.fetchAuditLogs({
         type: Discord.AuditLogEvent.messageUpdate,
