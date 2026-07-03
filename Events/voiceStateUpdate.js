@@ -2,56 +2,90 @@ const Discord = require("discord.js");
 const ms = require("ms");
 const { executeQuery } = require("../Fonctions/databaseConnect.js")
 
-module.exports = async(bot, oldState, newState, user) => {
+module.exports = async(bot, oldState, newState) => {
 
   const oldChannel = oldState.channel;
   const newChannel = newState.channel;
-  const logsChannel = oldState.guild.channels.cache.get("1201547807132225669")
+  const logsChannel = oldState.guild.channels.cache.get(process.env.LOGS_CHANNEL_VOICE);
+
+  const member = newState.guild.members.cache.get(newState.id);
+  if (!member) {
+    console.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouver.");
+    return;
+  }
 
   if (!oldChannel && newChannel) {
 
-    const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${newState.user.id}', '${newState.channel.id}', '0')`
+    const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${member.id}', '${newState.channel.id}', '0')`
     await executeQuery(queryJoinCall)
 
     const JoinCall = new Discord.EmbedBuilder()
-    .setColor(process.env.BOT_COLOR)
-    .setTitle(`${newState.user} à rejoint un vocal`)
-    .setDescription(`**Salon**: ${oldChannel}\n**ID**\nUtilisateur : ${newState.user}\nSalon : ${oldChannel}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
-    .setTimestamp()
+        .setColor(process.env.BOT_COLOR)
+        .setTitle(`${member.displayName} à rejoint un salon vocal`)
+        .setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\#ID\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        .setTimestamp()
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
 
     await logsChannel.send({embeds: [JoinCall]})
-
   }
 
   if (oldChannel && !newChannel) {
 
-    const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${oldState.user.id}'`
+    const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${member.id}'`
     await executeQuery(queryLeaveCall)
 
     const LeaveCall = new Discord.EmbedBuilder()
-    .setColor(process.env.BOT_COLOR)
-    .setTitle(`${oldState.user} à quittée un vocal`)
-    .setDescription(`**Salon**: ${oldChannel}\n**ID**\nUtilisateur : ${oldState.user}\nSalon : ${oldChannel.name}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.oldState.user.displayAvatarURL({ dynamic: true }) })
-    .setTimestamp()
+        .setColor(process.env.BOT_COLOR)
+        .setTitle(`${member.displayName} à quittée un salon vocal`)
+        .setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\#ID\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        .setTimestamp()
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
 
     await logsChannel.send({embeds: [LeaveCall]})
-
   }
   
   if (oldChannel && newChannel) {
 
-    const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', AND user = '${newState.user.id}' AND time = '0'`
-    await executeQuery(queryMooveCall)
+    if (newState.selfDeaf !== oldState.selfDeaf) {
+      return;
+    } else if (oldState.selfDeaf !== newState.selfDeaf) {
+      return;
+    }
 
-    const MooveCall = new Discord.EmbedBuilder()
-    .setColor(process.env.BOT_COLOR)
-    .setTitle(`${newState.user} à changée de vocal`)
-    .setDescription(`**Salon**: ${oldChannel.name} et maintenant ${newChannel.name}\n**ID**\nUtilisateur : ${newState.user}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}`)
-    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.newState.user.displayAvatarURL({ dynamic: true }) })
-    .setTimestamp()
+    if (newState.selfMute !== oldState.selfMute) {
+      return;
+    } else if (oldState.selfMute !== newState.selfMute) {
+      return;
+    }
 
-    await logsChannel.send({embeds: [MooveCall]})
+    if (newState.deaf !== oldState.deaf) {
+      return;
+    } else if (oldState.deaf !== newState.deaf) {
+      return;
+    }
+
+    if (newState.mute !== oldState.mute) {
+      return;
+    } else if (oldState.mute !== newState.mute) {
+      return;
+    }
+
+    if (oldChannel !== newChannel) {
+
+      const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', time = '0' WHERE user = '${member.id}'`
+      await executeQuery(queryMooveCall)
+
+      const MooveCall = new Discord.EmbedBuilder()
+          .setColor(process.env.BOT_COLOR)
+          .setTitle(`${member.displayName} à changée de vocal`)
+          .setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel.name}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\#ID\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+          .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+          .setTimestamp()
+          .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+
+      await logsChannel.send({embeds: [MooveCall]})
+    }
   }
 };

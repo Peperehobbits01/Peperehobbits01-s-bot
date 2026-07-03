@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
-const { levenshteinDistance } = require('../../Fonctions/levenshteinDistance')
+const { levenshteinDistance } = require('../../Fonctions/levenshteinDistance');
+const PERMISSION_NOM = require('../../Fonctions/permissionName');
 
 module.exports = {
 
@@ -95,16 +96,20 @@ module.exports = {
             });
 
             const command = bot.commands.get(commandeProche)
-            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, ephemeral: true})
+            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`}, {ephemeral: true})
+
+            const permissionsText = command.permission === "Aucune"
+                ? "Aucune"
+                : new Discord.PermissionsBitField(command.permission).toArray().map(perm => PERMISSION_NOM[perm] || perm).join(', ')
 
             let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${(typeof command.permission === 'object' && command.permission !== null && command.permission.toArray) ? (command.permission.toArray(false).join(', ')) : `${command.permission}`}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
             .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-            await message.reply({embeds: [EmbedCommande], ephemeral: false})
+            await message.reply({embeds: [EmbedCommande]})
         }
     }
 }

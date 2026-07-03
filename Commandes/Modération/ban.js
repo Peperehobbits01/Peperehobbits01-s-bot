@@ -57,7 +57,7 @@ module.exports = {
         .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
         
-        await message.followUp({embeds: [Ban2], ephemeral : false})
+        await message.followUp({embeds: [Ban2]})
 
         await message.guild.bans.create(user.id, {reason: reason})
 

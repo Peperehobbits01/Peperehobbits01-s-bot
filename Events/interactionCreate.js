@@ -63,7 +63,7 @@ module.exports = async (bot, interaction, message) => {
             const collector = interaction.channel.createMessageComponentCollector()
             
             collector.on('collect', async interaction => {
-                if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`, ephemeral: true})
+                if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`}, {ephemeral: true})
 
                 const category = interaction.values[0];
                 const categoryCommands = bot.commands.filter(command => command.category.toUpperCase() === category)

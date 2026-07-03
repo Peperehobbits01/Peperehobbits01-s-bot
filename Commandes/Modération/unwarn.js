@@ -45,7 +45,7 @@ module.exports = {
         const querySearch = `SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`
         const results = await executeQuery(querySearch)
 
-        if (results.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
+        if(results.length < 1) return message.reply('Aucune avertissements pour ce membre/ID du warn');
 
         const queryWarnRemove = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
         await executeQuery(queryWarnRemove)

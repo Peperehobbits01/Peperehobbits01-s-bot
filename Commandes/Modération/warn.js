@@ -67,7 +67,6 @@ module.exports = {
         .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Warn2], components: [unwarn], ephemeral : false})
-
+        await message.followUp({embeds: [Warn2], components: [unwarn]})
     }       
 }

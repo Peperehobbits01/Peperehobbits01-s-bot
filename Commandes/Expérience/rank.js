@@ -28,14 +28,17 @@ module.exports = {
             if(!user || !message.guild.members.cache.get(user?.id)) return message.reply("Aucun membre sélectionnée!")
         } else user = message.user;
 
-        const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
+        const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${user.id}'`
         const results = await executeQuery(querySearch);
 
         if(results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens possèdent de l'expérience!")
         
         await message.deferReply()
 
-        let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
+        const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
+        const resultsLeaderBoard = await executeQuery(querySearchLeaderBoard);
+
+        let leaderboard = resultsLeaderBoard.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
         let userInLeaderboard = results.find(u => u.user === user.id)
         let xp = parseInt(userInLeaderboard.xp)
         let level = parseInt(userInLeaderboard.level)
@@ -54,14 +57,16 @@ module.exports = {
 
         const member = message.guild.members.cache.get(user.id);
         const status = member?.presence?.status ?? "offline";
-        const badges = await user.fetchFlags()
-        const badge = badges.toArray()
+        const fetchedUser = await bot.users.fetch(user.id);
+        const badge = fetchedUser.flags.toArray()
         .filter(b => b !== "BotHTTPInteractions" 
             && b !== "Quarantined" 
             && b !== "Spammer" 
             && b !== "TeamPseudoUser"
             && b !== "VerifiedBot"
         );
+
+        //const hasNitro = member && member.premiumType && member.premiumType > 0;
 
         if(xp > need) xp = need
         if(xp < 0) xp = 0
@@ -116,7 +121,7 @@ module.exports = {
         ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 210)
 
         //Badge de l'utilisateur                    
-        if(badges.bitfield !== 0) {
+        if(fetchedUser.flags.bitfield !== 0) {
                     
             for(let i = 0; i < badge.length; i++) {
                 let b;
@@ -171,29 +176,14 @@ module.exports = {
                         ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                     }
                     if(member && member.premiumSinceTimestamp !== null) {
-                        if((await guild.fetchOwner()).id === user.id) {
-                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
-                            ctx.drawImage(b, 275 + (i+2) * 50, 220, 50, 50)
-                        } else {
-                            const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
-                            ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
-                        }
+                        const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
+                        ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                     }
-                    if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
-                        if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
-                            const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                            ctx.drawImage(b, 275 + (i+3) * 50, 220, 72, 50)
-                        } else if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp === null) {
-                            const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                            ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
-                        } else if((await guild.fetchOwner()).id !== user.id && member && member.premiumSinceTimestamp !== null) {
-                            const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                            ctx.drawImage(b, 275 + (i+2) * 50, 220, 72, 50)
-                        } else {
-                            const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                            ctx.drawImage(b, 275 + (i+1) * 50, 220, 72, 50)
-                        }
-                    }
+
+                    /*if(hasNitro) {
+                        const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
+                        ctx.drawImage(b, 275 + (i+1) * 50, 220, 72, 50)
+                    }*/
                 }
             }
 
@@ -203,30 +193,16 @@ module.exports = {
                 const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
                 ctx.drawImage(b, 275, 220, 50, 50)
             }
+
             if(member && member.premiumSinceTimestamp !== null) {
-                if((await guild.fetchOwner()).id === user.id) {
-                    const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `Assets/NitroBoost9.png`)
-                    ctx.drawImage(b, 275 + 50, 220, 50, 50)
-                } else {
-                    const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `Assets/NitroBoost9.png`)
-                    ctx.drawImage(b, 275, 220, 50, 50)
-                }
+                const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `Assets/NitroBoost9.png`)
+                ctx.drawImage(b, 275, 220, 50, 50)
             }
-            if(user.displayAvatarURL({dynamic: true}).endsWith(".gif") || (member ? member.presence ? member.presence.activities[0] ? member.presence.activities[0].emoji !== null ? member.presence.activities[0].emoji.id !== undefined : "" : "" : "" : "") || (member ? member.premiumSinceTimestamp !== null : "") || (await bot.users.fetch(user.id, {force: true})).banner) {
-                if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp !== null) {
-                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                    ctx.drawImage(b, 275 + 100, 220, 72, 50)
-                } else if((await guild.fetchOwner()).id === user.id && member && member.premiumSinceTimestamp === null) {
-                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                    ctx.drawImage(b, 275 + 50, 220, 72, 50)
-                } else if((await guild.fetchOwner()).id !== user.id && member && member.premiumSinceTimestamp !== null) {
-                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                    ctx.drawImage(b, 275 + 50, 220, 72, 50)
-                } else {
-                    const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
-                    ctx.drawImage(b, 275, 220, 72, 50)
-                }
-            }
+
+            /*if(hasNitro) {
+                const b = await Canvas.loadImage(`Assets/NitroBadge.png`)
+                ctx.drawImage(b, 325, 220, 72, 50)
+            }*/
         }
 
         //Status

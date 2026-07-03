@@ -47,8 +47,6 @@ module.exports = async(bot, message) => {
         await lastMessage.delete();
     } else if (currentNumber !== previousNumber + 1) {
         await lastMessage.delete();
-    } else if (!isNaN(parseInt(message.content)) && (currentNumber > 0 && !isNaN(currentNumber))) {
-        return;
     } else if (currentNumber > 0 && !isNaN(currentNumber)) {
         await lastMessage.delete();
     }

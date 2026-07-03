@@ -1,13 +1,12 @@
 const Discord = require("discord.js")
 
-module.exports = async(bot, message, oldMessage) => {
+module.exports = async (bot, message) => {
 
     if(message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
     if(message.partial) return;
-    if(message.content === oldMessage.content) return;
-    const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE)
+    const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
     const fetchedLogs = await message.guild.fetchAuditLogs({
-        type: Discord.AuditLogEvent.messageUpdate,
+        type: Discord.AuditLogEvent.messageDelete,
         limit: 1,
     });
 
@@ -17,18 +16,18 @@ module.exports = async(bot, message, oldMessage) => {
 
     const executor = channelLog?.executor || message.author;
 
-    const messageUpdateEmbed = new Discord.EmbedBuilder()
+    const MessageRemoveEmbed = new Discord.EmbedBuilder()
         .setAuthor({
             name: executor.displayName,
             iconURL: executor.displayAvatarURL({dynamic: true})
         })
         .setColor(process.env.BOT_COLOR)
-        .setDescription(`Un message a été modifiée par ${executor}\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
+        .setDescription(`Un message de ${message.author} a été supprimer par ${executor}\n\nMessage supprimer : ${message}\nAuteur : ${message.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
         .setFooter({
             text: "Gérée par l'instance de Peperehobbits01's Bot",
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
         .setTimestamp()
 
-    await logsChannel.send({embeds: [messageUpdateEmbed]});
+    await logsChannel.send({embeds: [MessageRemoveEmbed]})
 }

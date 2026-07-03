@@ -57,7 +57,7 @@ module.exports = {
         .setColor(process.env.BOT_COLOR)
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
 
-        await message.followUp({embeds: [Kick2], ephemeral : false})
+        await message.followUp({embeds: [Kick2]})
 
         await member.kick(reason)
 
@@ -65,7 +65,6 @@ module.exports = {
  
         const queryKickAdd = `INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
         await executeQuery(queryKickAdd)
-        
     }
 }
 
