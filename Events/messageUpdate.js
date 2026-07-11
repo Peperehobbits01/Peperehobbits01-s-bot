@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { getFirstImage } = require("../Fonctions/getMessageImage")
 
 module.exports = async(bot, message, oldMessage) => {
 
@@ -17,6 +18,9 @@ module.exports = async(bot, message, oldMessage) => {
 
     const executor = channelLog?.executor || message.author;
 
+    const oldImage = getFirstImage(oldMessage)
+    const newImage = getFirstImage(message)
+
     const messageUpdateEmbed = new Discord.EmbedBuilder()
         .setAuthor({
             name: executor.displayName,
@@ -29,6 +33,9 @@ module.exports = async(bot, message, oldMessage) => {
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
         .setTimestamp()
+
+    if (oldImage) messageUpdateEmbed.setThumbnail(oldImage)
+    if (newImage) messageUpdateEmbed.setImage(newImage)
 
     await logsChannel.send({embeds: [messageUpdateEmbed]});
 }
