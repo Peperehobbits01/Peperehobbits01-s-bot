@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const { getFirstImage } = require("../Fonctions/getMessageImage")
 
 module.exports = async (bot, message) => {
 
@@ -16,6 +17,8 @@ module.exports = async (bot, message) => {
 
     const executor = channelLog?.executor || message.author;
 
+    const deletedImage = getFirstImage(message)
+
     const MessageRemoveEmbed = new Discord.EmbedBuilder()
         .setAuthor({
             name: executor.displayName,
@@ -28,6 +31,11 @@ module.exports = async (bot, message) => {
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
         .setTimestamp()
+
+
+    if (deletedImage) {
+        MessageRemoveEmbed.setImage(deletedImage)
+    }
 
     await logsChannel.send({embeds: [MessageRemoveEmbed]})
 }
