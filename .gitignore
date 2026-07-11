@@ -2,3 +2,4 @@ node_modules/
 Fonctions/databaseConnect
 .idea
 .env
+package-lock.json
