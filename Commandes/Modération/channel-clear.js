@@ -36,8 +36,7 @@ module.exports = {
 
         try {
 
-            let messages = await channel.bulkDelete(parseInt(number))
-
+            await channel.bulkDelete(parseInt(number))
             await message.channel.send({content: `Les messages sont supprimée!`})
 
         } catch (err) {
