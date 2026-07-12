@@ -28,7 +28,7 @@ module.exports = {
         if(!channel) return message.reply(`**Le salon n'a pas été trouvé**`)
         if(!c) return message.reply(`**Le salon n'a pas été trouvé**`)
         let reason = args.getString('raison')
-        if(!reason) reason = "Pas de raison fournie"
+        if(!reason) reason = "Non respect de règle."
 
         c.permissionOverwrites.create(message.guild.roles.everyone, {
             SendMessages: false
@@ -38,7 +38,10 @@ module.exports = {
             .setColor(process.env.BOT_COLOR)
             .setTitle("Inforamtion lock")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
         
             await message.reply({embeds: [Lock]})
     }
