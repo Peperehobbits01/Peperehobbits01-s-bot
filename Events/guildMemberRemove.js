@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 
 module.exports = async (bot, member) => {
 
-    const logsChannel = member.guild.channel.cache.get(process.env.LOGS_CHANNEL_MEMBER)
+    const logsChannel = member.guild.channels.cache.get(process.env.LOGS_CHANNEL_GATEWAY)
 
     const removeMember = new Discord.EmbedBuilder()
         .setColor(process.env.BOT_COLOR)

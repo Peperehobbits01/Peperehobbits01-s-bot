@@ -13,6 +13,7 @@ bot.function = {
     calculXp : require("./Fonctions/calculXp.js"),
     channelTypeName : require("./Fonctions/channelTypeName.js"),
     permissionName : require("./Fonctions/permissionName.js"),
+    getMessageImage : require("./Fonctions/getMessageImage.js"),
 }
 
 bot.login(process.env.TOKEN)
