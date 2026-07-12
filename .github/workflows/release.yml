@@ -1,0 +1,54 @@
+name: Create Release on Push to main
+
+on:
+  push:
+    branches:
+      - 1.4.0-beta-24w16a
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate tag from commit
+        id: tag
+        run: |
+          TAG="v$(date +%Y.%m.%d)-$(echo ${{ github.sha }} | head -c7)"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch existing tags to avoid duplicates
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          if git ls-remote origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists, aborting release creation."
+            echo "SKIP=true" >> "$GITHUB_ENV"
+          else
+            echo "SKIP=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Gather changed files for changelog
+        if: env.SKIP != 'true'
+        id: changes
+        run: |
+          BODY="## What's Changed\n\n"
+          COMMITS=$(git log ${{ github.event.before }}..${{ github.sha }} --oneline --no-merges 2>/dev/null || git log --oneline -10)
+          BODY+="### Commits\n\n"
+          BODY+="$(echo "$COMMITS" | sed 's/^/- /')\n\n"
+          BODY+="**Full Changelog**: [compare](${{ github.server_url }}/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }})"
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        if: env.SKIP != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Release ${{ steps.tag.outputs.tag }}"
+          body: ${{ steps.changes.outputs.body }}
+          make_latest: true
