@@ -24,27 +24,30 @@ module.exports = {
         }
     ],
 
-    async run(bot, message, args, db) {
+    async run(bot, message, args) {
 
         let user = args.getUser("membre")
-        if(!user) return message.reply("Pas de membre à expulsé!")
+        if(!user) return message.reply("Aucun membre a expulsé.")
         let member = message.guild.members.cache.get(user.id)
-        if(!member) return message.reply("Pas de membre à expulsé.")
+        if(!member) return message.reply("Aucun membre a expulsé.")
 
         let reason = args.getString("raison")
-        if(!reason) reason = "Non respect du règlement! (raison auto ajoutée)";
+        if(!reason) reason = "Non respect du règlement ! (raison auto ajoutée)";
 
-        if(message.user.id === user.id) return message.reply("Tu ne peux pas t'expulsé!")
-        if((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peux pas être banni!")
-        if(member && !member.kickable) return message.reply("Je ne peux l'expulsé!")
-        if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulsé!")
+        if(message.user.id === user.id) return message.reply("Tu ne peux pas t'expulsé !")
+        if((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peux pas être banni !")
+        if(member && !member.kickable) return message.reply("Je ne peux l'expulsé !")
+        if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulsé !")
         
         try{
             const Kick1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été expulsée ! `)
             .setDescription(`${message.user.tag} vous a expulsée sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
             .setColor(process.env.BOT_COLOR)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
     
             await user.send({embeds: [Kick1]})
         } catch(err) {}
@@ -55,7 +58,10 @@ module.exports = {
         .setTitle("Informations du kick")
         .setDescription(`Vous avez kick ${user.tag} pour la raison : \`${reason}\` avec succès !`)
         .setColor(process.env.BOT_COLOR)
-        .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+        .setFooter({
+            text: "Gérée par l'instance de Peperehobbits01's Bot",
+            iconURL: bot.user.displayAvatarURL({dynamic: true})
+        })
 
         await message.followUp({embeds: [Kick2]})
 
