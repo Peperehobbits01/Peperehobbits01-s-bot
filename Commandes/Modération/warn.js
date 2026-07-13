@@ -58,7 +58,7 @@ module.exports = {
         const unwarn = new Discord.ActionRowBuilder()
             .addComponents(
                 new Discord.ButtonBuilder()
-                    .setCustomId("unwarn")
+                    .setCustomId(`unwarn_${ID}`)
                     .setLabel("Retirée l'avertisement")
                     .setStyle(Discord.ButtonStyle.Danger)
             )

@@ -1,5 +1,5 @@
 const Discord = require("discord.js")
-const { executeQuery } = require("../Fonctions/databaseConnect.js") 
+const { executeQuery } = require("../Fonctions/databaseConnect.js")
 
 module.exports = async (bot, interaction) => {
 
@@ -43,17 +43,22 @@ module.exports = async (bot, interaction) => {
 
     }
 
-    if(interaction.customId === "unwarn") {
-        if(interaction.isButton()) {
+    if(interaction.isButton()) {
+        if(interaction.customId.startsWith("unwarn_")) {
 
-            //if(!interaction.user.id.hasPermission("MANAGE_MESSAGES")) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
+            const warnId = interaction.customId.split("_")[1];
+            
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+            if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({content: "Vous ne pouvez pas utiliser ce bouton !", flags: [Discord.MessageFlags.Ephemeral]});
 
-            const queryUnwarnSearch = `SELECT * FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}"`
+            const queryUnwarnSearch = `SELECT * FROM warn WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND warn = "${warnId}"`
             const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
-            if (ResultsUnwarn.length < 1) return interaction.reply('Aucune avertissements pour ce membre/ID du warn')
+            if (ResultsUnwarn.length < 1) return interaction.reply({content: "Aucun avertissement trouvé pour ce membre", flags: [Discord.MessageFlags.Ephemeral]})
 
-            const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
+            const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND warn = "${warnId}"`
             await executeQuery(queryUnwarnDelete)
+
+            return interaction.reply({content: "Avertissement retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
     }
 
@@ -75,7 +80,7 @@ module.exports = async (bot, interaction) => {
                 .setTimestamp()
                 .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
         
-            interaction.update({ embeds: [nouvelEmbed] });
+            return interaction.update({ embeds: [nouvelEmbed] });
         }
     }
 }
