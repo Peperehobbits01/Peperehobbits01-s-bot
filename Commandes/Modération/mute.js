@@ -67,6 +67,21 @@ module.exports = {
 
         await message.deferReply()
 
+        let ID = await bot.function.createId("MUTE")
+
+        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${time}')`
+        await executeQuery(queryMuteAdd)
+
+        await member.timeout(ms(time), reason)
+
+        const unmute = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId(`unmute_${ID}`)
+                    .setLabel("Retirée le mute")
+                    .setStyle(Discord.ButtonStyle.Danger)
+            )
+
         const Mute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du mute")
         .setDescription(`Vous avez mute ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
@@ -76,13 +91,6 @@ module.exports = {
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
 
-        await message.followUp({embeds: [Mute2]})
-
-        await member.timeout(ms(time), reason)
-
-        let ID = await bot.function.createId("MUTE")
- 
-        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${time}')`
-        await executeQuery(queryMuteAdd)
+        await message.followUp({embeds: [Mute2], components: [unmute]})
     }
 }

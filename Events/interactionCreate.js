@@ -77,6 +77,25 @@ module.exports = async (bot, interaction) => {
 
             return interaction.reply({content: "Avertissement retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
+
+        if(interaction.customId.startsWith("unmute_")) {
+
+            const muteId = interaction.customId.split("_")[1];
+
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+            if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({content: "Vous ne pouvez pas utiliser ce bouton !", flags: [Discord.MessageFlags.Ephemeral]});
+
+            const queryUnmuteSearch = `SELECT * FROM mute WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND mute = "${muteId}"`
+            const ResultsUnmute = await executeQuery(queryUnmuteSearch)
+            if (ResultsUnmute.length < 1) return interaction.reply({content: "Aucun mute trouvé pour ce membre", flags: [Discord.MessageFlags.Ephemeral]})
+
+            const queryUnmuteDelete = `DELETE FROM mute WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND mute = "${muteId}"`
+            await executeQuery(queryUnmuteDelete)
+
+            await member.timeout(null)
+
+            return interaction.reply({content: "Mute retiré !", flags: [Discord.MessageFlags.Ephemeral]});
+        }
     }
 
     if(interaction.customId === "help") {
