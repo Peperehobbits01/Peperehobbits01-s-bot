@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 const { executeQuery } = require("../Fonctions/databaseConnect.js") 
 
-module.exports = async (bot, interaction, message) => {
+module.exports = async (bot, interaction) => {
 
     if(interaction.type === Discord.InteractionType.ApplicationCommand) {
 
@@ -43,7 +43,7 @@ module.exports = async (bot, interaction, message) => {
 
     }
 
-    if (interaction.customId === "unwarn") {
+    if(interaction.customId === "unwarn") {
         if(interaction.isButton()) {
 
             //if(!interaction.user.id.hasPermission("MANAGE_MESSAGES")) return message.reply({content: `Vous ne pouvez pas utiliser ce boutton !`, ephemeral: true});
@@ -57,28 +57,25 @@ module.exports = async (bot, interaction, message) => {
         }
     }
 
-    if (interaction.customId === "help") {
+    if(interaction.customId === "help") {
         if(interaction.isStringSelectMenu()) {
-          
-            const collector = interaction.channel.createMessageComponentCollector()
-            
-            collector.on('collect', async interaction => {
-                if(interaction.user.id !== interaction.user.id) return interaction.reply({content: `Vous ne pouvez pas utiliser ce menu!`}, {ephemeral: true})
 
-                const category = interaction.values[0];
-                const categoryCommands = bot.commands.filter(command => command.category.toUpperCase() === category)
-                const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
+            const category = interaction.values[0];
+            const categoryCommands = bot.commands.filter(command => command.category.toUpperCase() === category)
+            const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
 
-                const nouvelEmbed = new Discord.EmbedBuilder()
-                    .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
-                    .setDescription(commandString)
-                    .setColor(process.env.BOT_COLOR)
-                    .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-                    .setTimestamp()
-                    .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
-            
-                interaction.update({ embeds: [nouvelEmbed] });
-            })
+            const nouvelEmbed = new Discord.EmbedBuilder()
+                .setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
+                .setDescription(commandString)
+                .setColor(process.env.BOT_COLOR)
+                .setFooter({
+                    text: "Gérée par l'instance de Peperehobbits01's Bot",
+                    conURL: bot.user.displayAvatarURL({dynamic: true })
+                })
+                .setTimestamp()
+                .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+        
+            interaction.update({ embeds: [nouvelEmbed] });
         }
     }
 }
