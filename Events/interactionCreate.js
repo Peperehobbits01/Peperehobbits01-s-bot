@@ -44,6 +44,23 @@ module.exports = async (bot, interaction) => {
     }
 
     if(interaction.isButton()) {
+        if(interaction.customId.startsWith("unnote_")) {
+
+            const noteID = interaction.customId.split("_")[1];
+
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+            if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({content: "Vous ne pouvez pas utiliser ce bouton !", flags: [Discord.MessageFlags.Ephemeral]});
+
+            const queryUnnoteSearch = `SELECT * FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`
+            const ResultsUnnote = await executeQuery(queryUnnoteSearch)
+            if (ResultsUnnote.length < 1) return interaction.reply({content: "Aucune note trouvé pour ce membre", flags: [Discord.MessageFlags.Ephemeral]})
+
+            const queryUnnoteDelete = `DELETE FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`
+            await executeQuery(queryUnnoteDelete)
+
+            return interaction.reply({content: "Note retiré !", flags: [Discord.MessageFlags.Ephemeral]});
+        }
+
         if(interaction.customId.startsWith("unwarn_")) {
 
             const warnId = interaction.customId.split("_")[1];

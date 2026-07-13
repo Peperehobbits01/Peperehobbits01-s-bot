@@ -40,6 +40,19 @@ module.exports = {
 
         await message.deferReply()
 
+        let ID = await bot.function.createId("NOTE")
+
+        const queryNoteAdd = `INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+        await executeQuery(queryNoteAdd)
+
+        const unnote = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId(`unnote_${ID}`)
+                    .setLabel("Retirée la note")
+                    .setStyle(Discord.ButtonStyle.Danger)
+            )
+
         const Note1 = new Discord.EmbedBuilder()
         .setTitle("Informations de la note")
         .setDescription(`Vous avez mis une note à ${user.tag} et voici sa note : \`${reason}\` avec succès !`)
@@ -48,11 +61,6 @@ module.exports = {
             text: "Gérée par l'instance de Peperehobbits01's Bot",
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
-        await message.followUp({embeds: [Note1]})
-
-        let ID = await bot.function.createId("NOTE")
- 
-        const queryNoteAdd = `INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
-        await executeQuery(queryNoteAdd)
+        await message.followUp({embeds: [Note1], components: [unnote]})
     }
 }
