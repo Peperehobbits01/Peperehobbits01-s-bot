@@ -55,7 +55,7 @@ module.exports = {
 
       await channel.send({embeds: [EmbedwhatToReport]});
 
-      await reponse.reply({embeds: [EmbedReport]}, {ephemeral: true})
+      await reponse.reply({embeds: [EmbedReport], flags: [Discord.MessageFlags.Ephemeral]})
 
     } catch (err) {}
   }

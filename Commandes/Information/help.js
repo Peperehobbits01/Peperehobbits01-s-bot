@@ -95,7 +95,7 @@ module.exports = {
             });
 
             const command = bot.commands.get(commandeProche)
-            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`}, {ephemeral: true})
+            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, flags: [Discord.MessageFlags.Ephemeral]})
 
             const permissionsText = command.permission === "Aucune"
                 ? "Aucune"
