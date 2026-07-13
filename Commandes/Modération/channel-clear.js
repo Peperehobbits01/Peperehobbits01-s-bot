@@ -5,7 +5,6 @@ module.exports = {
     name: "channel-clear",
     description: "Supprimer des messages dans un salon",
     permission: Discord.PermissionFlagsBits.ManageMessages,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {

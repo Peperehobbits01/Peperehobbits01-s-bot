@@ -5,7 +5,6 @@ module.exports = {
   name: "report",
   description: "💬 Envois un message de report à l'équipe.",
   permission: "Aucune",
-  dm: false,
   category: "🛡・Modération",
 
   async run(bot, message) {

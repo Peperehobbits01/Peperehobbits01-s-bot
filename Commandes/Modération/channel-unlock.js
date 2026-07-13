@@ -5,7 +5,6 @@ module.exports = {
     description: "Permet d'ouvrir un salon",
     permission: Discord.PermissionFlagsBits.ManageChannels,
     category: "🛡・Modération",
-    dm: false,
     options: [
         {
             type: "channel",

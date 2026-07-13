@@ -6,7 +6,6 @@ module.exports = {
     name: "unban",
     description: "Débannir une personne.",
     permission: Discord.PermissionFlagsBits.BanMembers,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {

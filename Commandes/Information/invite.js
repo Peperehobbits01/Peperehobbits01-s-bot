@@ -6,7 +6,6 @@ module.exports = {
     description: `Voir combien d'invitations les membres ont déjà envoyées`,
     permission: "Aucune",
     category: "📚・Informations",
-    dm: false,
     options: [
         {   
             type: "user",

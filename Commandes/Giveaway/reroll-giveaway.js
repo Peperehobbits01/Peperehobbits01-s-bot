@@ -4,7 +4,6 @@ module.exports = {
   name: "reroll-giveaway",
   description: "Choisir un nouveau gagnant pour le giveaway",
   permission: Discord.PermissionFlagsBits.Administrator,
-  dm: false,
   category: "🎁・giveaway",
   options : [
     {

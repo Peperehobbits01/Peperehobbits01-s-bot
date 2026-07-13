@@ -8,7 +8,6 @@ module.exports = {
     name: "leaderboard",
     description: "Classement des membres en xp sur le serveur.",
     permission: "Aucune",
-    dm: false,
     category: "📊・Système d'expérience",
 
     async run(bot, message) {

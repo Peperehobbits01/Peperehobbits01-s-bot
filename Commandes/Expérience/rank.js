@@ -8,7 +8,6 @@ module.exports = {
     name: "rank",
     description: "Permet de savoir le nombre d'xp d'un membre.",
     permission: "Aucune",
-    dm: false,
     category: "📊・Système d'expérience",
     options: [
         {

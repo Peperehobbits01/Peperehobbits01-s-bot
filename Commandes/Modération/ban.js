@@ -6,7 +6,6 @@ module.exports = {
     name: "ban",
     description: "Bannir les personnes ne respectant pas les règles.",
     permission: Discord.PermissionFlagsBits.BanMembers,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {

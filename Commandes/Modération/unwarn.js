@@ -5,7 +5,6 @@ module.exports = {
 
     name: "unwarn",
     description: "Permet de supprimer un avertissement d'un membre",
-    dm: false,
     category: "🛡・Modération",
     permission: Discord.PermissionFlagsBits.ModerateMembers,
     options: [

@@ -6,7 +6,6 @@ module.exports = {
     name: "note",
     description: "Mettre une note sur un membre.",
     permission: Discord.PermissionFlagsBits.KickMembers,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {

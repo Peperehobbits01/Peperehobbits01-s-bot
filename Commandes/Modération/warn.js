@@ -6,7 +6,6 @@ module.exports = {
     name: "warn",
     description: "Warn un membre ",
     permission: Discord.PermissionFlagsBits.ModerateMembers,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {

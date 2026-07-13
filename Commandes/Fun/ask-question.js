@@ -29,7 +29,6 @@ module.exports = {
   name: "ask-question",
   description: "Je répond a tes question",
   permission: "Aucune",
-  dm: false,
   category: "🥳・Fun",
   options: [
     {

@@ -5,7 +5,6 @@ module.exports = {
     name: "clear",
     description: "Effacer l'expérience d'un membre",
     permission: Discord.PermissionFlagsBits.Administrator,
-    dm: false,
     category: "📊・Système d'expérience",
     options: [
         {

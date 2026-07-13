@@ -6,7 +6,6 @@ module.exports = {
     name: "kick",
     description: "Expulse les personnes ne respectant pas les règles.",
     permission: Discord.PermissionFlagsBits.KickMembers,
-    dm: false,
     category: "🛡・Modération",
     options: [
         {
