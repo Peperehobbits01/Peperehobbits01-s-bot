@@ -167,7 +167,7 @@ module.exports = {
                     default:
                         break;
                 }
-                ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
+                ctx.drawImage(b, 275 + i * 50, 230, 50, 50)
 
                 if(i === (badge.length - 1)) {
                     if((await guild.fetchOwner()).id === user.id) {
