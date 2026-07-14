@@ -69,13 +69,16 @@ module.exports = {
         const queryMuteSearch = `SELECT * FROM mute WHERE guild = '${message.guildId}' AND user = '${user.id}'`
         const MuteResults = await executeQuery(queryMuteSearch)
     
-        if(MuteResults.length >= 1) console.log("Pas de mute")
-        await MuteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
-        
-        for(let i = 0; i < MuteResults.length; i++) {
-        
-            Embed.addFields([{name: `Mute n°${i+1}`, value: `> **Auteur** : ${(await bot.users.fetch(MuteResults[i].author)).tag}\n> **ID** : \`${MuteResults[i].mute}\`\n> **Raison** : \`${MuteResults[i].reason}\`\n> **Temps** : ${MuteResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(MuteResults[i].date) / 1000)}:f>`}])
-                    
+        if(MuteResults.length >= 1) {
+            await MuteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
+
+            for (let i = 0; i < MuteResults.length; i++) {
+
+                Embed.addFields([{
+                    name: `Mute n°${i + 1}`,
+                    value: `> **Auteur** : ${(await bot.users.fetch(MuteResults[i].author)).tag}\n> **ID** : \`${MuteResults[i].mute}\`\n> **Raison** : \`${MuteResults[i].reason}\`\n> **Temps** : ${MuteResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(MuteResults[i].date) / 1000)}:f>`
+                }])
+            }
         }
 
         const queryKickSearch = `SELECT * FROM kick WHERE guild = '${message.guildId}' AND user = '${user.id}'`
