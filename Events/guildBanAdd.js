@@ -15,6 +15,14 @@ module.exports = async(bot, ban) => {
 
     const executor = channelLog?.executor;
 
+    const unban = new Discord.ActionRowBuilder()
+        .addComponents(
+            new Discord.ButtonBuilder()
+                .setCustomId(`unban-${ban.user.id}`)
+                .setLabel("Retirée le bannisement")
+                .setStyle(Discord.ButtonStyle.Danger)
+        )
+
     const BanEmbed = new Discord.EmbedBuilder()
         .setColor(process.env.BOT_COLOR)
         .setAuthor({name : ban.displayName, iconURL: ban.user.displayAvatarURL({dynamic: true})})
@@ -22,5 +30,5 @@ module.exports = async(bot, ban) => {
         .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({dynamic: true})})
         .setTimestamp()
 
-    await logsChannel.send({ embeds: [BanEmbed] })
+    await logsChannel.send({ embeds: [BanEmbed], components: [unban] });
 }

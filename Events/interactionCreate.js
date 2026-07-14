@@ -113,7 +113,26 @@ module.exports = async (bot, interaction) => {
 
             await interaction.guild.members.unban(interaction.guild.members.fetch(ResultsUnban[0].user))
 
-            return interaction.reply({content: "Mute retiré !", flags: [Discord.MessageFlags.Ephemeral]});
+            return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
+        }
+
+        if(interaction.customId.startsWith("unban-")) {
+
+            const banUser = interaction.customId.split("-")[1];
+
+            const member = await interaction.guild.members.fetch(interaction.user.id);
+            if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({content: "Vous ne pouvez pas utiliser ce bouton !", flags: [Discord.MessageFlags.Ephemeral]});
+
+            const queryUnbanSearch = `SELECT * FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND user = "${banUser}"`
+            const ResultsUnban = await executeQuery(queryUnbanSearch)
+            if (ResultsUnban.length < 1) return interaction.reply({content: "Aucun ban trouvé pour ce membre", flags: [Discord.MessageFlags.Ephemeral]})
+
+            const queryUnbanDelete = `DELETE FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND user = "${banUser}"`
+            await executeQuery(queryUnbanDelete)
+
+            await interaction.guild.members.unban(interaction.guild.members.fetch(ResultsUnban[0].user))
+
+            return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
     }
 
