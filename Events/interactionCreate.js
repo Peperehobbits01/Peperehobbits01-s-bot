@@ -75,6 +75,19 @@ module.exports = async (bot, interaction) => {
             const queryUnwarnDelete = `DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND warn = "${warnId}"`
             await executeQuery(queryUnwarnDelete)
 
+            try{
+                const Warn1 = new Discord.EmbedBuilder()
+                    .setTitle(`Un avertissement a été retiré ! `)
+                    .setDescription(`${interaction.user.tag} a retiré votre avertissement sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
+                    .setColor(process.env.BOT_COLOR)
+                    .setFooter({
+                        text: "Gérée par l'instance de Peperehobbits01's Bot",
+                        iconURL: bot.user.displayAvatarURL({dynamic: true})
+                    })
+
+                await ResultsUnwarn[0].user.send({embeds: [Warn1]})
+            }catch(err) {}
+
             return interaction.reply({content: "Avertissement retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
 
@@ -92,7 +105,22 @@ module.exports = async (bot, interaction) => {
             const queryUnmuteDelete = `DELETE FROM mute WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND mute = "${muteId}"`
             await executeQuery(queryUnmuteDelete)
 
-            await interaction.guild.members.cache.get(ResultsUnmute[0].user).timeout(null)
+            const user = await interaction.guild.members.fetch(ResultsUnmute[0].user)
+
+            await interaction.guild.members.cache.get(user).timeout(null)
+
+            try{
+                const Mute1 = new Discord.EmbedBuilder()
+                    .setTitle(`Vous avez été démute ! `)
+                    .setDescription(`${interaction.user.tag} vous a démute sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
+                    .setColor(process.env.BOT_COLOR)
+                    .setFooter({
+                        text: "Gérée par l'instance de Peperehobbits01's Bot",
+                        iconURL: bot.user.displayAvatarURL({dynamic: true})
+                    })
+
+                await user.send({embeds: [Mute1]})
+            }catch(err) {}
 
             return interaction.reply({content: "Mute retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
@@ -111,7 +139,21 @@ module.exports = async (bot, interaction) => {
             const queryUnbanDelete = `DELETE FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND ban = "${banId}"`
             await executeQuery(queryUnbanDelete)
 
-            await interaction.guild.members.unban(interaction.guild.members.fetch(ResultsUnban[0].user))
+            const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
+            await interaction.guild.members.unban(user)
+
+            try{
+                const Ban1 = new Discord.EmbedBuilder()
+                    .setTitle(`Vous avez été débannis ! `)
+                    .setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
+                    .setColor(process.env.BOT_COLOR)
+                    .setFooter({
+                        text: "Gérée par l'instance de Peperehobbits01's Bot",
+                        iconURL: bot.user.displayAvatarURL({dynamic: true})
+                    })
+
+                await user.send({embeds: [Ban1]})
+            }catch(err) {}
 
             return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
@@ -130,7 +172,21 @@ module.exports = async (bot, interaction) => {
             const queryUnbanDelete = `DELETE FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND user = "${banUser}"`
             await executeQuery(queryUnbanDelete)
 
-            await interaction.guild.members.unban(interaction.guild.members.fetch(ResultsUnban[0].user))
+            const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
+            await interaction.guild.members.unban(user)
+
+            try{
+                const Ban1 = new Discord.EmbedBuilder()
+                    .setTitle(`Vous avez été débannis ! `)
+                    .setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
+                    .setColor(process.env.BOT_COLOR)
+                    .setFooter({
+                        text: "Gérée par l'instance de Peperehobbits01's Bot",
+                        iconURL: bot.user.displayAvatarURL({dynamic: true})
+                    })
+
+                await user.send({embeds: [Ban1]})
+            }catch(err) {}
 
             return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
         }
