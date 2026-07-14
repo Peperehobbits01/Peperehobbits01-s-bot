@@ -107,7 +107,7 @@ module.exports = async (bot, interaction) => {
 
             const user = await interaction.guild.members.fetch(ResultsUnmute[0].user)
 
-            await interaction.guild.members.cache.get(user).timeout(null)
+            await user.timeout(null)
 
             try{
                 const Mute1 = new Discord.EmbedBuilder()
