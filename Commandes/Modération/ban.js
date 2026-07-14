@@ -53,6 +53,21 @@ module.exports = {
 
         await message.deferReply()
 
+        let ID = await bot.function.createId("BAN")
+
+        const queryBanAdd = `INSERT INTO ban (guild, user, author, ban, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}', '${Date.now()}')`
+        await executeQuery(queryBanAdd)
+
+        await message.guild.bans.create(user.id, {reason: reason})
+
+        const unban = new Discord.ActionRowBuilder()
+            .addComponents(
+                new Discord.ButtonBuilder()
+                    .setCustomId(`unban_${ID}`)
+                    .setLabel("Retirée le bannisement")
+                    .setStyle(Discord.ButtonStyle.Danger)
+            )
+
         const Ban2 = new Discord.EmbedBuilder()
         .setTitle("Informations du ban")
         .setDescription(`Vous avez banni ${user.tag} pour la raison : \`${reason}\` avec succès !`)
@@ -62,13 +77,6 @@ module.exports = {
             iconURL: bot.user.displayAvatarURL({dynamic: true})
         })
         
-        await message.followUp({embeds: [Ban2]})
-
-        await message.guild.bans.create(user.id, {reason: reason})
-
-        let ID = await bot.function.createId("BAN")
- 
-        const queryBanAdd = `INSERT INTO ban (guild, user, author, ban, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
-        await executeQuery(queryBanAdd)
+        await message.followUp({embeds: [Ban2], components: [unban]})
     }
 }

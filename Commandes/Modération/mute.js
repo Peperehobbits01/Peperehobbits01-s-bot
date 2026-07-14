@@ -41,7 +41,7 @@ module.exports = {
         if(!time) return message.reply("Aucun temps donnée !")
         if(isNaN(ms(time))) return message.reply("Mauvais format !")
         if(ms(time) > 2419200000) return message.reply("Le bot ne peux pas mute autant de temps !")
-        if(ms(time) < 80000) return message.reply("La durée du mute est trop courte !")
+        if(ms(time) < 300000) return message.reply("La durée du mute est trop courte !")
 
         let reason = args.getString("raison")
         if(!reason) reason = "Non respect des règles (raison auto ajouté)";
@@ -69,7 +69,7 @@ module.exports = {
 
         let ID = await bot.function.createId("MUTE")
 
-        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${time}')`
+        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}', '${Date.now()}', '${time}')`
         await executeQuery(queryMuteAdd)
 
         await member.timeout(ms(time), reason)
