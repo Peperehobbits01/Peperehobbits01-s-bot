@@ -15,33 +15,31 @@ module.exports = {
         }, {
             type: "string",
             name: "raison",
-            description: "la raison du lock",
+            description: "la raison de la fermeture",
             required: false,
             autocomplete: false
         }
     ],
 
     async run(bot, message, args) {
-        let channel = args.getChannel("salon")
-        let c = message.guild.channels.cache.get(channel.id)
-        if(!channel) return message.reply(`**Le salon n'a pas été trouvé**`)
-        if(!c) return message.reply(`**Le salon n'a pas été trouvé**`)
+        let channel = await message.guild.channels.cache.get(args.getChannel("salon").id)
+        if(!channel) return message.reply({content: `Le salon n'a pas été trouvé !`})
         let reason = args.getString('raison')
         if(!reason) reason = "Non respect de règle."
 
-        c.permissionOverwrites.create(message.guild.roles.everyone, {
+        await channel.permissionOverwrites.create(message.guild.roles.everyone, {
             SendMessages: false
-          })
+        })
         
-          let Lock = new Discord.EmbedBuilder()
+        let Lock = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setTitle("Inforamtion lock")
+            .setTitle("Inforamtion sur la fermeture du salon")
             .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
             .setFooter({
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
                 iconURL: bot.user.displayAvatarURL({dynamic: true})
             })
         
-            await message.reply({embeds: [Lock]})
+        await message.reply({embeds: [Lock]})
     }
 }

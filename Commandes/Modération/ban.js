@@ -4,7 +4,7 @@ const { executeQuery } = require("../../Fonctions/databaseConnect.js")
 module.exports = {
 
     name: "ban",
-    description: "Bannir les personnes ne respectant pas les règles.",
+    description: "Permet de bannir les personnes ne respectant pas les règles.",
     permission: Discord.PermissionFlagsBits.BanMembers,
     category: "🛡・Modération",
     options: [
@@ -26,7 +26,7 @@ module.exports = {
     async run(bot, message, args) {
 
         let user = args.getUser("membre")
-        if(!user) return message.reply("Aucun membre a bannir!")
+        if(!user) return message.reply("Aucun membre a bannir !")
         let member = message.guild.members.cache.get(user.id)
 
         let reason = args.getString("raison")
@@ -36,7 +36,7 @@ module.exports = {
         if((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être banni !")
         if(member && !member.bannable) return message.reply("Je ne peux le bannir !")
         if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le bannir !")
-        if((await message.guild.bans.fetch()).get(user.id)) return message.reply("Il est déjà banni !")
+        if((await message.guild.bans.fetch()).get(member)) return message.reply("Il est déjà banni !")
 
         try{
             const Ban1 = new Discord.EmbedBuilder()
@@ -64,7 +64,7 @@ module.exports = {
             .addComponents(
                 new Discord.ButtonBuilder()
                     .setCustomId(`unban_${ID}`)
-                    .setLabel("Retiré le bannisement")
+                    .setLabel("RetiréAprè le bannisement")
                     .setStyle(Discord.ButtonStyle.Danger)
             )
 

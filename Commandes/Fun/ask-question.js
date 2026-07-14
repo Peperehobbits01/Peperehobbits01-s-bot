@@ -31,26 +31,29 @@ module.exports = {
   permission: "Aucune",
   category: "🥳・Fun",
   options: [
-    {
-        type: "string",
-        name: "question",
-        description: "Pose ta question",
-        required: true,
-        autocomplete: false
-    },
-    
-],
+      {
+          type: "string",
+          name: "question",
+          description: "Pose ta question",
+          required: true,
+          autocomplete: false
+      },
+  ],
   async run(bot, message, args) {
     
-     let msg = args.getString("question")
+      let msg = args.getString("question")
+      if(!msg) return message.reply({content: "Aucune question n'a été posé !"})
      
-    const Ask = new Discord.EmbedBuilder()
-      .setTitle('🎱  Je réponds à tes questions  🎱')
-      .setDescription(`Question de ${message.user} \`\`\`${msg}\`\`\`Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\``)
-      .setTimestamp()
-      .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
-      .setColor(process.env.BOT_COLOR);
+      const Ask = new Discord.EmbedBuilder()
+        .setColor(process.env.BOT_COLOR)
+        .setTitle('🎱  Je réponds à tes questions  🎱')
+        .setDescription(`Question de ${message.user} \`\`\`${msg}\`\`\`Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\``)
+        .setTimestamp()
+        .setFooter({
+          text: "Gérée par l'instance de Peperehobbits01's Bot",
+          iconURL: bot.user.displayAvatarURL({dynamic: true})
+        })
 
       await message.reply({embeds: [Ask]})
-  }
+    }
 };

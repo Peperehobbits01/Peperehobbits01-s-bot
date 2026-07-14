@@ -21,8 +21,6 @@ module.exports = {
 
         let user = args.getUser("membre")
         if(!user) return message.reply("Aucun utilisateur sélectionnée!")
-        let member = message.guild.members.cache.get(user.id)
-        if(!member) return message.reply("Aucun utilisateur sélectionnée!")
 
         await message.deferReply()
 

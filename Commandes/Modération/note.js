@@ -33,8 +33,8 @@ module.exports = {
         let reason = args.getString("note")
         if(!reason) return message.reply("Note manquante.")
 
-        if(message.user.id === user.id) return message.reply("Tu ne peux pas te noter !")
-        if((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être noté !")
+        if(message.user.id === member) return message.reply("Tu ne peux pas te noter !")
+        if((await message.guild.fetchOwner()).id === member) return message.reply("Le fondateur ne peut pas être noté !")
         if(member && !member.kickable) return message.reply("Je ne peux le noter !")
         if(member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le noter !")
 
@@ -42,7 +42,7 @@ module.exports = {
 
         let ID = await bot.function.createId("NOTE")
 
-        const queryNoteAdd = `INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+        const queryNoteAdd = `INSERT INTO note (guild, user, author, note, reason, date) VALUES ('${message.guild.id}', '${member}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
         await executeQuery(queryNoteAdd)
 
         const unnote = new Discord.ActionRowBuilder()

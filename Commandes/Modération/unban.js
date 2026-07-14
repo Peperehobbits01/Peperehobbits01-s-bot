@@ -4,14 +4,14 @@ const { executeQuery } = require("../../Fonctions/databaseConnect")
 module.exports = {
 
     name: "unban",
-    description: "Débannir une personne.",
+    description: "Permet de débannir une personne.",
     permission: Discord.PermissionFlagsBits.BanMembers,
     category: "🛡・Modération",
     options: [
         {
             type: "user",
             name: "utilisateur",
-            description: "L'utilisateur à débannir",
+            description: "L'utilisateur a débannir",
             required: true,
             autocomplete: false
         }, {
@@ -75,6 +75,6 @@ module.exports = {
 
         await message.followUp({embeds: [Unban2]})
             
-        await message.guild.members.unban(user, reason)
+        await message.guild.members.unban(user.id, reason)
     }
 }

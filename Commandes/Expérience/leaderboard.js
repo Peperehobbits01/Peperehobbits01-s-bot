@@ -15,7 +15,7 @@ module.exports = {
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
         const results = await executeQuery(querySearch)
 
-        if (results.length < 1) return message.reply("Aucun utilisateur enregistrée sur ce serveur!")
+        if (results.length < 1) return message.reply("Aucun utilisateur n'est enregistré sur ce serveur !")
 
         await message.deferReply()
 

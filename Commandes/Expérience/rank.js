@@ -21,11 +21,8 @@ module.exports = {
 
     async run(bot, message, args) {
 
-        let user;
-        if(args.getUser("utilisateur")) {
-            user = args.getUser("utilisateur")
-            if(!user || !message.guild.members.cache.get(user?.id)) return message.reply("Aucun membre sélectionnée!")
-        } else user = message.user;
+        let user = args.getUser("utilisateur")
+        if(!user) user = message.user
 
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${user.id}'`
         const results = await executeQuery(querySearch);
