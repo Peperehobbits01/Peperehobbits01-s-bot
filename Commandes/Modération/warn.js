@@ -26,14 +26,14 @@ module.exports = {
     async run(bot, message, args) {
  
         let user = args.getUser("membre")
-        if(!user) return message.reply("Aucun utilisateur sélectionnée !")
+        if(!user) return message.reply("Aucun utilisateur sélectionné !")
         let member = message.guild.members.cache.get(user.id)
-        if(!member) return message.reply("Aucun utilisateur sélectionnée !")
+        if(!member) return message.reply("Aucun utilisateur sélectionné !")
  
         let reason = args.getString("raison")
-        if(!reason) reason = "Premier non respect des règles !"
+        if(!reason) reason = "Premier non-respect des règles !"
  
-        if(message.user.id === user.id) return message.reply("Tu ne peux pas de donner un avertissement ! ")
+        if(message.user.id === user.id) return message.reply("Tu ne peux pas te donner un avertissement !")
 
         let ID = await bot.function.createId("WARN")
 
@@ -59,7 +59,7 @@ module.exports = {
             .addComponents(
                 new Discord.ButtonBuilder()
                     .setCustomId(`unwarn_${ID}`)
-                    .setLabel("Retirée l'avertisement")
+                    .setLabel("Retiré l'avertissement")
                     .setStyle(Discord.ButtonStyle.Danger)
             )
  

@@ -33,18 +33,18 @@ module.exports = {
     async run(bot, message, args) {
 
         let user = args.getUser("membre")
-        if(!user) return message.reply("Aucun membre sélectionée !")
+        if(!user) return message.reply("Aucun membre sélectioné !")
         let member = message.guild.members.cache.get(user.id)
-        if(!member) return message.reply("Aucun membre sélectionnée !")
+        if(!member) return message.reply("Aucun membre sélectionné !")
 
         let time = args.getString("temps")
-        if(!time) return message.reply("Aucun temps donnée !")
+        if(!time) return message.reply("Aucun temps donné !")
         if(isNaN(ms(time))) return message.reply("Mauvais format !")
-        if(ms(time) > 2419200000) return message.reply("Le bot ne peux pas mute autant de temps !")
+        if(ms(time) > 2419200000) return message.reply("Le bot ne peut pas mute autant de temps !")
         if(ms(time) < 300000) return message.reply("La durée du mute est trop courte !")
 
         let reason = args.getString("raison")
-        if(!reason) reason = "Non respect des règles (raison auto ajouté)";
+        if(!reason) reason = "Non-respect des règles (raison auto ajouté)";
 
         if(message.user.id === user.id) return message.reply("Tu ne peux pas te mute!")
         if((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas mute le fondateur!")
@@ -55,7 +55,7 @@ module.exports = {
         try{
             const Mute1 = new Discord.EmbedBuilder()
             .setTitle(`Vous avez été mute ! `)
-            .setDescription(`${message.user.tag} vous a mute sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il dureras :  \`${time}\` ! `)
+            .setDescription(`${message.user.tag} vous a muté sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` ! `)
             .setColor(process.env.BOT_COLOR)
             .setFooter({
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
@@ -78,13 +78,13 @@ module.exports = {
             .addComponents(
                 new Discord.ButtonBuilder()
                     .setCustomId(`unmute_${ID}`)
-                    .setLabel("Retirée le mute")
+                    .setLabel("Retiré le mute")
                     .setStyle(Discord.ButtonStyle.Danger)
             )
 
         const Mute2 = new Discord.EmbedBuilder()
         .setTitle("Informations du mute")
-        .setDescription(`Vous avez mute ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
+        .setDescription(`Vous avez muté ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
         .setColor(process.env.BOT_COLOR)
         .setFooter({
             text: "Gérée par l'instance de Peperehobbits01's Bot",
