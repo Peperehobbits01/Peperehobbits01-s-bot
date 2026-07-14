@@ -23,6 +23,18 @@ module.exports = {
             SendMessages: true
         })
 
+        let Unlockmessage = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setTitle("Ce salon vient d'être déverrouiller !")
+            .setDescription(`Ce salon a été fermé par ${message.user}.`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
+            .setTimestamp()
+
+        await channel.send({embeds: [Unlockmessage]})
+
         let Unlock = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setTitle("Information unlock")

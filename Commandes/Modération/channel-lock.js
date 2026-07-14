@@ -30,6 +30,18 @@ module.exports = {
         await channel.permissionOverwrites.create(message.guild.roles.everyone, {
             SendMessages: false
         })
+
+        let lockmessage = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setTitle("Ce salon vient d'être fermer !")
+            .setDescription(`Ce salon a été fermé par ${message.user} pour la raison suivante : **${reason}**`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
+            .setTimestamp()
+
+        await channel.send({embeds: [lockmessage]})
         
         let Lock = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
