@@ -130,6 +130,7 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
           branch: prepare-release-${{ steps.bump.outputs.version }}
           title: Prepare release ${{ steps.bump.outputs.version }}
+          base: main
           commit-message: "chore: bump version to ${{ steps.bump.outputs.version }}"
           body: ${{ steps.changelog.outputs.body }}
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
