@@ -79,9 +79,9 @@ jobs:
               
               {% for commit in commits %}
                   {% if commit.scope %}
-                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.sha[:11] }})
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
                   {% else %}
-                  - {{ commit.message | trim }} ({{ commit.sha[:11] }})
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
                   {% endif %}
               {% endfor %}
               {% endfor %}
