@@ -196,4 +196,3 @@ jobs:
             --title "$PR_TITLE" \
             --body "$PR_BODY" \
             --label "release" \
-            --label "automated pr"
