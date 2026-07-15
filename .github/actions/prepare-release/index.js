@@ -98,8 +98,49 @@ async function main() {
     const compareUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/compare/v${newVersion}...HEAD`;
     const body = buildChangelog(commits, compareUrl);
 
-    // Write body to file for body-path
-    fs.writeFileSync('/tmp/release-body.md', body);
+    // Write changelog to file
+    fs.writeFileSync('RELEASE_BODY.md', body);
+
+    // Commit and push
+    core.startGroup('Creating release branch and pull request');
+    execSync('git config user.name github-actions[bot]', { stdio: 'pipe' });
+    execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"', { stdio: 'pipe' });
+
+    const branch = `prepare-release-v${newVersion}`;
+    try {
+      execSync(`git checkout -b ${branch} origin/main 2>/dev/null || git checkout -b ${branch}`);
+    } catch {
+      execSync(`git checkout -b ${branch}`);
+    }
+
+    execSync(`git add package.json RELEASE_BODY.md`, { stdio: 'pipe' });
+    execSync(`git commit -m "chore(release): v${newVersion}"`, { stdio: 'pipe' });
+    execSync(`git push origin ${branch} --force`, { stdio: 'pipe' });
+
+    // Check if PR already exists
+    const ghToken = process.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+    try {
+      const existingPR = execSync(`gh pr list --head ${branch} --json number --jq '.[0].number'`, { env: { ...process.env, GITHUB_TOKEN: ghToken }, encoding: 'utf8' }).trim();
+      if (existingPR) {
+        core.info(`PR #${existingPR} already exists. Updating it.`);
+        execSync(`gh pr update ${existingPR} --title "Prepare release ${newVersion}" --body-file RELEASE_BODY.md`, { env: { ...process.env, GITHUB_TOKEN: ghToken }, stdio: 'inherit' });
+        core.setOutput('pr_url', `${repoUrl}/${process.env.GITHUB_REPOSITORY}/pull/${existingPR}`);
+        core.endGroup();
+        core.setOutput('skip', 'false');
+        core.setOutput('new_version', newVersion);
+        core.setOutput('release_type', bumpType);
+        core.setOutput('commit_message', `chore(release): v${newVersion}`);
+        return;
+      }
+    } catch (e) {
+      core.warning('Could not check for existing PR');
+    }
+
+    // Create PR
+    execSync(`gh pr create --title "Prepare release ${newVersion}" --body-file RELEASE_BODY.md --base ${process.env.GITHUB_BASE_REF || 'main'} --label release`, { env: { ...process.env, GITHUB_TOKEN: ghToken }, stdio: 'inherit' });
+
+    core.endGroup();
+    core.setOutput('pr_url', `${repoUrl}/${process.env.GITHUB_REPOSITORY}/pull/${execSync('gh pr list --json url --jq \'.[0].url\'', { encoding: 'utf8' }).trim().replace(new RegExp(`^${repoUrl}/${process.env.GITHUB_REPOSITORY}/pull/`, 'i'), '')}`);
 
     core.setOutput('skip', 'false');
     core.setOutput('new_version', newVersion);

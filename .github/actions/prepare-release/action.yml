@@ -6,6 +6,14 @@ inputs:
     description: 'Manual version bump type (major/minor/patch)'
     required: false
     default: ''
+  GITHUB_TOKEN:
+    description: 'GitHub token for PR creation'
+    required: false
+    default: ''
+  GITHUB_BASE_REF:
+    description: 'Base branch for the PR'
+    required: false
+    default: 'main'
 
 outputs:
   skip:
@@ -16,6 +24,8 @@ outputs:
     description: 'Type of release (major/minor/patch)'
   commit_message:
     description: 'Git commit message for the version bump'
+  pr_url:
+    description: 'URL of the created pull request'
 
 runs:
   using: 'node20'
