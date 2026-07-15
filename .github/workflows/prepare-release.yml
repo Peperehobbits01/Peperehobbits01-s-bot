@@ -78,7 +78,11 @@ jobs:
               ## {{ group | striptags | trim | upper }}
               
               {% for commit in commits %}
-                  - {{ commit.scope | default(value="") | striptags | trim }}{{ ", " if commit.scope else "" }}{{ commit.message | trim }} ({{ commit.sha[:11] }})
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.sha[:11] }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.sha[:11] }})
+                  {% endif %}
               {% endfor %}
               {% endfor %}
           """
