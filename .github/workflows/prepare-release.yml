@@ -28,72 +28,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Determine version bump
-        id: bump
-        run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-
-          # Get commits since last release tag
-          LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
-          
-          if [ -n "$LATEST_TAG" ]; then
-            COMMITS=$(git log "$LATEST_TAG"..HEAD --pretty=format:"%s" --no-merges)
-          else
-            COMMITS=$(git log --pretty=format:"%s" --no-merges -50)
-          fi
-           
-          # Use manual bump if provided, otherwise auto-detect
-          if [ -n "${{ github.event.inputs.bump_type }}" ]; then
-            BUMP_TYPE="${{ github.event.inputs.bump_type }}"
-          elif echo "$COMMITS" | grep -qE '^[a-z]+(\(.+\))?!\:'; then
-            BUMP_TYPE="major"
-          elif echo "$COMMITS" | grep -qE '^feat(\(.+\))?:'; then
-            BUMP_TYPE="minor"
-          elif echo "$COMMITS" | grep -qE '^fix(\(.+\))?:'; then
-            BUMP_TYPE="patch"
-          else
-            BUMP_TYPE="none"
-          fi
-           
-          # Calculate new version
-          MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
-          MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
-          PATCH=$(echo "$CURRENT_VERSION" | cut -d. -f3)
-          
-          case "$BUMP_TYPE" in
-            major)
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR + 1))
-              PATCH=0
-              ;;
-            patch)
-              PATCH=$((PATCH + 1))
-              ;;
-            none)
-              echo "No significant changes detected"
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
-              ;;
-          esac
-           
-          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-          echo "Bump type: $BUMP_TYPE"
-          echo "New version: $NEW_VERSION"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
-          echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+      - name: Prepare release
+        id: prepare
+        uses: ./.github/actions/prepare-release
+        env:
+          MANUAL_BUMP: ${{ github.event.inputs.bump_type }}
 
       - name: Check if release PR already exists
-        if: steps.bump.outputs.skip != 'true'
+        if: steps.prepare.outputs.skip != 'true'
         id: check-pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_VERSION: ${{ steps.bump.outputs.new_version }}
+          NEW_VERSION: ${{ steps.prepare.outputs.new_version }}
         run: |
           EXISTING=$(gh pr list --head prepare-release-v"$NEW_VERSION" --json number --jq '.[0].number')
           if [ -n "$EXISTING" ]; then
@@ -104,77 +50,14 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Generate changelog
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        run: |
-          # Get commits since last release tag
-          LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
-          CURRENT_TAG=$LATEST_TAG
-          if [ -z "$CURRENT_TAG" ]; then
-            CURRENT_TAG=$(git rev-list --max-parents=0 HEAD)
-          fi
-           
-          # Initialize body
-          BODY="## What's Changed\n\n"
-          
-          # Features
-          FEATS=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges --grep='^feat' --regexp-ignore-case || true)
-          if [ -n "$FEATS" ]; then
-            BODY+="\n### Features\n\n"
-            echo "$FEATS" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-           
-          # Bug fixes
-          FIXES=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges --grep='^fix' --regexp-ignore-case || true)
-          if [ -n "$FIXES" ]; then
-            BODY+="\n### Bug Fixes\n\n"
-            echo "$FIXES" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-           
-          # Breaking changes
-          BREAKING=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -E '^[a-z]+(\(.+\))?!\:' || true)
-          if [ -n "$BREAKING" ]; then
-            BODY+="\n### BREAKING CHANGES\n\n"
-            echo "$BREAKING" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-           
-          # Other changes
-          OTHER=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -vE '^(feat|fix)' || true)
-          if [ -n "$OTHER" ]; then
-            BODY+="\n### Other Changes\n\n"
-            echo "$OTHER" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-           
-          BODY+="\n**Full Changelog**: [compare](${{ github.server_url }}/${{ github.repository }}/compare/v${{ steps.bump.outputs.new_version }}.HEAD)\n"
-          
-          # Write to file
-          echo "$BODY" > /tmp/release-body.md
-
-      - name: Update version
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        run: |
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.version = '${{ steps.bump.outputs.new_version }}';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
-
       - name: Create pull request
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
+        if: steps.prepare.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "prepare-release-v${{ steps.bump.outputs.new_version }}"
-          title: "Prepare release ${{ steps.bump.outputs.new_version }}"
-          body-file: /tmp/release-body.md
+          branch: "prepare-release-v${{ steps.prepare.outputs.new_version }}"
+          title: "Prepare release ${{ steps.prepare.outputs.new_version }}"
+          body-path: /tmp/release-body.md
+          body: "## What\x27s Changed\n\nThis release was auto-generated by the [Prepare Release workflow](https://github.com/${GITHUB_REPOSITORY}/blob/main/.github/workflows/prepare-release.yml)\n\n"
           base: ${{ github.event.repository.default_branch }}
           labels: release

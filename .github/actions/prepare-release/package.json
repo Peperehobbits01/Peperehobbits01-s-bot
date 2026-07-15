@@ -1,0 +1,16 @@
+{
+  "name": "prepare-release-action",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Prepares a release PR (version bump + changelog)",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "conventional-recommended-bump": "^9.0.0",
+    "conventional-commits-parser": "^5.0.0",
+    "semver": "^7.7.1"
+  },
+  "scripts": {
+    "build": "ncc build index.js -o dist"
+  }
+}
