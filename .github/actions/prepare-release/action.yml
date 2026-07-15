@@ -1,0 +1,22 @@
+name: 'Prepare Release'
+description: 'Generates changelog and bumps version for release PRs'
+
+inputs:
+  MANUAL_BUMP:
+    description: 'Manual version bump type (major/minor/patch)'
+    required: false
+    default: ''
+
+outputs:
+  skip:
+    description: 'Whether to skip release (true/false)'
+  new_version:
+    description: 'New version number'
+  release_type:
+    description: 'Type of release (major/minor/patch)'
+  commit_message:
+    description: 'Git commit message for the version bump'
+
+runs:
+  using: 'node20'
+  main: 'index.js'
