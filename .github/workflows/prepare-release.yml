@@ -28,6 +28,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Install action dependencies
+        run: npm install
+        working-directory: ./.github/actions/prepare-release
+
       - name: Prepare release
         id: prepare
         uses: ./.github/actions/prepare-release
