@@ -97,7 +97,6 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           branch: prepare-release-${{ steps.bump.outputs.version }}
-          branch-suffix: timestamp
           title: Prepare release ${{ steps.bump.outputs.version }}
           body: ${{ steps.changelog.outputs.body }}
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
