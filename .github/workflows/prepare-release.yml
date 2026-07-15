@@ -4,15 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       bump_type:
-        description: "Manual version bump type (optional - auto-detected if empty)"
-        required: false
-        default: ""
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
         type: choice
         options:
-          - ""
-          - major
-          - minor
           - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -22,20 +21,84 @@ jobs:
   prepare-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
+          ref: main
 
-      - name: Install action dependencies
-        run: npm install
-        working-directory: ./.github/actions/prepare-release
+      - name: Get current version
+        id: current
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
 
-      - name: Prepare release
-        id: prepare
-        uses: ./.github/actions/prepare-release
-        env:
-          MANUAL_BUMP: ${{ github.event.inputs.bump_type }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_BASE_REF: ${{ github.event.repository.default_branch }}
+      - name: Bump version
+        id: bump
+        run: |
+          VERSION="${{ steps.current.outputs.version }}"
+          MAJOR=${VERSION%%.*}
+          REST=${VERSION#*.}
+          MINOR=${REST%.*}
+          PATCH=${REST##*.}
+
+          BUMP="${{ github.event.inputs.bump_type }}"
+          if [ "$BUMP" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Update package.json
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '${{ steps.bump.outputs.version }}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^{commit} 2>/dev/null | head -1 || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %%s" "$LAST_TAG"..HEAD)
+          else
+            COMMITS=$(git log --pretty=format:"- %%s")
+          fi
+          # Write changelog to a file to handle multiline properly
+          echo -n "" > /tmp/changelog.md
+          echo "## What's Changed" >> /tmp/changelog.md
+          echo "" >> /tmp/changelog.md
+          if [ -n "$COMMITS" ]; then
+            echo "$COMMITS" >> /tmp/changelog.md
+          else
+            echo "- No changes (empty release)" >> /tmp/changelog.md
+          fi
+          {
+            echo "body<<EOF"
+            cat /tmp/changelog.md
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: prepare-release-${{ steps.bump.outputs.version }}
+          branch-suffix: timestamp
+          title: Prepare release ${{ steps.bump.outputs.version }}
+          body: ${{ steps.changelog.outputs.body }}
+          committer: GitHub <noreply@github.com>
+          author: GitHub <noreply@github.com>
