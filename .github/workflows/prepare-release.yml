@@ -42,7 +42,7 @@ jobs:
           else
             COMMITS=$(git log --pretty=format:"%s" --no-merges -50)
           fi
-          
+           
           # Use manual bump if provided, otherwise auto-detect
           if [ -n "${{ github.event.inputs.bump_type }}" ]; then
             BUMP_TYPE="${{ github.event.inputs.bump_type }}"
@@ -55,7 +55,7 @@ jobs:
           else
             BUMP_TYPE="none"
           fi
-          
+           
           # Calculate new version
           MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
           MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
@@ -80,7 +80,7 @@ jobs:
               exit 0
               ;;
           esac
-          
+           
           NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
           echo "Bump type: $BUMP_TYPE"
           echo "New version: $NEW_VERSION"
@@ -106,7 +106,6 @@ jobs:
 
       - name: Generate changelog
         if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        id: changelog
         run: |
           # Get commits since last release tag
           LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
@@ -114,7 +113,7 @@ jobs:
           if [ -z "$CURRENT_TAG" ]; then
             CURRENT_TAG=$(git rev-list --max-parents=0 HEAD)
           fi
-          
+           
           # Initialize body
           BODY="## What's Changed\n\n"
           
@@ -126,7 +125,7 @@ jobs:
               BODY+="* $line\n"
             done
           fi
-          
+           
           # Bug fixes
           FIXES=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges --grep='^fix' --regexp-ignore-case || true)
           if [ -n "$FIXES" ]; then
@@ -135,7 +134,7 @@ jobs:
               BODY+="* $line\n"
             done
           fi
-          
+           
           # Breaking changes
           BREAKING=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -E '^[a-z]+(\(.+\))?!\:' || true)
           if [ -n "$BREAKING" ]; then
@@ -144,7 +143,7 @@ jobs:
               BODY+="* $line\n"
             done
           fi
-          
+           
           # Other changes
           OTHER=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -vE '^(feat|fix)' || true)
           if [ -n "$OTHER" ]; then
@@ -153,70 +152,29 @@ jobs:
               BODY+="* $line\n"
             done
           fi
-          
-          BODY+="\n**Full Changelog**: [compare](${{ github.server_url }}/${{ github.repository }}/compare/v${{ steps.bump.outputs.new_version }}...HEAD)\n"
+           
+          BODY+="\n**Full Changelog**: [compare](${{ github.server_url }}/${{ github.repository }}/compare/v${{ steps.bump.outputs.new_version }}.HEAD)\n"
           
           # Write to file
           echo "$BODY" > /tmp/release-body.md
-          
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat /tmp/release-body.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create release branch
+      - name: Update version
         if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
         run: |
-          BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          
-          # Update version in package.json
-          NEW_VER="${{ steps.bump.outputs.new_version }}"
           node -e "
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.version = '$NEW_VER';
+            pkg.version = '${{ steps.bump.outputs.new_version }}';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
-          
-          git add package.json
-          git commit -m "chore(release): v$NEW_VER"
-          git push origin "$BRANCH"
 
-      - name: Create pull request via API
+      - name: Create pull request
         if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
-          PR_TITLE="Prepare release ${{ steps.bump.outputs.new_version }}"
-          
-          # Build JSON payload using jq (safe for markdown with special chars)
-          jq -n \
-            --arg title "$PR_TITLE" \
-            --rawfile body /tmp/release-body.md \
-            --arg head "$BRANCH" \
-            --arg base "${{ github.event.repository.default_branch }}" \
-            '{title: $title, body: $body, head: $head, base: $base, labels: ["release"]}' \
-            > /tmp/pr-request.json
-
-          RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d @/tmp/pr-request.json \
-            "https://api.github.com/repos/${{ github.repository }}/pulls")
-          
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          
-          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-            PR_URL=$(echo "$BODY" | jq -r .html_url)
-            echo "Pull request created: $PR_URL"
-          else
-            echo "Failed to create PR:"
-            echo "$BODY"
-            exit 1
-          fi
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "prepare-release-v${{ steps.bump.outputs.new_version }}"
+          title: "Prepare release ${{ steps.bump.outputs.new_version }}"
+          body-file: /tmp/release-body.md
+          base: ${{ github.event.repository.default_branch }}
+          labels: release
