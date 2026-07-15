@@ -104,7 +104,7 @@ jobs:
           pip install git-cliff
           LAST_TAG=$(git describe --tags --abbrev=0 HEAD 2>/dev/null | head -1 || echo "")
           if [ -n "$LAST_TAG" ]; then
-            git-cliff --last "$LAST_TAG"...HEAD --config git-cliff.toml > /tmp/changelog.md
+            git-cliff --lastest "$LAST_TAG"...HEAD --config git-cliff.toml > /tmp/changelog.md
           else
             git-cliff --config git-cliff.toml > /tmp/changelog.md
           fi
