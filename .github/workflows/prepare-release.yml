@@ -68,27 +68,55 @@ jobs:
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
 
+      - name: Create git-cliff config
+        run: |
+          cat > git-cliff.toml << 'EOF'
+          [changelog]
+          header = "## What's Changed\n"
+          body = """
+          {% for group, commits in commits | group_by(attribute='group') %}
+              ## {{ group | striptags | trim | upper }}
+              
+              {% for commit in commits %}
+                  - {{ commit.scope | default(value="") | striptags | trim }}{{ ", " if commit.scope else "" }}{{ commit.message | trim }} ({{ commit.sha[:11] }})
+              {% endfor %}
+              {% endfor %}
+          """
+          trim = true
+          footer = ""
+          [git]
+          conventional_commits = true
+          filter_unconventional = true
+          commit_parsers = [
+              { message = "^feat", group = "**Features**" },
+              { message = "^fix|^hotfix", group = "**Bug Fixes**" },
+              { message = "^refactor", group = "**Refactors**" },
+              { message = "^chore", group = "**Chore**" },
+              { message = "^docs", group = "**Documentation**" },
+              { message = "^test", group = "**Tests**" },
+              { message = "^perf", group = "**Performance**" },
+          ]
+          EOF
+
       - name: Generate changelog
         id: changelog
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^{commit} 2>/dev/null | head -1 || echo "")
+          pip install git-cliff
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD 2>/dev/null | head -1 || echo "")
           if [ -n "$LAST_TAG" ]; then
-            COMMITS=$(git log --pretty=format:"- %%s" "$LAST_TAG"..HEAD)
+            git-cliff --last "$LAST_TAG"...HEAD --config git-cliff.toml > /tmp/changelog.md
           else
-            COMMITS=$(git log --pretty=format:"- %%s")
+            git-cliff --config git-cliff.toml > /tmp/changelog.md
           fi
-          # Write changelog to a file to handle multiline properly
-          echo -n "" > /tmp/changelog.md
-          echo "## What's Changed" >> /tmp/changelog.md
-          echo "" >> /tmp/changelog.md
-          if [ -n "$COMMITS" ]; then
-            echo "$COMMITS" >> /tmp/changelog.md
-          else
-            echo "- No changes (empty release)" >> /tmp/changelog.md
-          fi
+          VERSION="${{ steps.bump.outputs.version }}"
+          {
+            echo "$VERSION"
+            echo ""
+            cat /tmp/changelog.md
+          } > /tmp/changelog-with-version.md
           {
             echo "body<<EOF"
-            cat /tmp/changelog.md
+            cat /tmp/changelog-with-version.md
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
