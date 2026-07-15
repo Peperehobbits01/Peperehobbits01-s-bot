@@ -136,3 +136,5 @@ jobs:
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           labels: release
+          assignees: Peperehobbits01, Skudar
+          reviewers: Peperehobbits01, Skudar
