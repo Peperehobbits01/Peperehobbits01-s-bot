@@ -27,11 +27,14 @@ module.exports = async(bot, oldMember, newMember) => {
     if (addedRoles.size > 0) {
         const addRolesEmbed = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic : true})})
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic : true})
+            })
             .setDescription(`${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
             .setFooter({
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
-                iconURL: bot.user.displayAvatarURL({ dynamic: true })
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
             })
             .setTimestamp()
 
@@ -41,11 +44,14 @@ module.exports = async(bot, oldMember, newMember) => {
     if (removedRoles.size > 0) {
         const removeRolesEmbed = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic : true})})
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic : true})
+            })
             .setDescription(`${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
             .setFooter({
                 text: "Gérée par l'instance de Peperehobbits01's Bot",
-                iconURL: bot.user.displayAvatarURL({ dynamic: true })
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
             })
             .setTimestamp()
 
@@ -55,7 +61,10 @@ module.exports = async(bot, oldMember, newMember) => {
 
         const updateName = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor({name: executor.displayName, iconURL: executor.displayAvatarURL({dynamic: true})})
+            .setAuthor({
+                name: executor.displayName,
+                iconURL: executor.displayAvatarURL({dynamic: true})
+            })
             .setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
             .setFooter({
                 text: "Gérée par l'instance de Peperehobbits01's Bot",

@@ -5,7 +5,6 @@ module.exports = {
     name: "clear",
     description: "Effacer l'expérience d'un membre",
     permission: Discord.PermissionFlagsBits.Administrator,
-    dm: false,
     category: "📊・Système d'expérience",
     options: [
         {
@@ -20,22 +19,14 @@ module.exports = {
     async run(bot, message, args) {
 
         const member = args.getMember("membre")
-        if(!member) return message.reply({embeds: [
-
-            new Discord.EmbedBuilder()
-            .setColor(process.env.BOT_COLOR)
-            .setDescription("Indiquer un membre !")
-            .setFooter({text: `Gérée par l'instance de Peperehobbits01's bot`, iconURL: (bot.user.displayAvatarURL({dynamic: true}))})
-            .setTimestamp()
-            .setTitle("Erreur de la commande d'effacement dans le système d'expérience")
-        ]})
+        if(!member) return message.reply({content: "Aucun membre sélectionné !"})
 
         await message.deferReply()
 
         const queryAllClearSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
         const AllClearResults = await executeQuery(queryAllClearSearch)
             
-        if(AllClearResults.length < 1) return message.followUp(`Le membre ${member.user.tag} n'est pas dans la base de donnée!`)
+        if(AllClearResults.length < 1) return message.followUp(`Le membre ${member.user.tag} n'est pas dans la base de donnée !`)
 
         const queryAllClear = `DELETE FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
         await executeQuery(queryAllClear)
@@ -44,7 +35,10 @@ module.exports = {
             .setColor(process.env.BOT_COLOR)
             .setTitle("Effacement du membre de la base de donnée réussie.")
             .setDescription(`Le membre ${member.user.tag} a bien été effacer de la base de donnée!`)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
             .setTimestamp()
 
         await message.followUp({embeds: [succesAllClear]})

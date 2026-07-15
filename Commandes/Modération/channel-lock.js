@@ -5,7 +5,6 @@ module.exports = {
     description: "Permet de fermer un salon",
     permission: Discord.PermissionFlagsBits.ManageChannels,
     category: "🛡・Modération",
-    dm: false,
     options: [
         {
             type: "channel",
@@ -16,30 +15,43 @@ module.exports = {
         }, {
             type: "string",
             name: "raison",
-            description: "la raison du lock",
+            description: "la raison de la fermeture",
             required: false,
             autocomplete: false
         }
     ],
 
     async run(bot, message, args) {
-        let channel = args.getChannel("salon")
-        let c = message.guild.channels.cache.get(channel.id)
-        if(!channel) return message.reply(`**Le salon n'a pas été trouvé**`)
-        if(!c) return message.reply(`**Le salon n'a pas été trouvé**`)
+        let channel = await message.guild.channels.cache.get(args.getChannel("salon").id)
+        if(!channel) return message.reply({content: `Le salon n'a pas été trouvé !`})
         let reason = args.getString('raison')
-        if(!reason) reason = "Pas de raison fournie"
+        if(!reason) reason = "Non respect de règle."
 
-        c.permissionOverwrites.create(message.guild.roles.everyone, {
+        await channel.permissionOverwrites.create(message.guild.roles.everyone, {
             SendMessages: false
-          })
-        
-          let Lock = new Discord.EmbedBuilder()
+        })
+
+        let lockmessage = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
-            .setTitle("Inforamtion lock")
-            .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setTitle("Ce salon vient d'être fermer !")
+            .setDescription(`Ce salon a été fermé par ${message.user} pour la raison suivante : **${reason}**`)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
+            .setTimestamp()
+
+        await channel.send({embeds: [lockmessage]})
         
-            await message.reply({embeds: [Lock]})
+        let Lock = new Discord.EmbedBuilder()
+            .setColor(process.env.BOT_COLOR)
+            .setTitle("Inforamtion sur la fermeture du salon")
+            .setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
+        
+        await message.reply({embeds: [Lock]})
     }
 }

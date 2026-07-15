@@ -6,14 +6,13 @@ module.exports = {
 
     name: "help",
     description: "Affiche les commandes du bot",
-    dm: false,
     permission: "Aucune",
     category: "📚・Informations",
     options: [
         {
             type: "string",
             name: "commande",
-            description: "La commande à rechercher",
+            description: "La commande dont vous voulez connaitre son fonctionnement.",
             required: false,
             autocomplete: true
         }
@@ -70,9 +69,12 @@ module.exports = {
                 Catégories : \`${commandCategories.length}\`
                 Commandes : \`${commands.size}\`
                 `)
-                .setThumbnail(bot.user.displayAvatarURL({ dynamic: true }))
+                .setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
                 .setTimestamp()
-                .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+                .setFooter({
+                    text: "Gérée par l'instance de Peperehobbits01's Bot",
+                    iconURL: bot.user.displayAvatarURL({dynamic: true})
+                })
 
             message.reply({ embeds: [EmbedHelp], components: [menuRow] })
 
@@ -96,7 +98,7 @@ module.exports = {
             });
 
             const command = bot.commands.get(commandeProche)
-            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`}, {ephemeral: true})
+            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, flags: [Discord.MessageFlags.Ephemeral]})
 
             const permissionsText = command.permission === "Aucune"
                 ? "Aucune"
@@ -105,9 +107,12 @@ module.exports = {
             let EmbedCommande = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\nEn message privée: \`${command.dm ? "Oui" : "Non"}\`\n`)
+            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\n`)
             .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
-            .setFooter({ text: "Gérée par l'instance de Peperehobbits01's Bot", iconURL: bot.user.displayAvatarURL({ dynamic: true }) })
+            .setFooter({
+                text: "Gérée par l'instance de Peperehobbits01's Bot",
+                iconURL: bot.user.displayAvatarURL({dynamic: true})
+            })
 
             await message.reply({embeds: [EmbedCommande]})
         }

@@ -5,7 +5,6 @@ module.exports = {
   name: 'create-giveaway',
   description: 'Lancer un giveaway',
   permission : Discord.PermissionFlagsBits.Administrator,
-  dm: false,
   category: "🎁・giveaway",
   options: [
     {
