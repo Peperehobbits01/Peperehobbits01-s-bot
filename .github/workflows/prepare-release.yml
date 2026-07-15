@@ -163,12 +163,8 @@ jobs:
           cat /tmp/release-body.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create release branch and PR
+      - name: Create release branch
         if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_TITLE: "Prepare release ${{ steps.bump.outputs.new_version }}"
-          PR_BODY: ${{ steps.changelog.outputs.body }}
         run: |
           BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
           
@@ -188,11 +184,39 @@ jobs:
           git add package.json
           git commit -m "chore(release): v$NEW_VER"
           git push origin "$BRANCH"
+
+      - name: Create pull request via API
+        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: "Prepare release ${{ steps.bump.outputs.new_version }}"
+        run: |
+          BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
           
-          # Create PR
-          gh pr create \
-            --base "${{ github.event.repository.default_branch }}" \
-            --head "$BRANCH" \
-            --title "$PR_TITLE" \
-            --body "$PR_BODY" \
-            --label "release" \
+          # Build JSON payload properly with jq (escapes markdown automatically)
+          jq -n \
+            --arg title "$PR_TITLE" \
+            --body "$(cat /tmp/release-body.md)" \
+            --arg head "$BRANCH" \
+            --arg base "${{ github.event.repository.default_branch }}" \
+            '{title: $title, body: $body, head: $head, base: $base, labels: ["release"]}' \
+            > /tmp/pr-request.json
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d @/tmp/pr-request.json \
+            "https://api.github.com/repos/${{ github.repository }}/pulls")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            PR_URL=$(echo "$BODY" | jq -r .html_url)
+            echo "Pull request created: $PR_URL"
+          else
+            echo "Failed to create PR:"
+            echo "$BODY"
+            exit 1
+          fi
