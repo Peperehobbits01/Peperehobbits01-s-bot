@@ -189,19 +189,23 @@ jobs:
         if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_TITLE: "Prepare release ${{ steps.bump.outputs.new_version }}"
         run: |
           BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
+          PR_TITLE="Prepare release ${{ steps.bump.outputs.new_version }}"
           
-          # Build JSON payload properly with jq (escapes markdown automatically)
-          jq -n \
-            --arg title "$PR_TITLE" \
-            --body "$(cat /tmp/release-body.md)" \
-            --arg head "$BRANCH" \
-            --arg base "${{ github.event.repository.default_branch }}" \
-            '{title: $title, body: $body, head: $head, base: $base, labels: ["release"]}' \
-            > /tmp/pr-request.json
-          
+          # Build JSON payload safely using node (escapes all special chars in markdown)
+          node -e "
+            const fs = require('fs');
+            const body = fs.readFileSync('/tmp/release-body.md', 'utf8').replace(/\$/g, '\\$&').replace(/`/g, '\\`');
+            fs.writeFileSync('/tmp/pr-request.json', JSON.stringify({
+              title: process.env.PR_TITLE,
+              body: body,
+              head: '$BRANCH',
+              base: '${{ github.event.repository.default_branch }}',
+              labels: ['release']
+            }));
+          "
+
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
