@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const Canvas = require("canvas")
 const { executeQuery } = require(`../../Fonctions/databaseConnect.js`);
 const { calculXp } = require("../../Fonctions/calculXp.js")
+const { registerFont } = require("canvas")
 
 module.exports = {
 
@@ -30,6 +31,8 @@ module.exports = {
         const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
         ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
+        registerFont('./Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
+
         if (leaderboard.length <= 5) {
 
             for (let i = 0; i < leaderboard.length; i++) {
@@ -45,13 +48,13 @@ module.exports = {
                 ctx.fillStyle = status === "online" ? "#3ba55c" : status === "dnd" ? "#ed4245" : status === "stream" ? "#593695" : status === "idle" ? "#faa61a" : status === "offline" ? "#747f8d" : ""
                 ctx.fill();
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '20px "Futura Book"';
+                ctx.font = '18px "Permanent Marker"';
 
                 const usernameDisplay = user.username > 20 ? user.username.slice(0, 20) : user.username;
                 ctx.fillText(`${usernameDisplay}`, (104 - (ctx.measureText(`${usernameDisplay}`).width / 2)), (135 + ((i) * 128)));
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '28px "Futura Book"';
+                ctx.font = '28px "Permanent Marker"';
                 ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (65 + (i * 128)));
                 ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (95 + (i * 128)));
                 ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (125 + (i * 128)));
@@ -104,12 +107,12 @@ module.exports = {
                 ctx.restore();
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '20px "Futura Book"';
+                ctx.font = '18px "Permanent Marker"';
                 const username = user.tag.length > 20 ? user.tag.slice(0, 20) : user.tag;
                 ctx.fillText(`${username}`, (104 - (ctx.measureText(`${username}`).width / 2)), (135 + (i * 128)));
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '28px "Futura Book"';
+                ctx.font = '28px "Permanent Marker"';
                 ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (65 + (i * 128)));
                 ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (95 + (i * 128)));
                 ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (125 + (i * 128)));
@@ -145,12 +148,12 @@ module.exports = {
                 ctx.restore();
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '20px "Futura Book"';
+                ctx.font = '18px "Permanent Marker"';
                 const username = user.tag.length > 20 ? user.tag.slice(0, 20) : user.tag;
                 ctx.fillText(`${username}`, (column2X - (ctx.measureText(`${username}`).width / 2)), (135 + (i * 128)));
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = '28px "Futura Book"';
+                ctx.font = '28px "Permanent Marker"';
                 ctx.fillText(`Rang : ${i + 6 === 1 ? "1er" : `${i + 6}ème`}`, 840, (65 + (i * 128)));
                 ctx.fillText(`Niveau : ${leaderboard[leaderboardIndex].level}`, 840, (95 + (i * 128)));
                 ctx.fillText(`Expérience : ${leaderboard[leaderboardIndex].xp} / ${need}`, 840, (125 + (i * 128)));

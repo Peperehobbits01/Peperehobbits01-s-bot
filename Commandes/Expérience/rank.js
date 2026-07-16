@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const Canvas = require("canvas")
 const { executeQuery } = require(`../../Fonctions/databaseConnect.js`);
 const { calculXp } = require("../../Fonctions/calculXp.js")
+const {registerFont} = require("canvas");
 
 module.exports = {
 
@@ -50,6 +51,8 @@ module.exports = {
 
         const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
         ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
+
+        registerFont('./Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
 
         const member = message.guild.members.cache.get(user.id);
         const status = member?.presence?.status ?? "offline";
@@ -100,19 +103,19 @@ module.exports = {
         ctx.closePath()
 
         //Pourcentage + Xp
-        ctx.font = '20px "Futura Book"'
+        ctx.font = '24px "Permanent Marker"'
         ctx.fillStyle = "#08490c"
         ctx.fillText(`${Math.floor(xp * 100 / need)}%`, 665, 100)
         ctx.fillText(`${xp} / ${need} xp`, 275, 100)
 
         //Level + Rang
-        ctx.font = '36px "Futura Book"'
+        ctx.font = '36px "Permanent Marker"'
         ctx.fillStyle = "#ffffff"
         ctx.fillText(`Niveau : ${level}`, 275, 150)
         rank === 1 ? ctx.fillText(`Rang : ${rank}er`, 520, 150) : ctx.fillText(`Rang : ${rank}ème`, 475, 150)
 
         //Tag de l'utilisateur
-        ctx.font = '36px "Futura Book"'
+        ctx.font = '36px "Permanent Marker"'
         ctx.fillStyle = "#ffffff"
         ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 210)
 
