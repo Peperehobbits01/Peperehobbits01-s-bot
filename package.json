@@ -11,8 +11,6 @@
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
     "canvas": "^3.2.3",
-    "discord-giveaway-easy": "^3.3.0",
-    "discord-rpc": "^4.0.1",
     "discord.js": "^14.26.4",
     "djs-voice": "^1.2.0",
     "dotenv": "^17.4.2",
