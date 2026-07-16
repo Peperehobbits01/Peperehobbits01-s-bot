@@ -4,7 +4,6 @@ module.exports = {
   name: "stop-giveaway",
   description: "Arrêter le giveaway",
   permission: Discord.PermissionFlagsBits.Administrator,
-  dm: false,
   category: "🎁・giveaway",
   options : [
     {

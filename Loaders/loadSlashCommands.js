@@ -6,12 +6,15 @@ module.exports = async bot => {
 
     let commands = [];
 
-    bot.commands.forEach(async command => {
+    for (const [, command] of bot.commands) {
+        if (!command.name) {
+            console.warn('Commande sans nom ignorée:', command)
+            continue
+        }
 
         let slashcommand = new Discord.SlashCommandBuilder()
             .setName(command.name)
             .setDescription(command.description)
-            .setDMPermission(command.dm)
             .setDefaultMemberPermissions(command.permission === "Aucune" ? null : command.permission)
 
         if (command.options?.length >= 1) {
@@ -20,8 +23,8 @@ module.exports = async bot => {
                 else slashcommand[`add${command.options[i].type.slice(0, 1).toUpperCase() + command.options[i].type.slice(1, command.options[i].type.length)}Option`](option => option.setName(command.options[i].name).setDescription(command.options[i].description).setRequired(command.options[i].required))
             }
         }
-        await commands.push(slashcommand);
-    })
+        commands.push(slashcommand);
+    }
 
     const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
 

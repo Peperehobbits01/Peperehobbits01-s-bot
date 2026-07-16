@@ -4,15 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       bump_type:
-        description: "Manual version bump type (optional - auto-detected if empty)"
-        required: false
-        default: ""
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
         type: choice
         options:
-          - ""
-          - major
-          - minor
           - patch
+          - minor
+          - major
 
 permissions:
   contents: write
@@ -22,205 +21,116 @@ jobs:
   prepare-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
+          ref: dev
 
-      - name: Determine version bump
+      - name: Get current version
+        id: current
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+
+      - name: Bump version
         id: bump
         run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
+          VERSION="${{ steps.current.outputs.version }}"
+          MAJOR=${VERSION%%.*}
+          REST=${VERSION#*.}
+          MINOR=${REST%.*}
+          PATCH=${REST##*.}
 
-          # Get commits since last release tag
-          LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
-          
-          if [ -n "$LATEST_TAG" ]; then
-            COMMITS=$(git log "$LATEST_TAG"..HEAD --pretty=format:"%s" --no-merges)
+          BUMP="${{ github.event.inputs.bump_type }}"
+          if [ "$BUMP" = "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$BUMP" = "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
           else
-            COMMITS=$(git log --pretty=format:"%s" --no-merges -50)
+            PATCH=$((PATCH + 1))
           fi
-          
-          # Use manual bump if provided, otherwise auto-detect
-          if [ -n "${{ github.event.inputs.bump_type }}" ]; then
-            BUMP_TYPE="${{ github.event.inputs.bump_type }}"
-          elif echo "$COMMITS" | grep -qE '^[a-z]+(\(.+\))?!\:'; then
-            BUMP_TYPE="major"
-          elif echo "$COMMITS" | grep -qE '^feat(\(.+\))?:'; then
-            BUMP_TYPE="minor"
-          elif echo "$COMMITS" | grep -qE '^fix(\(.+\))?:'; then
-            BUMP_TYPE="patch"
-          else
-            BUMP_TYPE="none"
-          fi
-          
-          # Calculate new version
-          MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
-          MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
-          PATCH=$(echo "$CURRENT_VERSION" | cut -d. -f3)
-          
-          case "$BUMP_TYPE" in
-            major)
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR + 1))
-              PATCH=0
-              ;;
-            patch)
-              PATCH=$((PATCH + 1))
-              ;;
-            none)
-              echo "No significant changes detected"
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
-              ;;
-          esac
-          
-          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-          echo "Bump type: $BUMP_TYPE"
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
-          echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Check if release PR already exists
-        if: steps.bump.outputs.skip != 'true'
-        id: check-pr
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_VERSION: ${{ steps.bump.outputs.new_version }}
+      - name: Update package.json
         run: |
-          EXISTING=$(gh pr list --head prepare-release-v"$NEW_VERSION" --json number --jq '.[0].number')
-          if [ -n "$EXISTING" ]; then
-            echo "PR #$EXISTING already exists"
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "PR does not exist"
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Generate changelog
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        id: changelog
-        run: |
-          # Get commits since last release tag
-          LATEST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
-          CURRENT_TAG=$LATEST_TAG
-          if [ -z "$CURRENT_TAG" ]; then
-            CURRENT_TAG=$(git rev-list --max-parents=0 HEAD)
-          fi
-          
-          # Initialize body
-          BODY="## What's Changed\n\n"
-          
-          # Features
-          FEATS=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges --grep='^feat' --regexp-ignore-case || true)
-          if [ -n "$FEATS" ]; then
-            BODY+="\n### Features\n\n"
-            echo "$FEATS" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-          
-          # Bug fixes
-          FIXES=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges --grep='^fix' --regexp-ignore-case || true)
-          if [ -n "$FIXES" ]; then
-            BODY+="\n### Bug Fixes\n\n"
-            echo "$FIXES" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-          
-          # Breaking changes
-          BREAKING=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -E '^[a-z]+(\(.+\))?!\:' || true)
-          if [ -n "$BREAKING" ]; then
-            BODY+="\n### BREAKING CHANGES\n\n"
-            echo "$BREAKING" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-          
-          # Other changes
-          OTHER=$(git log "$CURRENT_TAG"..HEAD --pretty=format:"%s" --no-merges | grep -vE '^(feat|fix)' || true)
-          if [ -n "$OTHER" ]; then
-            BODY+="\n### Other Changes\n\n"
-            echo "$OTHER" | while read -r line; do
-              BODY+="* $line\n"
-            done
-          fi
-          
-          BODY+="\n**Full Changelog**: [compare](${{ github.server_url }}/${{ github.repository }}/compare/v${{ steps.bump.outputs.new_version }}...HEAD)\n"
-          
-          # Write to file
-          echo "$BODY" > /tmp/release-body.md
-          
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat /tmp/release-body.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create release branch
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        run: |
-          BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          
-          # Update version in package.json
-          NEW_VER="${{ steps.bump.outputs.new_version }}"
           node -e "
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.version = '$NEW_VER';
+            pkg.version = '${{ steps.bump.outputs.version }}';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
-          
-          git add package.json
-          git commit -m "chore(release): v$NEW_VER"
-          git push origin "$BRANCH"
 
-      - name: Create pull request via API
-        if: steps.bump.outputs.skip != 'true' && steps.check-pr.outputs.exists != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create git-cliff config
         run: |
-          BRANCH="prepare-release-v${{ steps.bump.outputs.new_version }}"
-          PR_TITLE="Prepare release ${{ steps.bump.outputs.new_version }}"
-          
-          # Build JSON payload safely using node (escapes all special chars in markdown)
-          node -e "
-            const fs = require('fs');
-            const body = fs.readFileSync('/tmp/release-body.md', 'utf8').replace(/\$/g, '\\$&').replace(/`/g, '\\`');
-            fs.writeFileSync('/tmp/pr-request.json', JSON.stringify({
-              title: process.env.PR_TITLE,
-              body: body,
-              head: '$BRANCH',
-              base: '${{ github.event.repository.default_branch }}',
-              labels: ['release']
-            }));
-          "
+          cat > git-cliff.toml << 'EOF'
+          [changelog]
+          header = "## What's Changed\n"
+          body = """
+          {% for group, commits in commits | group_by(attribute='group') %}
+              ## {{ group | striptags | trim | upper }}
+              
+              {% for commit in commits %}
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% endif %}
+              {% endfor %}
+              {% endfor %}
+          """
+          trim = true
+          footer = ""
+          [git]
+          conventional_commits = true
+          filter_unconventional = true
+          commit_parsers = [
+              { message = "^feat", group = "**Features**" },
+              { message = "^fix|^hotfix", group = "**Bug Fixes**" },
+              { message = "^refactor", group = "**Refactors**" },
+              { message = "^chore", group = "**Chore**" },
+              { message = "^docs", group = "**Documentation**" },
+              { message = "^test", group = "**Tests**" },
+              { message = "^perf", group = "**Performance**" },
+          ]
+          EOF
 
-          RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d @/tmp/pr-request.json \
-            "https://api.github.com/repos/${{ github.repository }}/pulls")
-          
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          
-          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
-            PR_URL=$(echo "$BODY" | jq -r .html_url)
-            echo "Pull request created: $PR_URL"
+      - name: Generate changelog
+        id: changelog
+        run: |
+          pip install git-cliff
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD 2>/dev/null | head -1 || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            git-cliff --latest "$LAST_TAG"...HEAD --config git-cliff.toml > /tmp/changelog.md
           else
-            echo "Failed to create PR:"
-            echo "$BODY"
-            exit 1
+            git-cliff --config git-cliff.toml > /tmp/changelog.md
           fi
+          VERSION="${{ steps.bump.outputs.version }}"
+          {
+            echo "$VERSION"
+            echo ""
+            cat /tmp/changelog.md
+          } > /tmp/changelog-with-version.md
+          {
+            echo "body<<EOF"
+            cat /tmp/changelog-with-version.md
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          branch: prepare-release-${{ steps.bump.outputs.version }}
+          title: Prepare release ${{ steps.bump.outputs.version }}
+          commit-message: "chore: bump version to ${{ steps.bump.outputs.version }}"
+          body: ${{ steps.changelog.outputs.body }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>

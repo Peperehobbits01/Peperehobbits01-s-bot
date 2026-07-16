@@ -8,7 +8,6 @@ module.exports = {
     name: "rank",
     description: "Permet de savoir le nombre d'xp d'un membre.",
     permission: "Aucune",
-    dm: false,
     category: "📊・Système d'expérience",
     options: [
         {
@@ -22,11 +21,8 @@ module.exports = {
 
     async run(bot, message, args) {
 
-        let user;
-        if(args.getUser("utilisateur")) {
-            user = args.getUser("utilisateur")
-            if(!user || !message.guild.members.cache.get(user?.id)) return message.reply("Aucun membre sélectionnée!")
-        } else user = message.user;
+        let user = args.getUser("utilisateur")
+        if(!user) user = message.user
 
         const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${user.id}'`
         const results = await executeQuery(querySearch);
@@ -168,7 +164,7 @@ module.exports = {
                     default:
                         break;
                 }
-                ctx.drawImage(b, 275 + i * 50, 220, 50, 50)
+                ctx.drawImage(b, 275 + i * 50, 230, 50, 50)
 
                 if(i === (badge.length - 1)) {
                     if((await guild.fetchOwner()).id === user.id) {
@@ -176,7 +172,7 @@ module.exports = {
                         ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                     }
                     if(member && member.premiumSinceTimestamp !== null) {
-                        const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? "https://cdn.discordapp.com/emojis/885885300721741874.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? "https://cdn.discordapp.com/emojis/885885268538851379.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? "https://cdn.discordapp.com/emojis/885885230945296384.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? "https://cdn.discordapp.com/emojis/885885188457001070.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? "https://cdn.discordapp.com/emojis/885885137802366996.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? "https://cdn.discordapp.com/emojis/885885091652440104.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? "https://cdn.discordapp.com/emojis/885885056814575697.png?size=96" : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? "https://cdn.discordapp.com/emojis/885885020269584404.png?size=96" : "https://cdn.discordapp.com/emojis/885884977831620708.png?size=96")
+                        const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000 `Assets/NitroBoost9.png`)
                         ctx.drawImage(b, 275 + (i+1) * 50, 220, 50, 50)
                     }
 
