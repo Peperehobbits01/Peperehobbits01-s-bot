@@ -1,120 +1,126 @@
 const Discord = require('discord.js');
-const { levenshteinDistance } = require('../../Fonctions/levenshteinDistance');
+const {levenshteinDistance} = require('../../Fonctions/levenshteinDistance');
 const PERMISSION_NOM = require('../../Fonctions/permissionName');
 
 module.exports = {
 
-    name: "help",
-    description: "Affiche les commandes du bot",
-    permission: "Aucune",
-    category: "📚・Informations",
-    options: [
-        {
-            type: "string",
-            name: "commande",
-            description: "La commande dont vous voulez connaitre son fonctionnement.",
-            required: false,
-            autocomplete: true
-        }
-    ],
+	name: "help",
+	description: "Affiche les commandes du bot",
+	permission: "Aucune",
+	category: "📚・Informations",
+	options: [
+		{
+			type: "string",
+			name: "commande",
+			description: "La commande dont vous voulez connaitre son fonctionnement.",
+			required: false,
+			autocomplete: true
+		}
+	],
 
-    async run(bot, message, args) {
+	async run(bot, message, args) {
 
-        const commande = args.getString('commande');
+		const commande = args.getString('commande');
 
-        if(!commande) {
-            let categories = []
-            let cat = []
-            bot.commands.forEach(command => {
-                if(!cat.includes(command.category)) cat.push(command.category)
+		if (!commande) {
+			let categories = []
+			let cat = []
+			bot.commands.forEach(command => {
+				if (!cat.includes(command.category)) cat.push(command.category)
 
-                const categoriesExistante = categories.some(category => category.value === command.category.toLowerCase() && category.label === command.category)
+				const categoriesExistante = categories.some(category => category.value === command.category.toLowerCase() && category.label === command.category)
 
-                if(!categoriesExistante) categories.push({ label: command.category, value: command.category.toLowerCase() })
-            })
+				if (!categoriesExistante) categories.push({
+					label: command.category,
+					value: command.category.toLowerCase()
+				})
+			})
 
-            let commands = bot.commands.filter(command => {
-                if(command.permission === "Aucune") {
-                    return true;
-                } else {
-                    return message.member.permissions.has(command.permission);
-                }
-            });
+			let commands = bot.commands.filter(command => {
+				if (command.permission === "Aucune") {
+					return true;
+				} else {
+					return message.member.permissions.has(command.permission);
+				}
+			});
 
-            let commandCategories = []
-            commands.forEach(command => {
-                if (!commandCategories.includes(command.category)) {
-                    commandCategories.push(command.category)
-                }
-            })
+			let commandCategories = []
+			commands.forEach(command => {
+				if (!commandCategories.includes(command.category)) {
+					commandCategories.push(command.category)
+				}
+			})
 
-            let menuOptions = []
-            commandCategories.forEach(category => {
-                menuOptions.push({ label: category, value: category.toUpperCase() })
-            })
+			let menuOptions = []
+			commandCategories.forEach(category => {
+				menuOptions.push({label: category, value: category.toUpperCase()})
+			})
 
-            let menu = new Discord.StringSelectMenuBuilder()
-                .setCustomId("help")
-                .setOptions(menuOptions)
+			let menu = new Discord.StringSelectMenuBuilder()
+				.setCustomId("help")
+				.setOptions(menuOptions)
 
-            let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
+			let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
 
-            let EmbedHelp = new Discord.EmbedBuilder()
-                .setColor(process.env.BOT_COLOR)
-                .setTitle(`Menu d'aide  `)
-                .setDescription(`
+			let EmbedHelp = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`Menu d'aide  `)
+				.setDescription(`
                 Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
                 **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**
 
                 Catégories : \`${commandCategories.length}\`
                 Commandes : \`${commands.size}\`
                 `)
-                .setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
-                .setTimestamp()
-                .setFooter({
-                    text: "Gérée par l'instance de Peperehobbits01's Bot",
-                    iconURL: bot.user.displayAvatarURL({dynamic: true})
-                })
+				.setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
+				.setTimestamp()
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
 
-            message.reply({ embeds: [EmbedHelp], components: [menuRow] })
+			message.reply({embeds: [EmbedHelp], components: [menuRow]})
 
-        } else {
+		} else {
 
-            const commandes = []
-            bot.commands.forEach(command => {
-                commandes.push(command.name)
-            })
+			const commandes = []
+			bot.commands.forEach(command => {
+				commandes.push(command.name)
+			})
 
-            let minDistance = Number.MAX_SAFE_INTEGER;
-            let commandeProche = "";
+			let minDistance = Number.MAX_SAFE_INTEGER;
+			let commandeProche = "";
 
-            commandes.forEach((word) => {
-                const distance = levenshteinDistance(word, commande);
+			commandes.forEach((word) => {
+				const distance = levenshteinDistance(word, commande);
 
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    commandeProche = word;
-                }
-            });
+				if (distance < minDistance) {
+					minDistance = distance;
+					commandeProche = word;
+				}
+			});
 
-            const command = bot.commands.get(commandeProche)
-            if(!command) return message.reply({content: `Aucune commande correspondante à ${commande} n'a été trouvée !`, flags: [Discord.MessageFlags.Ephemeral]})
+			const command = bot.commands.get(commandeProche)
+			if (!command) return message.reply({
+				content: `Aucune commande correspondante à ${commande} n'a été trouvée !`,
+				flags: [Discord.MessageFlags.Ephemeral]
+			})
 
-            const permissionsText = command.permission === "Aucune"
-                ? "Aucune"
-                : new Discord.PermissionsBitField(command.permission).toArray().map(perm => PERMISSION_NOM[perm] || perm).join(', ')
+			const permissionsText = command.permission === "Aucune"
+				? "Aucune"
+				: new Discord.PermissionsBitField(command.permission).toArray().map(perm => PERMISSION_NOM[perm] || perm).join(', ')
 
-            let EmbedCommande = new Discord.EmbedBuilder()
-            .setColor(process.env.BOT_COLOR)
-            .setTitle(`Commande ${command.name}`)
-            .setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\n`)
-            .setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
-            .setFooter({
-                text: "Gérée par l'instance de Peperehobbits01's Bot",
-                iconURL: bot.user.displayAvatarURL({dynamic: true})
-            })
+			let EmbedCommande = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`Commande ${command.name}`)
+				.setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\n`)
+				.setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
 
-            await message.reply({embeds: [EmbedCommande]})
-        }
-    }
+			await message.reply({embeds: [EmbedCommande]})
+		}
+	}
 }

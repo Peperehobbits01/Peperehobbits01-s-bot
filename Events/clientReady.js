@@ -1,12 +1,12 @@
 const Discord = require('discord.js')
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
-const { ActivityType } = require("discord.js")
+const {ActivityType} = require("discord.js")
 
 module.exports = async bot => {
 
-    await loadSlashCommand(bot)
+	await loadSlashCommand(bot)
 
-    bot.user.setPresence({activities: [{name: "la version 1.4.1",type: ActivityType.Watching}],status:"online"})
+	bot.user.setPresence({activities: [{name: "la version 1.4.1", type: ActivityType.Watching}], status: "online"})
 
-    console.log(`Je suis connecté à ${bot.user.tag}!`)
+	console.log(`Je suis connecté à ${bot.user.tag}!`)
 }
