@@ -91,7 +91,7 @@ module.exports = {
         ctx.beginPath()
         ctx.globalAlpha = 1;
         ctx.lineWidth = 2;
-        ctx.fillStyle = "#ff0000"
+        ctx.fillStyle = "#fad02c"
         ctx.moveTo(220, 92.5)
         ctx.quadraticCurveTo(220, 75, 240, 75)
         ctx.lineTo(240 + barre - 20, 75)
@@ -104,7 +104,7 @@ module.exports = {
 
         //Pourcentage + Xp
         ctx.font = '24px "Permanent Marker"'
-        ctx.fillStyle = "#08490c"
+        ctx.fillStyle = "#2C55FA"
         ctx.fillText(`${Math.floor(xp * 100 / need)}%`, 665, 100)
         ctx.fillText(`${xp} / ${need} xp`, 275, 100)
 
