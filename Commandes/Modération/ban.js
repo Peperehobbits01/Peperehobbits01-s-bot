@@ -64,7 +64,7 @@ module.exports = {
             .addComponents(
                 new Discord.ButtonBuilder()
                     .setCustomId(`unban_${ID}`)
-                    .setLabel("RetiréAprè le bannisement")
+                    .setLabel("Retiré le bannisement")
                     .setStyle(Discord.ButtonStyle.Danger)
             )
 
