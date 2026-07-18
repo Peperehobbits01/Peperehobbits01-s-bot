@@ -55,9 +55,9 @@ module.exports = {
 
 				ctx.fillStyle = "#ffffff";
 				ctx.font = '28px "Permanent Marker"';
-				ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (65 + (i * 128)));
-				ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (95 + (i * 128)));
-				ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (125 + (i * 128)));
+				ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (60 + (i * 128)));
+				ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (90 + (i * 128)));
+				ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (120 + (i * 128)));
 			}
 
 			ctx.beginPath();
@@ -113,9 +113,9 @@ module.exports = {
 
 				ctx.fillStyle = "#ffffff";
 				ctx.font = '28px "Permanent Marker"';
-				ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (65 + (i * 128)));
-				ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (95 + (i * 128)));
-				ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (125 + (i * 128)));
+				ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (60 + (i * 128)));
+				ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (90 + (i * 128)));
+				ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (120 + (i * 128)));
 			}
 
 			const column2Count = Math.min(leaderboard.length - 5, 5);
@@ -154,9 +154,9 @@ module.exports = {
 
 				ctx.fillStyle = "#ffffff";
 				ctx.font = '28px "Permanent Marker"';
-				ctx.fillText(`Rang : ${i + 6 === 1 ? "1er" : `${i + 6}ème`}`, 840, (65 + (i * 128)));
-				ctx.fillText(`Niveau : ${leaderboard[leaderboardIndex].level}`, 840, (95 + (i * 128)));
-				ctx.fillText(`Expérience : ${leaderboard[leaderboardIndex].xp} / ${need}`, 840, (125 + (i * 128)));
+				ctx.fillText(`Rang : ${i + 6 === 1 ? "1er" : `${i + 6}ème`}`, 840, (60 + (i * 128)));
+				ctx.fillText(`Niveau : ${leaderboard[leaderboardIndex].level}`, 840, (90 + (i * 128)));
+				ctx.fillText(`Expérience : ${leaderboard[leaderboardIndex].xp} / ${need}`, 840, (120 + (i * 128)));
 			}
 		}
 
