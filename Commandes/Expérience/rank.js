@@ -117,7 +117,7 @@ module.exports = {
 		//Tag de l'utilisateur
 		ctx.font = '36px "Permanent Marker"'
 		ctx.fillStyle = "#ffffff"
-		ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 210)
+		ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 200)
 
 		//Badge de l'utilisateur
 		if (fetchedUser.flags.bitfield !== 0) {
@@ -167,16 +167,16 @@ module.exports = {
 					default:
 						break;
 				}
-				ctx.drawImage(b, 275 + i * 50, 230, 50, 50)
+				ctx.drawImage(b, 275 + i * 50, 215, 50, 50)
 
 				if (i === (badge.length - 1)) {
 					if ((await guild.fetchOwner()).id === user.id) {
 						const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
-						ctx.drawImage(b, 275 + (i + 1) * 50, 220, 50, 50)
+						ctx.drawImage(b, 275 + (i + 1) * 50, 215, 50, 50)
 					}
 					if (member && member.premiumSinceTimestamp !== null) {
 						const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000`Assets/NitroBoost9.png`)
-						ctx.drawImage(b, 275 + (i + 1) * 50, 220, 50, 50)
+						ctx.drawImage(b, 275 + (i + 1) * 50, 215, 50, 50)
 					}
 
 					/*if(hasNitro) {
@@ -190,12 +190,12 @@ module.exports = {
 
 			if ((await guild.fetchOwner()).id === user.id) {
 				const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
-				ctx.drawImage(b, 275, 220, 50, 50)
+				ctx.drawImage(b, 275, 215, 50, 50)
 			}
 
 			if (member && member.premiumSinceTimestamp !== null) {
 				const b = await Canvas.loadImage(Date.now() - member.premiumSinceTimestamp >= 63115200000 ? `Assets/NitroBoost1.png` : Date.now() - member.premiumSinceTimestamp >= 47336400000 ? `Assets/NitroBoost2.png` : Date.now() - member.premiumSinceTimestamp >= 39447000000 ? `Assets/NitroBoost3.png` : Date.now() - member.premiumSinceTimestamp >= 31557600000 ? `Assets/NitroBoost4.png` : Date.now() - member.premiumSinceTimestamp >= 23668200000 ? `Assets/NitroBoost5.png` : Date.now() - member.premiumSinceTimestamp >= 15778800000 ? `Assets/NitroBoost6.png` : Date.now() - member.premiumSinceTimestamp >= 7889400000 ? `Assets/NitroBoost7.png` : Date.now() - member.premiumSinceTimestamp >= 5259600000 ? `Assets/NitroBoost8.png` : Date.now() - member.premiumSinceTimestamp >= 2629800000`Assets/NitroBoost9.png`)
-				ctx.drawImage(b, 275, 220, 50, 50)
+				ctx.drawImage(b, 275, 215, 50, 50)
 			}
 
 			/*if(hasNitro) {
