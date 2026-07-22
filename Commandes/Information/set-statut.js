@@ -1,55 +1,55 @@
 const Discord = require("discord.js")
 
 module.exports = {
-    name: "set-statut",
-    description: "Permet de changer le statut du bot",
-    permission: Discord.PermissionFlagsBits.Administrator,
-    category: "📚・Informations",
-    options:[
-        {
-            type: "string",
-            name: "activite",
-            description: "Que fait le bot ?",
-            required: true,
-            autocomplete: true
-        }, {
-            type: "string",
-            name: "statut",
-            description: "Le statut du robot.",
-            required: false,
-            autocomplete: false
-        }, {
-            type: "string",
-            name: "lien",
-            description: "URL du stream",
-            required: false,
-            autocomplete: false
-        }
-    ],
-    async run(bot, message, args) {
-        
-        let activity = args.getString("activite")
-        if(activity !== "Listening" && activity !== "Playing" && activity !== "Competing" && activity !== "Watching" && activity !== "Streaming") return message.reply("Aucun statut sélectionné !")
+	name: "set-statut",
+	description: "Permet de changer le statut du bot",
+	permission: Discord.PermissionFlagsBits.Administrator,
+	category: "📚・Informations",
+	options: [
+		{
+			type: "string",
+			name: "activite",
+			description: "Que fait le bot ?",
+			required: true,
+			autocomplete: true
+		}, {
+			type: "string",
+			name: "statut",
+			description: "Le statut du robot.",
+			required: false,
+			autocomplete: false
+		}, {
+			type: "string",
+			name: "lien",
+			description: "URL du stream",
+			required: false,
+			autocomplete: false
+		}
+	],
+	async run(bot, message, args) {
 
-        let status = args.getString("statut")
+		let activity = args.getString("activite")
+		if (activity !== "Listening" && activity !== "Playing" && activity !== "Competing" && activity !== "Watching" && activity !== "Streaming") return message.reply("Aucun statut sélectionné !")
 
-        let lien = args.getString("lien")
+		let status = args.getString("statut")
 
-        if(activity === "Streaming") {
-            if(!lien.match(new RegExp(/^(?:https?:\/\/)?(?:www\.|go\.)?twitch\.tv\/([a-z0-9_]+)($|\?)/))) return message.reply("URL manquante !")
+		let lien = args.getString("lien")
 
-            await bot.user.setActivity(status, {type: Discord.ActivityType[activity], url: lien})
-        }
+		if (activity === "Streaming") {
+			if (!lien.match(new RegExp(/^(?:https?:\/\/)?(?:www\.|go\.)?twitch\.tv\/([a-z0-9_]+)($|\?)/))) return message.reply("URL manquante !")
 
-        let Setstatut = new Discord.EmbedBuilder()
-        .setColor(process.env.BOT_COLOR)
-        .setTitle("ℹ️ Information sur le changement du statut ℹ️")
-        .setDescription(`Activité : ${activity}\nStatut : ${status}`)
-        .setFooter({
-            text: "Gérée par l'instance de Peperehobbits01's Bot",
-            iconURL: bot.user.displayAvatarURL({dynamic: true})
-        })
+			await bot.user.setActivity(status, {type: Discord.ActivityType[activity], url: lien})
+		}
 
-        message.reply({ embeds: [Setstatut] })
-    }
+		let Setstatut = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setTitle("ℹ️ Information sur le changement du statut ℹ️")
+			.setDescription(`Activité : ${activity}\nStatut : ${status}`)
+			.setFooter({
+				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				iconURL: bot.user.displayAvatarURL({dynamic: true})
+			})
+
+		message.reply({embeds: [Setstatut]})
+	}
 }

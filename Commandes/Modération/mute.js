@@ -1,96 +1,99 @@
 const Discord = require("discord.js")
 const ms = require("ms")
-const { executeQuery } = require("../../Fonctions/databaseConnect.js")
+const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 
 module.exports = {
 
-    name: "mute",
-    description: "Mute un membre",
-    permission: Discord.PermissionFlagsBits.ModerateMembers,
-    category: "🛡・Modération",
-    options: [
-        {
-            type: "user",
-            name: "membre",
-            description: "Le membre à mute",
-            required: true,
-            autocomplete: false
-        }, {
-            type: "string",
-            name: "temps",
-            description: "Le temps du mute",
-            required: true,
-            autocomplete: false
-        }, {
-            type: "string",
-            name: "raison",
-            description: "La raison du mute",
-            required: false,
-            autocomplete: false
-        }
-    ],
+	name: "mute",
+	description: "Mute un membre",
+	permission: Discord.PermissionFlagsBits.ModerateMembers,
+	category: "🛡・Modération",
+	options: [
+		{
+			type: "user",
+			name: "membre",
+			description: "Le membre à mute",
+			required: true,
+			autocomplete: false
+		}, {
+			type: "string",
+			name: "temps",
+			description: "Le temps du mute",
+			required: true,
+			autocomplete: false
+		}, {
+			type: "string",
+			name: "raison",
+			description: "La raison du mute",
+			required: false,
+			autocomplete: false
+		}
+	],
 
-    async run(bot, message, args) {
+	async run(bot, message, args) {
 
-        let user = args.getUser("membre")
-        if(!user) return message.reply("Aucun membre sélectioné !")
-        let member = message.guild.members.cache.get(user.id)
-        if(!member) return message.reply("Aucun membre sélectionné !")
+		let user = args.getUser("membre")
+		if (!user) return message.reply("Aucun membre sélectioné !")
+		let member = message.guild.members.cache.get(user.id)
+		if (!member) return message.reply("Aucun membre sélectionné !")
 
-        let time = args.getString("temps")
-        if(!time) return message.reply("Aucun temps donné !")
-        if(isNaN(ms(time))) return message.reply("Mauvais format !")
-        if(ms(time) > 2419200000) return message.reply("Le bot ne peut pas mute autant de temps !")
-        if(ms(time) < 300000) return message.reply("La durée du mute est trop courte !")
+		let time = args.getString("temps")
+		if (!time) return message.reply("Aucun temps donné !")
+		if (isNaN(ms(time))) return message.reply("Mauvais format !")
+		if (ms(time) > 2419200000) return message.reply("Le bot ne peut pas mute autant de temps !")
+		if (ms(time) < 300000) return message.reply("La durée du mute est trop courte !")
 
-        let reason = args.getString("raison")
-        if(!reason) reason = "Non-respect des règles (raison auto ajouté)";
+		let reason = args.getString("raison")
+		if (!reason) reason = "Non-respect des règles (raison auto ajouté)";
 
-        if(message.user.id === user.id) return message.reply("Tu ne peux pas te mute!")
-        if((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas mute le fondateur!")
-        if(!member.moderatable) return message.reply("Je ne peux pas le mute!")
-        if(message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le mute!")
-        if(member.isCommunicationDisabled()) return message.reply("Il est déjà muet!")
+		if (message.user.id === user.id) return message.reply("Tu ne peux pas te mute!")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas mute le fondateur!")
+		if (!member.moderatable) return message.reply("Je ne peux pas le mute!")
+		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le mute!")
+		if (member.isCommunicationDisabled()) return message.reply("Il est déjà muet!")
 
-        try{
-            const Mute1 = new Discord.EmbedBuilder()
-            .setTitle(`Vous avez été mute ! `)
-            .setDescription(`${message.user.tag} vous a muté sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` ! `)
-            .setColor(process.env.BOT_COLOR)
-            .setFooter({
-                text: "Gérée par l'instance de Peperehobbits01's Bot",
-                iconURL: bot.user.displayAvatarURL({dynamic: true})
-            })
-            
-            await user.send({embeds: [Mute1]})
-        }catch(err) {}
+		try {
+			const Mute1 = new Discord.EmbedBuilder()
+				.setTitle(`Vous avez été mute ! `)
+				.setDescription(`${message.user.tag} vous a muté sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` ! `)
+				.setColor(process.env.BOT_COLOR)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
 
-        await message.deferReply()
+			await user.send({embeds: [Mute1]})
+		} catch (err) {
+		}
 
-        let ID = await bot.function.createId("MUTE")
+		await message.deferReply()
 
-        const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}', '${Date.now()}', '${time}')`
-        await executeQuery(queryMuteAdd)
+		let ID = await bot.function.createId("MUTE")
 
-        await member.timeout(ms(time), reason)
+		const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time)
+		                      VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}',
+		                              '${Date.now()}', '${time}')`
+		await executeQuery(queryMuteAdd)
 
-        const unmute = new Discord.ActionRowBuilder()
-            .addComponents(
-                new Discord.ButtonBuilder()
-                    .setCustomId(`unmute_${ID}`)
-                    .setLabel("Retiré le mute")
-                    .setStyle(Discord.ButtonStyle.Danger)
-            )
+		await member.timeout(ms(time), reason)
 
-        const Mute2 = new Discord.EmbedBuilder()
-        .setTitle("Informations du mute")
-        .setDescription(`Vous avez muté ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
-        .setColor(process.env.BOT_COLOR)
-        .setFooter({
-            text: "Gérée par l'instance de Peperehobbits01's Bot",
-            iconURL: bot.user.displayAvatarURL({dynamic: true})
-        })
+		const unmute = new Discord.ActionRowBuilder()
+			.addComponents(
+				new Discord.ButtonBuilder()
+					.setCustomId(`unmute_${ID}`)
+					.setLabel("Retiré le mute")
+					.setStyle(Discord.ButtonStyle.Danger)
+			)
 
-        await message.followUp({embeds: [Mute2], components: [unmute]})
-    }
+		const Mute2 = new Discord.EmbedBuilder()
+			.setTitle("Informations du mute")
+			.setDescription(`Vous avez muté ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
+			.setColor(process.env.BOT_COLOR)
+			.setFooter({
+				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				iconURL: bot.user.displayAvatarURL({dynamic: true})
+			})
+
+		await message.followUp({embeds: [Mute2], components: [unmute]})
+	}
 }
