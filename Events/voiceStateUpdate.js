@@ -22,7 +22,7 @@ module.exports = async (bot, oldState, newState) => {
 		const JoinCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle(`${member.displayName} a rejoint un salon vocal`)
-			.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\#ID\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+			.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
 				text: "Gérée par l'instance de Peperehobbits01's Bot",
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -41,7 +41,7 @@ module.exports = async (bot, oldState, newState) => {
 		const LeaveCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle(`${member.displayName} a quittée un salon vocal`)
-			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\#ID\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
 				text: "Gérée par l'instance de Peperehobbits01's Bot",
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -86,7 +86,7 @@ module.exports = async (bot, oldState, newState) => {
 			const MooveCall = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
 				.setTitle(`${member.displayName} a changée de vocal`)
-				.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel.name}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\#ID\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel.name}\nAncien salon : ${oldChannel.name}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: "Gérée par l'instance de Peperehobbits01's Bot",
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
