@@ -1,4 +1,3 @@
-const Discord = require('discord.js')
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
 

@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const {executeQuery} = require("../Fonctions/databaseConnect");
 
 module.exports = async (bot, member) => {
 
@@ -16,6 +17,16 @@ module.exports = async (bot, member) => {
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()
+
+	if(member.username.startsWith("deleted")){
+		const xpSystemSearch = `SELECT * FROM xp WHERE guild = '${member.guild.id}' AND user = '${member.id}'`
+		const xpSystemResults = await executeQuery(xpSystemSearch)
+
+		if(xpSystemResults.length > 0) {
+			const removeUserFromXpSystem = `DELETE FROM xp WHERE guild = '${member.guild.id}' AND user = '${member.id}'`
+			await executeQuery(removeUserFromXpSystem)
+		}
+	}
 
 	await logsChannel.send({embeds: [removeMember]})
 }

@@ -35,6 +35,15 @@ module.exports = {
 		const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
 		const resultsLeaderBoard = await executeQuery(querySearchLeaderBoard);
 
+		for(let i = 0; i < resultsLeaderBoard.length; i++) {
+			const user = await bot.users.fetch(resultsLeaderBoard[i].user);
+
+			if(user.username.startsWith("deleted")) {
+				const xpSystemRemove = `DELETE FROM xp WHERE user = ${user.id}`
+				await executeQuery(xpSystemRemove)
+			}
+		}
+
 		let leaderboard = resultsLeaderBoard.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
 		let userInLeaderboard = results.find(u => u.user === user.id)
 		let xp = parseInt(userInLeaderboard.xp)
