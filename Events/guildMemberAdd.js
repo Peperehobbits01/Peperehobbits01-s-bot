@@ -13,7 +13,7 @@ module.exports = async (bot, member) => {
 			name: member.displayName,
 			iconURL: member.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`${member} a rejoint le serveur.\nUtilisateur : ${member.displayName}\n**ID** :\nUtilisateur : ${member.id}`)
+		.setDescription(`${member} a rejoint le serveur.\nUtilisateur : ${member.displayName}\nPlus d'info : https://discord.com/channels/${member.guild.id}/member-safety\n\n**ID** :\n\nUtilisateur : ${member.id}`)
 		.setFooter({
 			text: "Gérée par l'instance de Peperehobbits01's Bot",
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
