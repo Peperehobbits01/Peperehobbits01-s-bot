@@ -72,7 +72,7 @@ jobs:
         run: |
           cat > git-cliff.toml << 'EOF'
           [changelog]
-          header = "# What's Changed in {{ steps.bump.outputs.version }}\n"
+          header = "# What's Changed in ${{ steps.bump.outputs.version }}\n"
           body = """
           {% for group, commits in commits | group_by(attribute='group') %}
               ## {{ group | striptags | trim | upper }}
