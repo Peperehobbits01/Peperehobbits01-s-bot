@@ -1,10 +1,21 @@
 const Discord = require("discord.js")
 const {getFirstImage} = require("../Fonctions/getMessageImage")
+const {executeQuery} = require("../Fonctions/databaseConnect");
 
 module.exports = async (bot, message) => {
 
-	if (message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
-	if (message.partial) return;
+	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
+	if(message.author.bot) {
+		if(message.components?.[0].components.find(c => c.customId.startsWith("giveaway_"))) {
+			const giveawayID = message.components?.[0].components.find(c => c.customId.startsWith("giveaway_")).customId.split("_")[1];
+			const giveawayCancel = `DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND ID = '${giveawayID}'`
+			await executeQuery(giveawayCancel)
+			return;
+		} else {
+			return;
+		}
+	}
+
 	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
 	const fetchedLogs = await message.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.messageDelete,
