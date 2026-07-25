@@ -5,16 +5,6 @@ const {executeQuery} = require("../Fonctions/databaseConnect");
 module.exports = async (bot, message) => {
 
 	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
-	if(message.author.bot) {
-		if(message.components?.[0].components.find(c => c.customId.startsWith("giveaway_"))) {
-			const giveawayID = message.components?.[0].components.find(c => c.customId.startsWith("giveaway_")).customId.split("_")[1];
-			const giveawayCancel = `DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND ID = '${giveawayID}'`
-			await executeQuery(giveawayCancel)
-			return;
-		} else {
-			return;
-		}
-	}
 
 	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
 	const fetchedLogs = await message.guild.fetchAuditLogs({
@@ -27,6 +17,32 @@ module.exports = async (bot, message) => {
 	);
 
 	const executor = channelLog?.executor || message.author;
+
+	if(message.author.bot) {
+		if(message.components?.[0].components.find(c => c.customId.startsWith("giveaway_"))) {
+			const giveawayID = message.components?.[0].components.find(c => c.customId.startsWith("giveaway_")).customId.split("_")[1];
+			const giveawayCancel = `DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND ID = '${giveawayID}'`
+			await executeQuery(giveawayCancel)
+
+			const GiveawayCanecelEmbed = new Discord.EmbedBuilder()
+				.setAuthor({
+					name: executor.displayName,
+					iconURL: executor.displayAvatarURL({dynamic: true})
+				})
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`Informations concernent le giveaway avec l'ID ${giveawayID}`)
+				.setDescription(`Le giveaway avec l'ID ${giveawayID} a été annulé par ${executor}`)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+
+			await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
+			return;
+		}
+		return;
+	}
 
 	const deletedImage = getFirstImage(message)
 
