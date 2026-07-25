@@ -1,86 +1,118 @@
 const Discord = require("discord.js");
 const ms = require('ms');
+const {executeQuery} = require("../../Fonctions/databaseConnect");
 
 module.exports = {
-  name: 'create-giveaway',
-  description: 'Lancer un giveaway',
-  permission : Discord.PermissionFlagsBits.Administrator,
-  category: "🎁・giveaway",
-  options: [
-    {
-      name: 'duration',
-      type: 'string',
-      description: 'La duration du giveaway',
-      required: true,
-      autocomplete: false
-    },
-    {
-      name: 'winners',
-      type: 'integer',
-      description: 'Le nombre de gagnant',
-      required: true,
-      autocomplete: false
-    },
-    {
-      name: 'prize',
-      type: 'string',
-      description: 'Le prix du giveaway',
-      required: true,
-      autocomplete: false
-    },
-  ],
-  async run(bot, interaction, args) {
-    let duration = args.getString('duration');
-    let winners = args.getInteger('winners');
-    let prize = args.getString('prize');
+	name: 'create-giveaway',
+	description: 'Lancer un giveaway',
+	permission: Discord.PermissionFlagsBits.Administrator,
+	category: "🎁・giveaway",
+	options: [
+		{
+			name: 'duration',
+			type: 'string',
+			description: 'Combien de temps dure le giveaway ?',
+			required: true,
+			autocomplete: false
+		},
+		{
+			name: 'winners',
+			type: 'integer',
+			description: 'Le nombre de gagnant',
+			required: true,
+			autocomplete: false
+		},
+		{
+			name: 'prize',
+			type: 'string',
+			description: 'Le prix du giveaway',
+			required: true,
+			autocomplete: false
+		},
+	],
+	async run(bot, message, args) {
+		let duration = args.getString('duration');
+		let winners = args.getInteger('winners');
+		let prize = args.getString('prize');
+		if(!duration) return message.reply("Aucun temps donné !")
+		if(isNaN(ms(duration))) return message.reply("Mauvais format !")
+		let durationMs = ms(duration)
+		let endTime = Math.floor(Date.now() + durationMs)
+		let ID = await bot.function.createId("GIVEAWAY")
 
-    // Calculer le temps restant
-  let durationMs = ms(duration);
-  let endTime = Date.now() + durationMs;
+		const offerButton = new Discord.ActionRowBuilder()
+			.addComponents(
+				new Discord.ButtonBuilder()
+					.setCustomId(`giveaway_${ID}`)
+					.setLabel("Participer")
+					.setEmoji('🎉')
+					.setStyle(Discord.ButtonStyle.Success)
+			)
 
-    const offrir = new Discord.EmbedBuilder()
-      .setColor(process.env.BOT_COLOR)
-      .setTitle(`Giveaway: ${prize}`)
-      .setDescription(`Réagissez avec 🎉 pour participer !\Duration: **${duration}**\nNombre de gagnant: **${winners}**`)
-      .setTimestamp(endTime);
+		const offrir = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setTitle(`Giveaway: ${prize}`)
+			.setDescription(`Cliquez sur le bouton pour participer !\nDuration: <t:${Math.floor(endTime / 1000)}:R>\nNombre de gagnant: **${winners}**`)
+			.setFooter({
+				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				iconURL: bot.user.displayAvatarURL({dynamic: true})
+			})
+			.setTimestamp(endTime)
 
-    const message = await interaction.reply({ embeds: [offrir], fetchReply: true });
-    await message.react('🎉');
+		const interaction = await message.reply({embeds: [offrir], components: [offerButton]})
 
-    const updateInterval = setInterval(() => {
-      const timeLeftMs = endTime - Date.now();
-      if (timeLeftMs <= 0) {
-        clearInterval(updateInterval);
-        //embed.setDescription(`Le giveaway est terminé !\nGG ! Tu as 24h pour venir en ticket sinon reroll !`);
-        //message.edit({ embeds: [embed] });
-        return;
-      }
-      embed.setDescription(`Réagissez avec 🎉 pour participer !\nduration: **${duration}**\nNombre de winners: **${winners}**\nTemps restant: **${ms(timeLeftMs, { long: true })}**`);
-      message.edit({ embeds: [updateInterval] });
-    }, 20000 && 25000)
+		setTimeout(async () => {
 
-    setTimeout(async () => {
-      const fetchedMessage = await interaction.channel.messages.fetch(message.id);
-      const reactions = fetchedMessage.reactions.cache.get('🎉').users.cache.filter((user) => !user.bot);
-      if (reactions.size < winners) {
-        const failedEmbed = new Discord.EmbedBuilder()
-          .setColor('#ff0000')
-          .setTitle(`Giveaway: ${prize}`)
-          .setDescription(`Il n'y a pas assez de participants pour déterminer les winners`);
+			try {
+				const contestantQuery = `SELECT * FROM giveaway WHERE guild = '${message.guild.id}' AND id = '${ID}'`;
+				const contestantResults = await executeQuery(contestantQuery);
 
-        return message.edit({ embeds: [failedEmbed] });
-      }
+				if (contestantResults.length < winners) {
+					const failedEmbed = new Discord.EmbedBuilder()
+						.setColor(process.env.BOT_COLOR)
+						.setTitle(`Giveaway: ${prize}`)
+						.setDescription(`Il n'y a pas assez de participants pour déterminer les winners`)
+						.setFooter({
+							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							iconURL: bot.user.displayAvatarURL({dynamic: true})
+						})
+						.setTimestamp(endTime)
 
-      const gagnants = reactions.random(winners);
-      const winnersList = gagnants.map((user) => `<@${user.id}>`).join(', ');
+					await interaction.edit({embeds: [failedEmbed], components: []});
+					return;
+				}
 
-      const successEmbed = new Discord.EmbedBuilder()
-        .setColor('#36ff00')
-        .setTitle(`Giveaway: ${prize}`)
-        .setDescription(`Félicitations ${winnersList} ! Vous avez gagné **${prize}** !`);
+				function shuffleArray(arr) {
+					const a = [...arr];
+					for (let i = a.length - 1; i > 0; i--) {
+						const j = Math.floor(Math.random() * (i + 1));
+						[a[i], a[j]] = [a[j], a[i]];
+					}
+					return a;
+				}
 
+				const unshuffled = contestantResults.map(x => x.user);
+				const shuffledUsers = shuffleArray(unshuffled).slice(0, winners);
 
-      return message.edit({ embeds: [successEmbed] });
-    }, ms(duration));
-  },
+				for (let i = 0; i < winners; i++) {
+					const winnerList = await bot.users.fetch(shuffledUsers[i])
+
+					const successEmbed = new Discord.EmbedBuilder()
+						.setColor('#36ff00')
+						.setTitle(`Giveaway: ${prize}`)
+						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné **${prize}** !`)
+						.setFooter({
+							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							iconURL: bot.user.displayAvatarURL({dynamic: true})
+						})
+						.setTimestamp(endTime)
+
+					await interaction.edit({embeds: [successEmbed], components: []});
+				}
+
+				const CleanUPRequest = `DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND id = '${ID}'`;
+				await executeQuery(CleanUPRequest);
+			} catch {}
+		}, ms(duration));
+	},
 };

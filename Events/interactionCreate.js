@@ -276,6 +276,26 @@ module.exports = async (bot, interaction) => {
 
 			return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
 		}
+
+		if(interaction.customId.startsWith("giveaway_")) {
+			const giveawayID = interaction.customId.split("_")[1];
+			const giveawaySearch = `SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+
+			const giveawaySearchResults = await executeQuery(giveawaySearch)
+			if(giveawaySearchResults.length < 1) {
+				const giveawayAdd = `INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`
+				await executeQuery(giveawayAdd)
+
+				return interaction.reply({content: "Tu a bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
+			} else if (giveawaySearchResults.length === 1) {
+				const giveawayRemove = `DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+				await executeQuery(giveawayRemove)
+
+				return interaction.reply({content: "Tu a bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
+ 			} else {
+				return interaction.reply({content: "Une erreur c'est produite lors de la vérifications de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
+			}
+		}
 	}
 
 	if (interaction.customId === "help") {
