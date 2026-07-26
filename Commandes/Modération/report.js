@@ -14,10 +14,10 @@ module.exports = {
 			label: 'Que souhaitez-vous signalée ?',
 			required: true,
 			placeholder: 'Indiquez votre signalement ici',
-			style: Discord.TextInputStyle.Paragrapht
+			style: Discord.TextInputStyle.Paragraph
 		})
 
-		let ActionRow1 = new Discord.ActionRowBuilder().addComponents(question1);
+		const ActionRow1 = new Discord.ActionRowBuilder().addComponents(question1);
 
 		let Modal = new Discord.ModalBuilder({
 			customId: 'report',
