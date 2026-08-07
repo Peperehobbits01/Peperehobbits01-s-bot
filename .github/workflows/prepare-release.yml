@@ -95,10 +95,7 @@ jobs:
                    { message = "^feat", group = "**🚀Features**" },
                    { message = "^fix|^hotfix", group = "**🐛 Bug Fixes**" },
                    { message = "^refactor", group = "**🏗 Refactors**" },
-                   { message = "^chore", group = "**📋 Chore**" },
                    { message = "^docs", group = "**📚 Documentation**" },
-                   { message = "^test", group = "**🧪 Tests**" },
-                   { message = "^perf", group = "**⚡  Performance**" },
           ]
           EOF
 
