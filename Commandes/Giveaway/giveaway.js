@@ -1,9 +1,10 @@
 const Discord = require("discord.js");
 const ms = require('ms');
 const {executeQuery} = require("../../Fonctions/databaseConnect");
+const {shuffleArray} = require("../../Fonctions/shuffleArray");
 
 module.exports = {
-	name: 'create-giveaway',
+	name: 'giveaway',
 	description: 'Lancer un giveaway',
 	permission: Discord.PermissionFlagsBits.Administrator,
 	category: "🎁・giveaway",
@@ -82,15 +83,6 @@ module.exports = {
 					return;
 				}
 
-				function shuffleArray(arr) {
-					const a = [...arr];
-					for (let i = a.length - 1; i > 0; i--) {
-						const j = Math.floor(Math.random() * (i + 1));
-						[a[i], a[j]] = [a[j], a[i]];
-					}
-					return a;
-				}
-
 				const unshuffled = contestantResults.map(x => x.user);
 				const shuffledUsers = shuffleArray(unshuffled).slice(0, winners);
 
@@ -100,18 +92,23 @@ module.exports = {
 					const successEmbed = new Discord.EmbedBuilder()
 						.setColor('#36ff00')
 						.setTitle(`Giveaway: ${prize}`)
-						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné **${prize}** !`)
+						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné **${prize}** ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
 						.setFooter({
 							text: "Gérer par l'instance de Peperehobbits01's Bot",
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
 						})
 						.setTimestamp(endTime)
 
-					await interaction.edit({embeds: [successEmbed], components: []});
-				}
+					const RerollButton = new Discord.ActionRowBuilder()
+						.addComponents(
+							new Discord.ButtonBuilder()
+								.setCustomId(`reroll_button_${ID}_${winners}_${endTime}_${prize}`)
+								.setLabel("Reroll")
+								.setStyle(Discord.ButtonStyle.Danger)
+						)
 
-				const CleanUPRequest = `DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND id = '${ID}'`;
-				await executeQuery(CleanUPRequest);
+					await interaction.edit({embeds: [successEmbed], components: [RerollButton]});
+				}
 			} catch {}
 		}, ms(duration));
 	},
