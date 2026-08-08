@@ -136,5 +136,6 @@ jobs:
       - name: Update Pull Request target branch
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.RELEASE_TOKEN }}
           branch: prepare-release-${{ steps.bump.outputs.version }}
           base: main
