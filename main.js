@@ -14,6 +14,7 @@ bot.function = {
 	channelTypeName: require("./Fonctions/channelTypeName.js"),
 	permissionName: require("./Fonctions/permissionName.js"),
 	getMessageImage: require("./Fonctions/getMessageImage.js"),
+	shuffleArray: require("./Fonctions/shuffleArray.js"),
 }
 
 bot.login(process.env.TOKEN)

@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect.js")
+const {shuffleArray} = require("../Fonctions/shuffleArray");
 
 module.exports = async (bot, interaction) => {
 
@@ -275,6 +276,63 @@ module.exports = async (bot, interaction) => {
 			}
 
 			return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
+		}
+
+		if(interaction.customId.startsWith("giveaway_")) {
+			const giveawayID = interaction.customId.split("_")[1];
+			const giveawaySearch = `SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+
+			const giveawaySearchResults = await executeQuery(giveawaySearch)
+			if(giveawaySearchResults.length < 1) {
+				const giveawayAdd = `INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`
+				await executeQuery(giveawayAdd)
+
+				return interaction.reply({content: "Tu a bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
+			} else if (giveawaySearchResults.length === 1) {
+				const giveawayRemove = `DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+				await executeQuery(giveawayRemove)
+
+				return interaction.reply({content: "Tu a bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
+ 			} else {
+				return interaction.reply({content: "Une erreur c'est produite lors de la vérifications de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
+			}
+		}
+
+		if(interaction.customId.startsWith("reroll_button_")) {
+			const giveawayID = interaction.customId.split("_")[2];
+			const giveawaySearch = `SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+			const giveawaySearchResults = await executeQuery(giveawaySearch)
+			const giveawayWinners = interaction.customId.split("_")[3];
+			const giveawayDuration = interaction.customId.split("_")[4];
+			const giveawayPrize = interaction.customId.split("_")[5];
+
+			const member = await interaction.guild.members.fetch(interaction.user.id);
+			if (!member.permissions.has("ADMINISTRATOR")) return interaction.reply({
+				content: "Vous ne pouvez pas utiliser ce bouton !",
+				flags: [Discord.MessageFlags.Ephemeral]
+			});
+
+			if(giveawayDuration < Date.now) {
+				const unshuffled = giveawaySearchResults.map(x => x.user);
+				const shuffledUsers = shuffleArray(unshuffled).slice(0, giveawayWinners);
+				for (let i = 0; i < giveawayWinners; i++) {
+					const winnerList = await bot.users.fetch(shuffledUsers[i])
+
+					const successEmbed = new Discord.EmbedBuilder()
+						.setColor('#36ff00')
+						.setTitle(`Giveaway: ${giveawayPrize}`)
+						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
+						.setFooter({
+							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							iconURL: bot.user.displayAvatarURL({dynamic: true})
+						})
+						.setTimestamp()
+
+					await interaction.update({embeds: [successEmbed]});
+				}
+			} else {
+				interaction.reply({content: "Cette action est impossible pour le moment !", flags: Discord.MessageFlags.Ephemeral})
+			}
 		}
 	}
 
