@@ -19,7 +19,7 @@ module.exports = async (bot, message) => {
 		let level = parseInt(results[0].level)
 		let xp = parseInt(results[0].xp)
 
-		if(Math.round(10 * Math.pow(1.12, level) * 10) <= xp) {
+		if(Math.round(100 * Math.pow(1.25, level)) <= xp) {
 
 			const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 			await executeQuery(queryXpupdate)
