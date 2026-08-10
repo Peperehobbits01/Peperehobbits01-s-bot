@@ -49,7 +49,7 @@ module.exports = {
 		let xp = parseInt(userInLeaderboard.xp)
 		let level = parseInt(userInLeaderboard.level)
 		let rank = leaderboard.findIndex(r => r.user === user.id) + 1
-		let need = (level + 1) * 1000;
+		let need = Math.round(10 * Math.pow(1.12, level) * 10);
 		let guild = message.guild
 
 		const canvas = Canvas.createCanvas(800, 300)

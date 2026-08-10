@@ -49,7 +49,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[i].user);
 				const member = message.guild.members.cache.get(leaderboard[i].user);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[i].level) + 1) * 1000;
+				const need = Math.round(10 * Math.pow(1.12, leaderboard[i].level) * 10);
 
 				ctx.beginPath();
 				ctx.closePath();
@@ -95,7 +95,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[i].user);
 				const member = message.guild.members.cache.get(user.id);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[i].level) + 1) * 1000;
+				const need = Math.round(10 * Math.pow(1.12, leaderboard[i].level) * 10);
 
 				ctx.beginPath();
 				ctx.arc(104, (74 + ((i) * 128)), 47, 0, Math.PI * 2, true);
@@ -136,7 +136,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[leaderboardIndex].user);
 				const member = message.guild.members.cache.get(user.id);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[leaderboardIndex].level) + 1) * 1000;
+				const need = Math.round(10 * Math.pow(1.12, leaderboard[leaderboardIndex].level) * 10);
 
 				ctx.beginPath();
 				ctx.arc(column2X, (74 + ((i) * 128)), 47, 0, Math.PI * 2, true);
