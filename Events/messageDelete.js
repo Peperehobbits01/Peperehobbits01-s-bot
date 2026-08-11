@@ -4,7 +4,7 @@ const {executeQuery} = require("../Fonctions/databaseConnect");
 
 module.exports = async (bot, message) => {
 
-	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
+	if(message.partial || message.channel.type === Discord.ChannelType.DM || message.channel.id === process.env.COUNTING_CHANNEL) return;
 
 	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
 	const fetchedLogs = await message.guild.fetchAuditLogs({
