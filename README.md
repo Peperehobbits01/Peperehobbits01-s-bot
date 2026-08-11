@@ -6,27 +6,16 @@ of the youtubeur Peperehobbits01, but it is designed to be usable on other serve
 not planned as a feature. So if a system isn't
 to your liking, I commanded looking for another Discord bot then Peperehobbits01's bot.
 
-## Project status ⚠️
-
-Due to this project being my first, it has some major flaws in its design. It is easier to restart from scratch a 2.0.0
-version has started development with the help of a friend, Skudar, on a new branch in this repository. That version is
-not intended for production use and is not ready at all, it is not receiving security updates consistently because
-Skudar and I are not having enough time to work on the bot for know. If you really want to use this bot, I recommend
-using the 1.4.x releases as I am still updating it frequently to make sure it is having the lastest security patches and
-bug fixes, no new features are being introduced, but if you find a bug, you can create an issue to report it. I'll fix
-it when I can. If you have any questions, feel free to join my Discord server.
-
 ## Requirements to run/program the software
 
 | Software | Version          | More information           |
 |----------|------------------|----------------------------|
 | Node.js  | 22.x or higher   | Bundles javaScript and npm |
 | MySQL    | 8.2.x or higher  | The database of the bot    |
-| git      | 2.25.1 or higher | Commands for Github        |
 
 ### All the dependecies in the packages.json files.
 
-## Recommanded to run/program the software
+## Recommended to program this software
 
 | Software   | Version         | More information             |
 |------------|-----------------|------------------------------|
@@ -35,13 +24,13 @@ it when I can. If you have any questions, feel free to join my Discord server.
 
 #### After pulling the repo, install dependencies (add the '-D' argument to install dev dependencies) :
 
-```
+```shell
 npm install
 ```
 
 #### Do database migrations :
 
-Not possible yet but will be introduced in the future.
+Use the peperehobbits01_s_bot.sql file after creating a database and import the file into it.
 
 #### Config files :
 
@@ -51,7 +40,7 @@ You have to copy the .env.example and name the copy .env, you can then put the v
 
 Simply run :
 
-```
+```shell
 node main
 ```
 
