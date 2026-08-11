@@ -1,45 +1,16 @@
-const Discord = require("discord.js");
-const channelTypeName = (channelType) => {
-	switch (channelType) {
-		case Discord.ChannelType.GuildText:
-			return "Salon textuel";
-
-		case Discord.ChannelType.GuildVoice:
-			return "Salon vocal";
-
-		case Discord.ChannelType.GuildCategory:
-			return "Catégorie";
-
-		case Discord.ChannelType.GuildAnnouncement:
-			return "Salon d'annonces";
-
-		case Discord.ChannelType.AnnouncementThread:
-			return "Fil d'annonce";
-
-		case Discord.ChannelType.PublicThread:
-			return "Fil public";
-
-		case Discord.ChannelType.PrivateThread:
-			return "Fil privé";
-
-		case Discord.ChannelType.GuildStageVoice:
-			return "Salon de conférence";
-
-		case Discord.ChannelType.GuildForum:
-			return "Forum";
-
-		case Discord.ChannelType.GuildMedia:
-			return "Salon média";
-
-		case Discord.ChannelType.DM:
-			return "Message privé";
-
-		case Discord.ChannelType.GroupDM:
-			return "Groupe privé";
-
-		default:
-			return `Type inconnu (${channelType})`;
-	}
+const channelTypeName = {
+	0: "Salon textuel",
+	1: "Message privé",
+	2: "Salon vocal",
+	3: "Groupe privé",
+	4: "Catégorie",
+	5: "Salon d'annonces",
+	10: "Fil d'annonce",
+	11: "Fil public",
+	12: "Fil privé",
+	13: "Salon de conférence",
+	15: "Forum",
+	16: "Salon média",
 };
 
-module.exports = {channelTypeName}
+module.exports = channelTypeName;
