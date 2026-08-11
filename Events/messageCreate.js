@@ -44,19 +44,34 @@ module.exports = async (bot, message) => {
 	}
 
 	const channel = await bot.channels.fetch(process.env.COUNTING_CHANNEL);
-	const messages = await channel.messages.fetch({limit: 2});
-	const lastMessage = messages.first();
-	const previousMessage = messages.last();
-	const currentNumber = parseInt(lastMessage);
-	const previousNumber = parseInt(previousMessage);
 
-	if(currentNumber === previousNumber + 1) {
-		return;
-	} else if (isNaN(currentNumber)) {
-		await lastMessage.delete();
-	} else if (currentNumber !== previousNumber + 1) {
-		await lastMessage.delete();
-	} else if (currentNumber > 0 && !isNaN(currentNumber)) {
+	if(message.channel.id === process.env.COUNTING_CHANNEL) {
+		const messages = await channel.messages.fetch({limit: 2});
+		const lastMessage = messages.first();
+		const currentNumber = parseInt(lastMessage);
+		const CountingEmbed = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setDescription(`${message.author} : \`${message.content}\``)
+
+		const previousMessage = messages.last();
+
+		if(previousMessage + 1 === currentNumber || currentNumber > 1) {
+			try {
+				const previousNumber = parseInt(previousMessage.embeds?.[0].description.split(":")[1].replace(/`/g, ''));
+
+				if (currentNumber === previousNumber + 1) {
+					await channel.send({embeds: [CountingEmbed]});
+				}
+			} catch (err) {
+				const previousNumber = parseInt(previousMessage)
+
+				if (currentNumber === previousNumber + 1) {
+					await channel.send({embeds: [CountingEmbed]});
+				}
+			}
+		} else {
+			await channel.send({embeds: [CountingEmbed]});
+		}
 		await lastMessage.delete();
 	}
 }
