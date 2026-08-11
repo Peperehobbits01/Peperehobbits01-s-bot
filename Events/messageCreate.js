@@ -19,17 +19,18 @@ module.exports = async (bot, message) => {
 
 	if(results.length < 1) {
 
-		const queryAdd = `INSERT INTO xp (guild, user, xp, level) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '0')`
+		const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '0', '${xptogive}')`
 		await executeQuery(queryAdd)
 
 	} else {
 
 		let level = parseInt(results[0].level)
 		let xp = parseInt(results[0].xp)
+		let xptotal = parseInt(results[0].xptotal)
 
 		if(Math.round(100 * Math.pow(1.25, level)) <= xp) {
 
-			const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
+			const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 			await executeQuery(queryXpupdate)
 
 			let channel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
@@ -37,7 +38,7 @@ module.exports = async (bot, message) => {
 
 		} else {
 
-			const queryXpUpdate = `UPDATE xp SET xp = '${xp + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
+			const queryXpUpdate = `UPDATE xp SET xp = '${xp + xptogive}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 			await executeQuery(queryXpUpdate)
 
 		}
