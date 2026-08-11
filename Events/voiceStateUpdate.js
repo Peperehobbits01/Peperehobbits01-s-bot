@@ -9,14 +9,14 @@ module.exports = async (bot, oldState, newState) => {
 	const logsChannel = oldState.guild.channels.cache.get(process.env.LOGS_CHANNEL_VOICE);
 
 	const member = newState.guild.members.cache.get(newState.id);
-	if (!member) {
+	if(!member) {
 		console.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouver.");
 		return;
 	}
 
-	if (!oldChannel && newChannel) {
+	if(!oldChannel && newChannel) {
 
-		const queryJoinCall = `INSERT INTO voicestateupdate (user, channel, time) VALUES ('${member.id}', '${newState.channel.id}', '0')`
+		const queryJoinCall = `INSERT INTO voicestateupdate (guild, user, channel, time) VALUES ('${member.guildId}','${member.id}', '${newState.channel.id}', '${Date.now / 1000}')`
 		await executeQuery(queryJoinCall)
 
 		const JoinCall = new Discord.EmbedBuilder()
@@ -33,7 +33,13 @@ module.exports = async (bot, oldState, newState) => {
 		await logsChannel.send({embeds: [JoinCall]})
 	}
 
-	if (oldChannel && !newChannel) {
+	if(oldChannel && !newChannel) {
+
+		const querySearchTime = `SELECT FROM voicestateupdate WHERE user = '${member.id}' AND guild = '${member.guildId}'`
+		await executeQuery(querySearchTime)
+
+		const StartTime = querySearchTime.time
+		const FullTime = StartTime - Date.now
 
 		const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${member.id}'`
 		await executeQuery(queryLeaveCall)
@@ -43,7 +49,7 @@ module.exports = async (bot, oldState, newState) => {
 			.setTitle(`${member.displayName} a quittée un salon vocal`)
 			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: `L'utilisateur est resté : ${FullTime}`,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -52,33 +58,33 @@ module.exports = async (bot, oldState, newState) => {
 		await logsChannel.send({embeds: [LeaveCall]})
 	}
 
-	if (oldChannel && newChannel) {
+	if(oldChannel && newChannel) {
 
-		if (newState.selfDeaf !== oldState.selfDeaf) {
+		if(newState.selfDeaf !== oldState.selfDeaf) {
 			return;
 		} else if (oldState.selfDeaf !== newState.selfDeaf) {
 			return;
 		}
 
-		if (newState.selfMute !== oldState.selfMute) {
+		if(newState.selfMute !== oldState.selfMute) {
 			return;
 		} else if (oldState.selfMute !== newState.selfMute) {
 			return;
 		}
 
-		if (newState.deaf !== oldState.deaf) {
+		if(newState.deaf !== oldState.deaf) {
 			return;
 		} else if (oldState.deaf !== newState.deaf) {
 			return;
 		}
 
-		if (newState.mute !== oldState.mute) {
+		if(newState.mute !== oldState.mute) {
 			return;
 		} else if (oldState.mute !== newState.mute) {
 			return;
 		}
 
-		if (oldChannel !== newChannel) {
+		if(oldChannel !== newChannel) {
 
 			const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', time = '0' WHERE user = '${member.id}'`
 			await executeQuery(queryMooveCall)

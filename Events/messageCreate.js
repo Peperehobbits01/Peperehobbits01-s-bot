@@ -7,7 +7,15 @@ module.exports = async (bot, message) => {
 
 	const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 	const results = await executeQuery(querySearch)
-	const xptogive = Math.floor(Math.random() * 20) + 12;
+	let xptogive = Math.floor(Math.random() * 20) + 12;
+
+	const member = message.guild.members.cache.get(message.author.id)
+
+	if(member.roles.cache.has(process.env.BOOSTER_ROLE)) {
+		xptogive = xptogive * 1.5
+	} else if(member.roles.cache.has(process.env.MOM_ROLE) || member.roles.cache.has(process.env.EVENT_WINNER_ROLE)) {
+		xptogive = xptogive * 1.25
+	}
 
 	if(results.length < 1) {
 
