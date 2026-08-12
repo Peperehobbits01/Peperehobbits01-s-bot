@@ -9,6 +9,7 @@
 	"author": "Peperehobbits01",
 	"license": "LGPL-3.0-or-later",
 	"dependencies": {
+		"@discordjs/rest": "^2.6.3",
 		"canvas": "^3.2.3",
 		"discord.js": "^14.26.4",
 		"dotenv": "^17.4.2",
