@@ -28,13 +28,14 @@ module.exports = async (bot, message) => {
 		let xp = parseInt(results[0].xp)
 		let xptotal = parseInt(results[0].xptotal)
 
-		if(Math.round(100 * Math.pow(1.25, level)) <= xp) {
+		if(Math.round(100 * Math.pow(1.25, level)) <= xp + xptogive) {
+			const xpneeded = Math.round(100 * Math.pow(1.25, level))
 
-			const queryXpupdate = `UPDATE xp SET xp = '${xptogive}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
+			const queryXpupdate = `UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 			await executeQuery(queryXpupdate)
 
-			let channel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-			channel.send(`Tu l'as fais ${message.author}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
+			let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
+			levelChannel.send(`Tu l'as fais ${message.author}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
 
 		} else {
 
