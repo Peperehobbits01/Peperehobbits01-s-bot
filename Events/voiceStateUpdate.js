@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
-const ms = require("ms");
-const {executeQuery} = require("../Fonctions/databaseConnect.js")
+const {voiceCallXpCalculation, activeTimers} = require("../Fonctions/voiceCallXpCalculation");
 
 module.exports = async (bot, oldState, newState) => {
 
@@ -16,8 +15,7 @@ module.exports = async (bot, oldState, newState) => {
 
 	if(!oldChannel && newChannel) {
 
-		const queryJoinCall = `INSERT INTO voicestateupdate (guild, user, channel, time) VALUES ('${member.guildId}','${member.id}', '${newState.channel.id}', '${Date.now / 1000}')`
-		await executeQuery(queryJoinCall)
+		await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 
 		const JoinCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
@@ -35,21 +33,17 @@ module.exports = async (bot, oldState, newState) => {
 
 	if(oldChannel && !newChannel) {
 
-		const querySearchTime = `SELECT FROM voicestateupdate WHERE user = '${member.id}' AND guild = '${member.guildId}'`
-		await executeQuery(querySearchTime)
+		const oldTimer = activeTimers.get(member.id);
+		if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-		const StartTime = querySearchTime.time
-		const FullTime = StartTime - Date.now
-
-		const queryLeaveCall = `DELETE FROM voicestateupdate WHERE channel = '${oldState.channel.id}' AND user = '${member.id}'`
-		await executeQuery(queryLeaveCall)
+		await voiceCallXpCalculation(oldChannel, newChannel, newState, oldState, member)
 
 		const LeaveCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle(`${member.displayName} a quittée un salon vocal`)
 			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
-				text: `L'utilisateur est resté : ${FullTime}`,
+				text: `Gérée par l'instance de Peperehobbits01's Bot`,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -85,9 +79,6 @@ module.exports = async (bot, oldState, newState) => {
 		}
 
 		if(oldChannel !== newChannel) {
-
-			const queryMooveCall = `UPDATE voicestateupdate SET channel = '${newState.channel.id}', time = '0' WHERE user = '${member.id}'`
-			await executeQuery(queryMooveCall)
 
 			const MooveCall = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
