@@ -55,13 +55,13 @@ module.exports = {
 		const canvas = Canvas.createCanvas(800, 300)
 		const ctx = canvas.getContext("2d")
 
-		const background = await Canvas.loadImage('Assets/Niveau.jpg')
+		const background = await Canvas.loadImage('./src/Assets/Niveau.jpg')
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-		const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
+		const opacity = await Canvas.loadImage(`./src/Assets/leaderboard_black.png`)
 		ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
-		registerFont('./Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
+		registerFont('./src/Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
 
 		const member = message.guild.members.cache.get(user.id);
 		const status = member?.presence?.status ?? "offline";
@@ -135,43 +135,43 @@ module.exports = {
 				let b;
 				switch (badge[i]) {
 					case "HypeSquadOnlineHouse1":
-						b = await Canvas.loadImage(`Assets/Hypesquad1.png`);
+						b = await Canvas.loadImage(`./src/Assets/Hypesquad1.png`);
 						break;
 					case "HypeSquadOnlineHouse2":
-						b = await Canvas.loadImage(`Assets/Hypesquad2.png`);
+						b = await Canvas.loadImage(`./src/Assets/Hypesquad2.png`);
 						break;
 					case "HypeSquadOnlineHouse3":
-						b = await Canvas.loadImage(`Assets/Hypesquad3.png`);
+						b = await Canvas.loadImage(`./src/Assets/Hypesquad3.png`);
 						break;
 					case "Staff":
-						b = await Canvas.loadImage(`Assets/Staff.png`);
+						b = await Canvas.loadImage(`./src/Assets/Staff.png`);
 						break;
 					case "Partner":
-						b = await Canvas.loadImage(`Assets/Partner.png`);
+						b = await Canvas.loadImage(`./src/Assets/Partner.png`);
 						break;
 					case "Hypesquad":
-						b = await Canvas.loadImage(`Assets/Hypesquad4.png`);
+						b = await Canvas.loadImage(`./src/Assets/Hypesquad4.png`);
 						break;
 					case "BugHunterLevel1":
-						b = await Canvas.loadImage(`Assets/BugHunter1.png`);
+						b = await Canvas.loadImage(`./src/Assets/BugHunter1.png`);
 						break;
 					case "BugHunterLevel2":
-						b = await Canvas.loadImage(`Assets/BugHunter2.png`);
+						b = await Canvas.loadImage(`./src/Assets/BugHunter2.png`);
 						break;
 					case "PremiumEarlySupporter":
-						b = await Canvas.loadImage(`Assets/PremiumEarlySupport.png`);
+						b = await Canvas.loadImage(`./src/Assets/PremiumEarlySupport.png`);
 						break;
 					case "VerifiedDeveloper":
-						b = await Canvas.loadImage(`Assets/VerifiedDeveloper.png`);
+						b = await Canvas.loadImage(`./src/Assets/VerifiedDeveloper.png`);
 						break;
 					case "CertifiedModerator":
-						b = await Canvas.loadImage(`Assets/CertifiedModerator.png`);
+						b = await Canvas.loadImage(`./src/Assets/CertifiedModerator.png`);
 						break;
 					case "ActiveDeveloper":
-						b = await Canvas.loadImage(`Assets/ActiveDeveloper.png`);
+						b = await Canvas.loadImage(`./src/Assets/ActiveDeveloper.png`);
 						break;
 					case "OldUserName":
-						b = await Canvas.loadImage(`Assets/OldUserNameBadge.png`);
+						b = await Canvas.loadImage(`./src/Assets/OldUserNameBadge.png`);
 						break;
 					default:
 						break;
@@ -180,7 +180,7 @@ module.exports = {
 
 				if (i === (badge.length - 1)) {
 					if ((await guild.fetchOwner()).id === user.id) {
-						const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
+						const b = await Canvas.loadImage(`./src/Assets/OwnerServer.png`)
 						ctx.drawImage(b, 275 + (i + 1) * 50, 215, 50, 50)
 					}
 					if (member && member.premiumSinceTimestamp !== null) {
@@ -198,7 +198,7 @@ module.exports = {
 		} else {
 
 			if ((await guild.fetchOwner()).id === user.id) {
-				const b = await Canvas.loadImage(`Assets/OwnerServer.png`)
+				const b = await Canvas.loadImage(`./src/Assets/OwnerServer.png`)
 				ctx.drawImage(b, 275, 215, 50, 50)
 			}
 

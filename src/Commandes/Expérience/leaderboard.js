@@ -34,13 +34,13 @@ module.exports = {
 		const canvas = Canvas.createCanvas(1280, 700);
 		const ctx = canvas.getContext("2d");
 
-		const background = await Canvas.loadImage(`Assets/Niveau.jpg`)
+		const background = await Canvas.loadImage(`./src/Assets/Niveau.jpg`)
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-		const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
+		const opacity = await Canvas.loadImage(`./src/Assets/leaderboard_black.png`)
 		ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
-		registerFont('./Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
+		registerFont('./src/Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
 
 		if (leaderboard.length <= 5) {
 

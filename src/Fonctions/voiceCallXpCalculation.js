@@ -1,4 +1,4 @@
-const {executeQuery} = require('../Fonctions/databaseConnect')
+const {executeQuery} = require('./databaseConnect')
 
 const activeTimers = new Map()
 
