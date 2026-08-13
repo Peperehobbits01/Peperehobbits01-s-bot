@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const {levenshteinDistance} = require('../../Fonctions/levenshteinDistance');
-const PERMISSION_NOM = require('../../Fonctions/permissionName');
+const PERMISSION_NOM = require('../../enum/permissionName');
 
 module.exports = {
 

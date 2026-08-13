@@ -11,10 +11,9 @@ bot.function = {
 	levenshteinDistance: require("./Fonctions/levenshteinDistance.js"),
 	databaseConnect: require("./Fonctions/databaseConnect.js"),
 	calculXp: require("./Fonctions/calculXp.js"),
-	channelTypeName: require("./Fonctions/channelTypeName.js"),
-	permissionName: require("./Fonctions/permissionName.js"),
 	getMessageImage: require("./Fonctions/getMessageImage.js"),
 	shuffleArray: require("./Fonctions/shuffleArray.js"),
+	voiceCallXpCalculation: require("./Fonctions/voiceCallXpCalculation.js"),
 }
 
 bot.login(process.env.TOKEN)

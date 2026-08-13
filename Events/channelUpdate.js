@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const channelTypeName = require("../Fonctions/channelTypeName.js")
+const channelTypeName = require("../enum/channelTypeName.js")
 
 module.exports = async (bot, oldChannel, newChannel) => {
 
