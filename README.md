@@ -59,33 +59,35 @@ node main
 │   .env.example
 │   peperehobbits01_s_bot.sql
 │
-├───Assets
-│       Assets that are used in the bot for commands like /rank.
-│
-├───Commands
-│   │
-│   ├───Expérience
-│   │       Experience related commands.
-│   │   
-│   ├───Fun
-│   │       Fun related commands.
-│   │   
-│   ├───Giveaway       
-│   │       Giveaway related commands.
-│   │   
-│   ├───Information       
-│   │       Information related commands.
-│   │    
-│   └───Modération       
-│          Moderation related commands.
-│         
-├───Events
-│       Discord related events.       
-│
-├───Fonctions
-│       Fonctions files required to run some commands.
-│
-└───Loaders
-        The loaders that load the events and commands files.
+└───src
+    │
+    ├───Assets
+    │   Assets that are used in the bot for commands like /rank.
+ 	│
+ 	├───Commands
+    │	│
+    │	├───Expérience
+    │	│       Experience related commands.
+    │	│   
+    │	├───Fun
+    │	│       Fun related commands.
+    │	│   
+    │	├───Giveaway       
+    │	│       Giveaway related commands.
+    │	│   
+    │	├───Information       
+    │	│       Information related commands.
+    │	│    
+    │	└───Modération       
+    │	       Moderation related commands.
+    │      
+ 	├───Events
+ 	│       Discord related events.       
+ 	│
+ 	├───Fonctions
+ 	│       Fonctions files required to run some commands.
+ 	│
+	└───Loaders
+    	    The loaders that load the events and commands files.
 
 ```
