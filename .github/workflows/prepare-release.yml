@@ -70,7 +70,7 @@ jobs:
 
       - name: Create git-cliff config
         run: |
-          cat > git-cliff.toml << 'EOF'
+          cat > /tmp/git-cliff.toml << 'EOF'
           [changelog]
           header = "# What's Changed in ${{ steps.bump.outputs.version }}\n"
           body = """
@@ -105,9 +105,9 @@ jobs:
           pip install git-cliff
           LAST_TAG=$(git describe --tags --abbrev=0 HEAD 2>/dev/null | head -1 || echo "")
           if [ -n "$LAST_TAG" ]; then
-            git-cliff --latest "$LAST_TAG"...HEAD --config git-cliff.toml > /tmp/changelog.md
+            git-cliff --latest "$LAST_TAG"...HEAD --config /tmp/git-cliff.toml > /tmp/changelog.md
           else
-            git-cliff --config git-cliff.toml > /tmp/changelog.md
+            git-cliff --config /tmp/git-cliff.toml > /tmp/changelog.md
           fi
           VERSION="${{ steps.bump.outputs.version }}"
           {

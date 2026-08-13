@@ -1,12 +1,12 @@
 const Discord = require('discord.js')
-const {channelTypeName} = require("../Fonctions/channelTypeName.js")
+const channelTypeName = require("../enum/channelTypeName.js")
 
 module.exports = async (bot, oldChannel, newChannel) => {
 
 	if (oldChannel.type === Discord.ChannelType.DM) return;
 	const logsChannel = oldChannel.guild.channels.cache.get(process.env.LOGS_CHANNEL_CHANNEL);
-	const oldReadableChannelType = channelTypeName(oldChannel.type);
-	const newReadableChannelType = channelTypeName(newChannel.type);
+	const oldReadableChannelType = channelTypeName[oldChannel.type];
+	const newReadableChannelType = channelTypeName[newChannel.type];
 
 	const fetchedLogs = await oldChannel.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.ChannelUpdate,

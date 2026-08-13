@@ -9,7 +9,7 @@ module.exports = {
 	options: [
 		{
 			type: "user",
-			name: 'membres',
+			name: 'membre',
 			description: `Le membre dont vous voulez connaitre le nombre de membre inviter.`,
 			required: true,
 			autocomplete: false
