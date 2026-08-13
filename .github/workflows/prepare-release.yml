@@ -70,7 +70,7 @@ jobs:
 
       - name: Create git-cliff config
         run: |
-          cat > git-cliff.toml << 'EOF'
+          cat > /tmp/git-cliff.toml << 'EOF'
           [changelog]
           header = "# What's Changed in ${{ steps.bump.outputs.version }}\n"
           body = """
