@@ -1,23 +1,23 @@
 const Discord = require("discord.js")
 require("dotenv").config();
 const bot = new Discord.Client({intents: 3276799})
-const loadCommands = require("./Loaders/loadCommands")
-const loadEvents = require("./Loaders/loadEvents")
+const loadCommands = require("./src/Loaders/loadCommands")
+const loadEvents = require("./src/Loaders/loadEvents")
 
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
-	createId: require("./Fonctions/createId.js"),
-	levenshteinDistance: require("./Fonctions/levenshteinDistance.js"),
-	databaseConnect: require("./Fonctions/databaseConnect.js"),
-	calculXp: require("./Fonctions/calculXp.js"),
-	getMessageImage: require("./Fonctions/getMessageImage.js"),
-	shuffleArray: require("./Fonctions/shuffleArray.js"),
-	voiceCallXpCalculation: require("./Fonctions/voiceCallXpCalculation.js"),
+	createId: require("./src/Fonctions/createId.js"),
+	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
+	databaseConnect: require("./src/Fonctions/databaseConnect.js"),
+	calculXp: require("./src/Fonctions/calculXp.js"),
+	getMessageImage: require("./src/Fonctions/getMessageImage.js"),
+	shuffleArray: require("./src/Fonctions/shuffleArray.js"),
+	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
 }
 
 bot.login(process.env.TOKEN)
-loadCommands(bot, process.cwd() + '/Commandes');
+loadCommands(bot, process.cwd() + '/src/Commandes');
 loadEvents(bot)
 
 require(`./anti-crash.js`)();
