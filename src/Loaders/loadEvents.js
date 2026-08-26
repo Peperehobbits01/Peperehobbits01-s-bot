@@ -1,10 +1,10 @@
 const fs = require('fs')
 
-module.exports = async bot => {
+module.exports = bot => {
 
-	for (const file of fs.readdirSync('./src/Events').filter(ƒ => ƒ.endsWith(".js"))) {
+	for (const file of fs.readdirSync('./src/Events').filter(f => f.endsWith(".js"))) {
 
-		let event = require(`../Events/${file}`)
+		const event = require(`../Events/${file}`)
 		bot.on(file.split(".js").join(""), event.bind(null, bot))
 		console.log(`Evenement ${file} chargé avec succès!`)
 	}
