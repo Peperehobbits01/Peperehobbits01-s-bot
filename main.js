@@ -20,8 +20,6 @@ bot.login(process.env.TOKEN)
 loadCommands(bot, process.cwd() + '/src/Commandes');
 loadEvents(bot)
 
-require(`./anti-crash.js`)();
-
 process.on('SIGINT', () => {
 	console.log('\n[!] Réception de SIGINT. Déconnexion du bot...');
 	bot.destroy().then(r => console.log('\n[!] Réception de SIGINT. Déconnexion du bot réussie.'));
