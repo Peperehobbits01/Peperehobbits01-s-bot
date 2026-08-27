@@ -74,7 +74,7 @@ function buildPaths(basePath, directoryTree) {
 
 /**
  * Load commands from a path
- * @param {Client} client
+ * @param bot
  * @param {string} path
  * @returns {Promise<void>}
  */
