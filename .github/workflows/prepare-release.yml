@@ -109,9 +109,7 @@ jobs:
           else
             git-cliff --config /tmp/git-cliff.toml > /tmp/changelog.md
           fi
-          VERSION="${{ steps.bump.outputs.version }}"
           {
-            echo "$VERSION"
             echo ""
             cat /tmp/changelog.md
           } > /tmp/changelog-with-version.md
