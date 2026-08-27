@@ -57,7 +57,7 @@ module.exports = {
 		const background = await Canvas.loadImage('./src/Assets/Niveau.jpg')
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-		const opacity = await Canvas.loadImage(`./src/Assets/leaderboard_black.png`)
+		const opacity = await Canvas.loadImage(`./src/Assets/rank_black.png`)
 		ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
 		registerFont('./src/Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
