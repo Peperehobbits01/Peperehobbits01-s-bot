@@ -52,6 +52,22 @@ module.exports = async (bot, oldState, newState) => {
 		await logsChannel.send({embeds: [LeaveCall]})
 	}
 
+	if(oldChannel !== newChannel) {
+
+		const MooveCall = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setTitle(`${member.displayName} a changée de vocal`)
+			.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel}\nAncien salon : ${oldChannel}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+			.setFooter({
+				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				iconURL: bot.user.displayAvatarURL({dynamic: true})
+			})
+			.setTimestamp()
+			.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+		await logsChannel.send({embeds: [MooveCall]})
+	}
+
 	if(oldChannel && newChannel) {
 
 		if(newState.selfDeaf !== oldState.selfDeaf) {
@@ -78,12 +94,12 @@ module.exports = async (bot, oldState, newState) => {
 			return;
 		}
 
-		if(oldChannel !== newChannel) {
+		if(newState.streaming !== oldState.streaming) {
 
-			const MooveCall = new Discord.EmbedBuilder()
+			const StartStream = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a changée de vocal`)
-				.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel}\nAncien salon : ${oldChannel}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setTitle(`${member.displayName} a commencé à streamer`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: "Gérée par l'instance de Peperehobbits01's Bot",
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -91,7 +107,21 @@ module.exports = async (bot, oldState, newState) => {
 				.setTimestamp()
 				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
 
-			await logsChannel.send({embeds: [MooveCall]})
+			await logsChannel.send({embeds: [StartStream]})
+		} else if (oldState.streaming !== newState.streaming) {
+
+			const EndStream = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a coupé son stream`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [EndStream]})
 		}
 	}
 };
