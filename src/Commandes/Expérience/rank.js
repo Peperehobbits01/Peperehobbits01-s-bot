@@ -167,9 +167,6 @@ module.exports = {
 					case "CertifiedModerator":
 						b = await Canvas.loadImage(`./src/Assets/CertifiedModerator.png`);
 						break;
-					case "ActiveDeveloper":
-						b = await Canvas.loadImage(`./src/Assets/ActiveDeveloper.png`);
-						break;
 					case "OldUserName":
 						b = await Canvas.loadImage(`./src/Assets/OldUserNameBadge.png`);
 						break;
