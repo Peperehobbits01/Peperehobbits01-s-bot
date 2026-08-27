@@ -25,7 +25,7 @@ body:
     attributes:
       label: Reproduction
       description: You must provide a way to reproduce the problem.
-      placeholder: Repo link or code
+      placeholder: Make the list of the things you did for it to trigger
     validations:
       required: true
 
@@ -44,15 +44,11 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - type: textarea
     id: version
     attributes:
-      label: Version
-      description: What version of the software are you running?
-      options:
-        - Stable = on the release pages of the repos
-        - Beta = on the release pages marked as pre-release
-        - Dev = on the development branch of the repo
+      label: What version of the software are you running?
+      description: Please provide the version number and if it is a the dev version just say it.
     validations:
       required: true
 
