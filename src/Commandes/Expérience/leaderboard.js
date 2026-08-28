@@ -20,15 +20,6 @@ module.exports = {
 
 		await message.deferReply()
 
-		for(let i = 0; i < results.length; i++) {
-			const user = await bot.users.fetch(results[i].user);
-
-			if(user.username.startsWith("deleted")) {
-				const xpSystemRemove = `DELETE FROM xp WHERE user = ${user.id}`
-				await executeQuery(xpSystemRemove)
-			}
-		}
-
 		let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
 
 		const canvas = Canvas.createCanvas(1280, 700);
