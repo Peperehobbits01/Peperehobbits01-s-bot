@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const {levenshteinDistance} = require('../../Fonctions/levenshteinDistance');
-const PERMISSION_NOM = require('../../enum/permissionName');
+const permissionName = require('../../enum/permissionName');
 
 module.exports = {
 
@@ -108,7 +108,7 @@ module.exports = {
 
 			const permissionsText = command.permission === "Aucune"
 				? "Aucune"
-				: new Discord.PermissionsBitField(command.permission).toArray().map(perm => PERMISSION_NOM[perm] || perm).join(', ')
+				: new Discord.PermissionsBitField(command.permission).toArray().map(perm => permissionName[perm] || perm).join(', ')
 
 			let EmbedCommande = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
