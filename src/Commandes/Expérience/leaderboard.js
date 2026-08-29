@@ -34,13 +34,13 @@ module.exports = {
 		const canvas = Canvas.createCanvas(1280, 700);
 		const ctx = canvas.getContext("2d");
 
-		const background = await Canvas.loadImage(`Assets/Niveau.jpg`)
+		const background = await Canvas.loadImage(`./src/Assets/Niveau.jpg`)
 		ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
-		const opacity = await Canvas.loadImage(`Assets/leaderboard_black.png`)
+		const opacity = await Canvas.loadImage(`./src/Assets/leaderboard_black.png`)
 		ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
-		registerFont('./Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
+		registerFont('./src/Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
 
 		if (leaderboard.length <= 5) {
 
@@ -49,7 +49,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[i].user);
 				const member = message.guild.members.cache.get(leaderboard[i].user);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[i].level) + 1) * 1000;
+				const need = Math.round(100 * Math.pow(1.25, leaderboard[i].level));
 
 				ctx.beginPath();
 				ctx.closePath();
@@ -95,7 +95,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[i].user);
 				const member = message.guild.members.cache.get(user.id);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[i].level) + 1) * 1000;
+				const need = Math.round(100 * Math.pow(1.25, leaderboard[i].level));
 
 				ctx.beginPath();
 				ctx.arc(104, (74 + ((i) * 128)), 47, 0, Math.PI * 2, true);
@@ -136,7 +136,7 @@ module.exports = {
 				const user = await bot.users.fetch(leaderboard[leaderboardIndex].user);
 				const member = message.guild.members.cache.get(user.id);
 				const status = member?.presence?.status ?? "offline";
-				const need = (parseInt(leaderboard[leaderboardIndex].level) + 1) * 1000;
+				const need = Math.round(100 * Math.pow(1.25, leaderboard[leaderboardIndex].level));
 
 				ctx.beginPath();
 				ctx.arc(column2X, (74 + ((i) * 128)), 47, 0, Math.PI * 2, true);

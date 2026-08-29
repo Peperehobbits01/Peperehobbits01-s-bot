@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : ven. 07 août 2026 à 19:49
+-- Généré le : jeu. 13 août 2026 à 16:29
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -24,18 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `giveaway`
---
-
-CREATE TABLE `giveaway` (
-					   `guild` varchar(255) NOT NULL,
-					   `user` varchar(255) NOT NULL,
-					   `ID` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `ban`
 --
 
@@ -46,6 +34,18 @@ CREATE TABLE `ban` (
   `ban` varchar(255) NOT NULL,
   `reason` varchar(2000) NOT NULL,
   `date` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `giveaway`
+--
+
+CREATE TABLE `giveaway` (
+  `guild` varchar(255) DEFAULT NULL,
+  `user` varchar(255) DEFAULT NULL,
+  `ID` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -97,18 +97,6 @@ CREATE TABLE `note` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `voicestateupdate`
---
-
-CREATE TABLE `voicestateupdate` (
-  `user` varchar(255) NOT NULL,
-  `channel` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `warn`
 --
 
@@ -131,7 +119,8 @@ CREATE TABLE `xp` (
   `user` varchar(255) NOT NULL,
   `guild` varchar(255) NOT NULL,
   `xp` varchar(255) NOT NULL,
-  `level` varchar(255) NOT NULL
+  `level` varchar(255) NOT NULL,
+  `xptotal` varchar(2000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -161,12 +150,6 @@ ALTER TABLE `mute`
 --
 ALTER TABLE `note`
   ADD PRIMARY KEY (`note`);
-
---
--- Index pour la table `voicestateupdate`
---
-ALTER TABLE `voicestateupdate`
-  ADD PRIMARY KEY (`user`);
 
 --
 -- Index pour la table `warn`

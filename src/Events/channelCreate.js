@@ -1,11 +1,11 @@
 const Discord = require("discord.js")
-const {channelTypeName} = require("../Fonctions/channelTypeName")
+const channelTypeName = require("../enum/channelTypeName")
 
 module.exports = async (bot, channel) => {
 
 	if (channel.type === Discord.ChannelType.DM) return;
 	const logsChannel = channel.guild.channels.cache.get(process.env.LOGS_CHANNEL_CHANNEL);
-	const readableChannelType = channelTypeName(channel.type);
+	const readableChannelType = channelTypeName[channel.type];
 
 	const fetchedLogs = await channel.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.ChannelCreate,

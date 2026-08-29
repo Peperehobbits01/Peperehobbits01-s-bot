@@ -18,7 +18,7 @@ module.exports = async (bot, member) => {
 		})
 		.setTimestamp()
 
-	if(member.username.startsWith("deleted")){
+	if(member.displayName.startsWith("deleted")){
 		const xpSystemSearch = `SELECT * FROM xp WHERE guild = '${member.guild.id}' AND user = '${member.id}'`
 		const xpSystemResults = await executeQuery(xpSystemSearch)
 
