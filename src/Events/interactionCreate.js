@@ -44,7 +44,7 @@ module.exports = async (bot, interaction) => {
 			})))
 		}
 
-		if (interaction.commandName === "clearxp") {
+		if (interaction.commandName === "clear") {
 
 			let choices = ["Level", "Xp", "Tout effacer"]
 			let sortie = choices.filter(c => c.includes(entry))

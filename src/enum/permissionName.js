@@ -1,4 +1,4 @@
-const PERMISSION_NOM = {
+const permissionName = {
 	CREATE_INSTANT_INVITE: "Créer des invitats",
 	KICK_MEMBERS: "Exclure les membres",
 	BAN_MEMBERS: "Bannir les membres",
@@ -59,4 +59,4 @@ const PERMISSION_NOM = {
 	USE_EXTERNAL_SCRIPTS: "Utiliser des scripts externes"
 };
 
-module.exports = PERMISSION_NOM;
+module.exports = permissionName;

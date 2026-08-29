@@ -56,23 +56,23 @@ module.exports = async (bot, oldMember, newMember) => {
 			.setTimestamp()
 
 		logsChannel.send({embeds: [removeRolesEmbed]})
+	}
 
-		if (oldMember.displayName !== newMember.displayName) {
+	if (oldMember.displayName !== newMember.displayName) {
 
-			const updateName = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setAuthor({
-					name: executor.displayName,
-					iconURL: executor.displayAvatarURL({dynamic: true})
-				})
-				.setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
-				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
+		const updateName = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setAuthor({
+				name: executor.displayName,
+				iconURL: executor.displayAvatarURL({dynamic: true})
+			})
+			.setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
+			.setFooter({
+				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				iconURL: bot.user.displayAvatarURL({dynamic: true})
+			})
+			.setTimestamp()
 
-			logsChannel.send({embeds: [updateName]})
-		}
+		logsChannel.send({embeds: [updateName]})
 	}
 }

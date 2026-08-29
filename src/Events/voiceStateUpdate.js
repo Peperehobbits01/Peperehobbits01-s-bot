@@ -36,8 +36,6 @@ module.exports = async (bot, oldState, newState) => {
 		const oldTimer = activeTimers.get(member.id);
 		if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-		await voiceCallXpCalculation(oldChannel, newChannel, newState, oldState, member)
-
 		const LeaveCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle(`${member.displayName} a quittée un salon vocal`)
@@ -54,28 +52,178 @@ module.exports = async (bot, oldState, newState) => {
 
 	if(oldChannel && newChannel) {
 
-		if(newState.selfDeaf !== oldState.selfDeaf) {
-			return;
-		} else if (oldState.selfDeaf !== newState.selfDeaf) {
-			return;
+		if(newState.selfDeaf === true && oldState.selfDeaf === false) {
+
+			const oldTimer = activeTimers.get(member.id);
+			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
+
+			const IsNowSelfDeaf = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} c'est mis en sourdine`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNowSelfDeaf]})
+			return
+		} else if (oldState.selfDeaf === true && newState.selfDeaf === false) {
+
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+
+			const IsNoLongerSelfDeaf = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a quitté le mode sourdine`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNoLongerSelfDeaf]});
+			return
 		}
 
-		if(newState.selfMute !== oldState.selfMute) {
-			return;
-		} else if (oldState.selfMute !== newState.selfMute) {
-			return;
+		if(newState.selfMute === true && oldState.selfMute === false) {
+
+			const oldTimer = activeTimers.get(member.id);
+			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
+
+			const IsNowSelfMute = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} c'est muté`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNowSelfMute]})
+		} else if (oldState.selfMute === true && newState.selfMute === false) {
+
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+
+			const IsNoLongerSelfMute = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} c'est démuté`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNoLongerSelfMute]});
 		}
 
-		if(newState.deaf !== oldState.deaf) {
-			return;
-		} else if (oldState.deaf !== newState.deaf) {
-			return;
+		if(newState.serverDeaf === true && oldState.serverDeaf === false) {
+
+			const oldTimer = activeTimers.get(member.id);
+			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
+
+			const IsNowDeaf = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a été mis en sourdine`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNowDeaf]})
+		} else if (oldState.serverDeaf === true && newState.serverDeaf === false) {
+
+			if(newState.serverMute === false && newState.selfMute === false) {
+				await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+			}
+
+			const IsNoLongerDeaf = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNoLongerDeaf]});
 		}
 
-		if(newState.mute !== oldState.mute) {
-			return;
-		} else if (oldState.mute !== newState.mute) {
-			return;
+		if(newState.serverMute === true && oldState.serverMute === false) {
+
+			const oldTimer = activeTimers.get(member.id);
+			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
+
+			const IsNowMute = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a été muté`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNowMute]})
+		} else if (oldState.serverMute === true && newState.serverMute === false) {
+
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+
+			const IsNoLongerMute = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a été démuté`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [IsNoLongerMute]});
+		}
+
+		if(!oldState.streaming && newState.streaming) {
+
+			const StartStream = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a commencé à streamer`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [StartStream]})
+		} else if (oldState.streaming && !newState.streaming) {
+
+			const EndStream = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
+				.setTitle(`${member.displayName} a coupé son stream`)
+				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+				.setFooter({
+					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					iconURL: bot.user.displayAvatarURL({dynamic: true})
+				})
+				.setTimestamp()
+				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
+			await logsChannel.send({embeds: [EndStream]})
 		}
 
 		if(oldChannel !== newChannel) {

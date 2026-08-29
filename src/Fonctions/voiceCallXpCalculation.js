@@ -25,7 +25,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 		}
 
 		if (lookUpUserResults.length < 1) {
-			const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES ('${oldState.guild.id}', '${member.id}', '${xptogive}', 0, '${xptogive}')`
+			const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES ('${oldState.guild.id}', '${member.id}', '${xptogive}', '1', '${xptogive}')`
 			await executeQuery(queryAdd)
 
 		} else {

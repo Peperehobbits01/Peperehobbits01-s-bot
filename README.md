@@ -55,7 +55,6 @@ node main
 │   package-lock.json
 │   package.json
 │   README.md
-│   anti-crash.js
 │   .env.example
 │   peperehobbits01_s_bot.sql
 │

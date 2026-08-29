@@ -16,11 +16,10 @@ bot.function = {
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
 }
 
-bot.login(process.env.TOKEN)
-loadCommands(bot, process.cwd() + '/src/Commandes');
-loadEvents(bot)
-
-require(`./anti-crash.js`)();
+bot.login(process.env.TOKEN).then(() =>
+	loadCommands(bot, process.cwd() + '/src/Commandes'),
+	loadEvents(bot)
+)
 
 process.on('SIGINT', () => {
 	console.log('\n[!] Réception de SIGINT. Déconnexion du bot...');
