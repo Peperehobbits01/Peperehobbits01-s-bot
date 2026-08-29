@@ -1,7 +1,6 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
 const {executeQuery} = require(`../../Fonctions/databaseConnect.js`);
-const {calculXp} = require("../../Fonctions/calculXp.js")
 const {registerFont} = require("canvas");
 
 module.exports = {
@@ -32,10 +31,9 @@ module.exports = {
 
 		await message.deferReply()
 
-		const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
-		const resultsLeaderBoard = await executeQuery(querySearchLeaderBoard);
+		const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC`
+		const leaderboard = await executeQuery(querySearchLeaderBoard);
 
-		let leaderboard = resultsLeaderBoard.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
 		let userInLeaderboard = results.find(u => u.user === user.id)
 		let xp = parseInt(userInLeaderboard.xp)
 		let level = parseInt(userInLeaderboard.level)

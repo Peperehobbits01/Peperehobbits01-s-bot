@@ -10,7 +10,6 @@ bot.function = {
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
 	databaseConnect: require("./src/Fonctions/databaseConnect.js"),
-	calculXp: require("./src/Fonctions/calculXp.js"),
 	getMessageImage: require("./src/Fonctions/getMessageImage.js"),
 	shuffleArray: require("./src/Fonctions/shuffleArray.js"),
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
