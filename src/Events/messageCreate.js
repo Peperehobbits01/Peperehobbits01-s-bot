@@ -19,7 +19,7 @@ module.exports = async (bot, message) => {
 
 	if(results.length < 1) {
 
-		const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '0', '${xptogive}')`
+		const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '1', '${xptogive}')`
 		await executeQuery(queryAdd)
 
 	} else {
