@@ -49,10 +49,9 @@ module.exports = {
 			ctx.closePath();
 			ctx.clip();
 
-			if (user) {
-				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
-				ctx.drawImage(avatar, 104 - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
-			}
+			const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+			ctx.drawImage(avatar, 104 - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
+
 			ctx.restore();
 
 			ctx.fillStyle = "#ffffff";
@@ -92,10 +91,9 @@ module.exports = {
 				ctx.closePath();
 				ctx.clip();
 
-				if (user) {
-					const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
-					ctx.drawImage(avatar, column2X - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
-				}
+				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+				ctx.drawImage(avatar, column2X - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
+
 				ctx.restore();
 
 				ctx.fillStyle = "#ffffff";
