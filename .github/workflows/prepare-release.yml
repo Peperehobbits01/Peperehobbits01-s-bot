@@ -104,7 +104,7 @@ jobs:
         run: |
           pip install git-cliff
           git fetch origin main:main
-          git-cliff main...dev --config /tmp/git-cliff.toml > /tmp/changelog.md
+          git-cliff main..dev --config /tmp/git-cliff.toml > /tmp/changelog.md
           {
             echo ""
             cat /tmp/changelog.md
