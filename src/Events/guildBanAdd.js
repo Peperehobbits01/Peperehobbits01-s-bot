@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const {executeQuery} = require("../Fonctions/databaseConnect");
 
 module.exports = async (bot, ban) => {
 
@@ -26,7 +27,7 @@ module.exports = async (bot, ban) => {
 	const BanEmbed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
 		.setAuthor({
-			name: ban.displayName,
+			name: ban.user.displayName,
 			iconURL: ban.user.displayAvatarURL({dynamic: true})
 		})
 		.setDescription(`${ban.user.username} a été banni par ${executor} pour la raison ${ban.reason}\nNom de l'utilisateur : ${ban.user}\nRaison : ${ban.reason}\nPar l'utilisateur : ${executor.name}\n**ID** :\nL'utilisateur : \`${ban.user.id}\`\nPar l'utilisateur : \`${executor.id}\``)
@@ -37,4 +38,12 @@ module.exports = async (bot, ban) => {
 		.setTimestamp()
 
 	await logsChannel.send({embeds: [BanEmbed], components: [unban]});
+
+	const xpSystemSearch = `SELECT * FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
+	const xpSystemResults = await executeQuery(xpSystemSearch)
+
+	if(xpSystemResults.length > 0) {
+		const removeUserFromXpSystem = `DELETE FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
+		await executeQuery(removeUserFromXpSystem)
+	}
 }
