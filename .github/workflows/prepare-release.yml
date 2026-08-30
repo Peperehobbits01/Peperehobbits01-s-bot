@@ -103,12 +103,7 @@ jobs:
         id: changelog
         run: |
           pip install git-cliff
-          LAST_TAG=$(git describe --tags --abbrev=0 "dev" 2>/dev/null | head -1 || echo "")
-          if [ -n "$LAST_TAG" ]; then
-            git-cliff --latest "$LAST_TAG"..."dev" --config /tmp/git-cliff.toml > /tmp/changelog.md
-          else
-            git-cliff --config /tmp/git-cliff.toml > /tmp/changelog.md
-          fi
+          git-cliff main...dev --config /tmp/git-cliff.toml > /tmp/changelog.md
           {
             echo ""
             cat /tmp/changelog.md
