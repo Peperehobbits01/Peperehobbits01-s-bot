@@ -31,8 +31,6 @@ jobs:
           if [ -z "$VERSION" ]; then
             VERSION=$(node -p "require('./package.json').version")
           fi
-          # Remove v prefix if present
-          VERSION_NO_V="${VERSION#v}"
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
           echo "version=$VERSION_NO_V" >> $GITHUB_OUTPUT
           echo "Found version: $VERSION"
@@ -45,7 +43,7 @@ jobs:
           # Download the PR body as raw text
           gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" \
             --jq '.body' > /tmp/release-body.txt
-          
+
           # Write to GITHUB_OUTPUT
           echo "body<<EOF" >> $GITHUB_OUTPUT
           cat /tmp/release-body.txt >> $GITHUB_OUTPUT
