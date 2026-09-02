@@ -172,9 +172,14 @@ module.exports = async (bot, interaction) => {
 			return interaction.reply({content: "Mute retiré !", flags: [Discord.MessageFlags.Ephemeral]});
 		}
 
-		if (interaction.customId.startsWith("unban_")) {
+		if (interaction.customId.startsWith("unban_") || interaction.customId.startsWith("unban-")) {
 
-			const banId = interaction.customId.split("_")[1];
+			let banId;
+			if(interaction.customId.startsWith("unban_")) {
+				banId = interaction.customId.split("_")[1]
+			} else {
+				banId = interaction.customId.split("-")[1]
+			}
 
 			const member = await interaction.guild.members.fetch(interaction.user.id);
 			if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({
@@ -207,54 +212,6 @@ module.exports = async (bot, interaction) => {
 				const Ban1 = new Discord.EmbedBuilder()
 					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Vous avez été débannis !`)
-					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
-					.setFooter({
-						text: process.env.EMBED_FOOTER,
-						iconURL: bot.user.displayAvatarURL({dynamic: true})
-					})
-
-				await user.send({embeds: [Ban1]})
-			} catch (err) {
-			}
-
-			return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
-		}
-
-		if (interaction.customId.startsWith("unban-")) {
-
-			const banUser = interaction.customId.split("-")[1];
-
-			const member = await interaction.guild.members.fetch(interaction.user.id);
-			if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({
-				content: "Vous ne pouvez pas utiliser ce bouton !",
-				flags: [Discord.MessageFlags.Ephemeral]
-			});
-
-			const queryUnbanSearch = `SELECT *
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND user = "${banUser}"`
-			const ResultsUnban = await executeQuery(queryUnbanSearch)
-			if (ResultsUnban.length < 1) return interaction.reply({
-				content: "Aucun ban trouvé pour ce membre.",
-				flags: [Discord.MessageFlags.Ephemeral]
-			})
-
-			const queryUnbanDelete = `DELETE
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND user = "${banUser}"`
-			await executeQuery(queryUnbanDelete)
-
-			const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
-			await interaction.guild.members.unban(user)
-
-			try {
-				const Ban1 = new Discord.EmbedBuilder()
-					.setColor(process.env.BOT_COLOR)
-					.setTitle(`Vous avez été débannis ! `)
 					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
 					.setFooter({
 						text: process.env.EMBED_FOOTER,
