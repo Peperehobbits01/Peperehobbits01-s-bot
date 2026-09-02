@@ -40,11 +40,11 @@ module.exports = {
 
 		try {
 			const Kick1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Vous avez été expulsé ! `)
 				.setDescription(`${message.user.tag} vous a expulsé sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -62,11 +62,11 @@ module.exports = {
 		await executeQuery(queryKickAdd)
 
 		const Kick2 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations du kick")
 			.setDescription(`Vous avez kick ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

@@ -74,7 +74,7 @@ module.exports = {
 						.setTitle(`Giveaway: ${prize}`)
 						.setDescription(`Il n'y a pas assez de participants pour déterminer les winners`)
 						.setFooter({
-							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
 						})
 						.setTimestamp(endTime)
@@ -94,7 +94,7 @@ module.exports = {
 						.setTitle(`Giveaway: ${prize}`)
 						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné **${prize}** ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
 						.setFooter({
-							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
 						})
 						.setTimestamp(endTime)

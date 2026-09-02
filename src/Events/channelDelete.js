@@ -26,7 +26,7 @@ module.exports = async (bot, channel) => {
 		})
 		.setDescription(`Le salon ${channel.name} a été supprimer par ${executor}.\n\nNom du salon : ${channel.name}\nType de salon : ${readableChannelType}\n\n**ID** :\nSalon : \`${channel.id}\`\nUtilisateur : \`${executor.id}\``)
 		.setFooter({
-			text: "Gérée par l'instance de Peperehobbits01's Bot",
+			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()

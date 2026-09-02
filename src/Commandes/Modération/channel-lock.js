@@ -36,7 +36,7 @@ module.exports = {
 			.setTitle("Ce salon vient d'être fermer !")
 			.setDescription(`Ce salon a été fermé par ${message.user} pour la raison suivante : **${reason}**`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -48,7 +48,7 @@ module.exports = {
 			.setTitle("Inforamtion sur la fermeture du salon")
 			.setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

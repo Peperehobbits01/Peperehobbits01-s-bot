@@ -83,7 +83,7 @@ module.exports = {
 
 		succesRemoveEmbed
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({ dynamic: true })
 			})
 			.setTimestamp();

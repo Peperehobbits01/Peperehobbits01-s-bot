@@ -50,11 +50,11 @@ module.exports = {
 
 		try {
 			const unwarn1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Un avertisement a été retirée! `)
 				.setDescription(`${message.user.tag} vous a retirée un avertisement sur le serveur ${message.guild.name} ! `)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -65,11 +65,11 @@ module.exports = {
 		await message.deferReply()
 
 		const unwarn2 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations du retrait d'avertisement")
 			.setDescription(`Vous avez retirée l'avertisement de ${user.tag} avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

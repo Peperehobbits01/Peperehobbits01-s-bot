@@ -36,7 +36,7 @@ module.exports = {
 			.setTitle("Effacement du membre de la base de donnée réussie.")
 			.setDescription(`Le membre ${member.user.tag} a bien été effacer de la base de donnée!`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()

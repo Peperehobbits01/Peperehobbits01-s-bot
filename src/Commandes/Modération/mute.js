@@ -54,11 +54,11 @@ module.exports = {
 
 		try {
 			const Mute1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Vous avez été mute ! `)
 				.setDescription(`${message.user.tag} vous a muté sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` ! `)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -86,11 +86,11 @@ module.exports = {
 			)
 
 		const Mute2 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations du mute")
 			.setDescription(`Vous avez muté ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

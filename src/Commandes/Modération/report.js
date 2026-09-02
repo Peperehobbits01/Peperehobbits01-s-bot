@@ -38,7 +38,7 @@ module.exports = {
 				.setTitle(`Votre report a bien été reçu.`)
 				.setDescription("Merci d'avoir effectuer votre rapport. Nous regarderons à celui-ci dès que possible !")
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 

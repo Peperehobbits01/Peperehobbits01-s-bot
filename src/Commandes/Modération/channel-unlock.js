@@ -28,7 +28,7 @@ module.exports = {
 			.setTitle("Ce salon vient d'être déverrouiller !")
 			.setDescription(`Ce salon a été fermé par ${message.user}.`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -40,7 +40,7 @@ module.exports = {
 			.setTitle("Information unlock")
 			.setDescription(`Réalisée: \`${message.user.username}\`\nDate: \`${Date.now}\``)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

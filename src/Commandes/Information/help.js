@@ -75,7 +75,7 @@ module.exports = {
 				.setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
 				.setTimestamp()
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -116,7 +116,7 @@ module.exports = {
 				.setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\n`)
 				.setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 

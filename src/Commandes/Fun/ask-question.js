@@ -50,7 +50,7 @@ module.exports = {
 			.setDescription(`Question de ${message.user} \`\`\`${msg}\`\`\`Réponse : \`\`\`${answers[Math.floor(Math.random() * answers.length)]}\`\`\``)
 			.setTimestamp()
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

@@ -58,7 +58,7 @@ module.exports = {
 				.setDescription(`${message.user.tag} vous a banni sur le serveur ${message.guild.name} pour la raison suivante : \`${reason}\` ! `)
 				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -96,7 +96,7 @@ module.exports = {
 			.setDescription(`Vous avez banni ${user} pour la raison : \`${reason}\` avec succès !`)
 			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 
