@@ -64,7 +64,7 @@ module.exports = async (bot, interaction) => {
 				                         AND note = "${noteID}"`
 			const ResultsUnnote = await executeQuery(queryUnnoteSearch)
 			if (ResultsUnnote.length < 1) return interaction.reply({
-				content: "Aucune note trouvé pour ce membre",
+				content: "Aucune note trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -95,7 +95,7 @@ module.exports = async (bot, interaction) => {
 				                         AND warn = "${warnId}"`
 			const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
 			if (ResultsUnwarn.length < 1) return interaction.reply({
-				content: "Aucun avertissement trouvé pour ce membre",
+				content: "Aucun avertissement trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -140,7 +140,7 @@ module.exports = async (bot, interaction) => {
 				                         AND mute = "${muteId}"`
 			const ResultsUnmute = await executeQuery(queryUnmuteSearch)
 			if (ResultsUnmute.length < 1) return interaction.reply({
-				content: "Aucun mute trouvé pour ce membre",
+				content: "Aucun mute trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -189,7 +189,7 @@ module.exports = async (bot, interaction) => {
 				                        AND ban = "${banId}"`
 			const ResultsUnban = await executeQuery(queryUnbanSearch)
 			if (ResultsUnban.length < 1) return interaction.reply({
-				content: "Aucun ban trouvé pour ce membre",
+				content: "Aucun ban trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -206,7 +206,7 @@ module.exports = async (bot, interaction) => {
 			try {
 				const Ban1 = new Discord.EmbedBuilder()
 					.setColor(process.env.BOT_COLOR)
-					.setTitle(`Vous avez été débannis ! `)
+					.setTitle(`Vous avez été débannis !`)
 					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
 					.setFooter({
 						text: process.env.EMBED_FOOTER,
@@ -237,7 +237,7 @@ module.exports = async (bot, interaction) => {
 				                        AND user = "${banUser}"`
 			const ResultsUnban = await executeQuery(queryUnbanSearch)
 			if (ResultsUnban.length < 1) return interaction.reply({
-				content: "Aucun ban trouvé pour ce membre",
+				content: "Aucun ban trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -277,14 +277,14 @@ module.exports = async (bot, interaction) => {
 				const giveawayAdd = `INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`
 				await executeQuery(giveawayAdd)
 
-				return interaction.reply({content: "Tu a bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Tu as bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
 			} else if (giveawaySearchResults.length === 1) {
 				const giveawayRemove = `DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
 				await executeQuery(giveawayRemove)
 
-				return interaction.reply({content: "Tu a bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Tu as bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
  			} else {
-				return interaction.reply({content: "Une erreur c'est produite lors de la vérifications de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Une erreur s'est produite lors de la vérification de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
 			}
 		}
 
