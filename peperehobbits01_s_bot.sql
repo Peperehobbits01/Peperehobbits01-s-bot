@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : jeu. 13 août 2026 à 16:29
+-- Généré le : mer. 02 sep. 2026 à 23:01
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -33,7 +33,8 @@ CREATE TABLE `ban` (
   `author` varchar(255) NOT NULL,
   `ban` varchar(255) NOT NULL,
   `reason` varchar(2000) NOT NULL,
-  `date` varchar(255) NOT NULL
+  `date` varchar(255) NOT NULL,
+  `time` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -118,9 +119,9 @@ CREATE TABLE `warn` (
 CREATE TABLE `xp` (
   `user` varchar(255) NOT NULL,
   `guild` varchar(255) NOT NULL,
-  `xp` varchar(255) NOT NULL,
-  `level` varchar(255) NOT NULL,
-  `xptotal` varchar(2000) DEFAULT NULL
+  `xp` int(11) DEFAULT NULL,
+  `level` int(11) NOT NULL,
+  `xptotal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
