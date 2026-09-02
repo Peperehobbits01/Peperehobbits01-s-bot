@@ -33,7 +33,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setDescription(`${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -50,7 +50,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setDescription(`${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -68,7 +68,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()

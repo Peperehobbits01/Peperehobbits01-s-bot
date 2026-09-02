@@ -108,11 +108,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Warn1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Un avertissement a été retiré ! `)
 					.setDescription(`${interaction.user.tag} a retiré votre avertissement sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -157,11 +157,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Mute1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Vous avez été démute ! `)
 					.setDescription(`${interaction.user.tag} vous a démute sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -205,11 +205,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Ban1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Vous avez été débannis ! `)
 					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -253,11 +253,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Ban1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Vous avez été débannis ! `)
 					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -313,7 +313,7 @@ module.exports = async (bot, interaction) => {
 						.setTitle(`Giveaway: ${giveawayPrize}`)
 						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
 						.setFooter({
-							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
 						})
 						.setTimestamp()
@@ -334,11 +334,11 @@ module.exports = async (bot, interaction) => {
 			const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
 
 			const nouvelEmbed = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
 				.setDescription(commandString)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					conURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 				.setTimestamp()

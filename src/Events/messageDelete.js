@@ -37,7 +37,7 @@ module.exports = async (bot, message) => {
 					.setTitle(`Informations concernent le giveaway avec l'ID ${giveawayID}`)
 					.setDescription(`Le giveaway avec l'ID ${giveawayID} a été annulé par ${executor}`)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 					.setTimestamp()
@@ -59,7 +59,7 @@ module.exports = async (bot, message) => {
 		.setColor(process.env.BOT_COLOR)
 		.setDescription(`Un message de ${message.author} a été supprimer par ${executor}\n\nMessage supprimer : ${message}\nAuteur : ${message.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
 		.setFooter({
-			text: "Gérée par l'instance de Peperehobbits01's Bot",
+			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()

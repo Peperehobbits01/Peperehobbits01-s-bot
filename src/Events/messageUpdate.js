@@ -29,7 +29,7 @@ module.exports = async (bot, message, oldMessage) => {
 		.setColor(process.env.BOT_COLOR)
 		.setDescription(`Un message a été modifiée par ${executor}\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
 		.setFooter({
-			text: "Gérée par l'instance de Peperehobbits01's Bot",
+			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()

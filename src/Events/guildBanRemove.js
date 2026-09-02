@@ -24,7 +24,7 @@ module.exports = async (bot, ban) => {
 		})
 		.setDescription(`${ban.user.username} a été débanni par ${executor}\nNom de l'utilisateur : ${ban.user}\nRaison du ban : ${ban.reason}\nPar l'utilisateur : ${executor.name}\n**ID** :\nL'utilisateur : \`${ban.user.id}\`\nPar l'utilisateur : \`${executor.id}\``)
 		.setFooter({
-			text: "Gérée par l'instance de Peperehobbits01's Bot",
+			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()

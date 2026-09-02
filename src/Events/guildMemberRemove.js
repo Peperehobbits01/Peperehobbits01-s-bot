@@ -13,7 +13,7 @@ module.exports = async (bot, member) => {
 		})
 		.setDescription(`Le membre ${member.username} vient de quitter le serveur.\n**ID** :\nUtilisateur : ${member.id}`)
 		.setFooter({
-			text: "Gérée par l'instance de Peperehobbits01's Bot",
+			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()
