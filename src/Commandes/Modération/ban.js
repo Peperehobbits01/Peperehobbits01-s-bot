@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../../Fonctions/databaseConnect.js")
+const ms = require("ms");
 
 module.exports = {
 
@@ -20,6 +21,12 @@ module.exports = {
 			description: "La raison du bannissement",
 			required: true,
 			autocomplete: false
+		}, {
+			type: "string",
+			name: "temps",
+			description: "La temps du bannissement",
+			required: false,
+			autocomplete: false
 		}
 	],
 
@@ -32,11 +39,18 @@ module.exports = {
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect du règlement! (raison auto ajoutée)";
 
+		let time = args.getString("temps")
+		if (!time) time = null
+
 		if (message.user.id === user.id) return message.reply("Tu ne peux pas te bannir !")
 		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être banni !")
 		if (member && !member.bannable) return message.reply("Je ne peux le bannir !")
 		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le bannir !")
 		if ((await message.guild.bans.fetch()).get(member)) return message.reply("Il est déjà banni !")
+
+		if (time !== null) {
+			if(isNaN(time)) return message.reply("La valeur entrée n'est pas un nombre.")
+		}
 
 		try {
 			const Ban1 = new Discord.EmbedBuilder()
@@ -48,6 +62,12 @@ module.exports = {
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
+			if (time !== null) {
+				Ban1.addFields([{
+					name: `Ce banissement est temporaire, et durera jusque ${ms(time)}`
+				}])
+			}
+
 			await user.send({embeds: [Ban1]})
 		} catch (err) {
 		}
@@ -56,9 +76,9 @@ module.exports = {
 
 		let ID = await bot.function.createId("BAN")
 
-		const queryBanAdd = `INSERT INTO ban (guild, user, author, ban, reason, date)
+		const queryBanAdd = `INSERT INTO ban (guild, user, author, ban, reason, date, time)
 		                     VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}',
-		                             '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
+		                             '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${Date.now + time}')`
 		await executeQuery(queryBanAdd)
 
 		await message.guild.bans.create(user.id, {reason: reason})
@@ -73,12 +93,18 @@ module.exports = {
 
 		const Ban2 = new Discord.EmbedBuilder()
 			.setTitle("Informations du ban")
-			.setDescription(`Vous avez banni ${user.tag} pour la raison : \`${reason}\` avec succès !`)
+			.setDescription(`Vous avez banni ${user} pour la raison : \`${reason}\` avec succès !`)
 			.setColor(process.env.BOT_COLOR)
 			.setFooter({
 				text: "Gérée par l'instance de Peperehobbits01's Bot",
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
+
+		if (time !== null) {
+			Ban2.addFields([{
+				name: `Ce banissement est temporaire, et durera jusque ${ms(time)}`
+			}])
+		}
 
 		await message.followUp({embeds: [Ban2], components: [unban]})
 	}
