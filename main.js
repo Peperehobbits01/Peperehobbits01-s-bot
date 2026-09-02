@@ -7,10 +7,10 @@ const loadEvents = require("./src/Loaders/loadEvents")
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
+	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
 	databaseConnect: require("./src/Fonctions/databaseConnect.js"),
-	calculXp: require("./src/Fonctions/calculXp.js"),
 	getMessageImage: require("./src/Fonctions/getMessageImage.js"),
 	shuffleArray: require("./src/Fonctions/shuffleArray.js"),
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),

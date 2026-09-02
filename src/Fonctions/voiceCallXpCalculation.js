@@ -15,7 +15,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 		const lookupUser = `SELECT * FROM xp WHERE guild = '${oldState.guild.id}' AND user = ${member.id}`
 		const lookUpUserResults = await executeQuery(lookupUser)
 
-		let xptogive = Math.floor(Math.random() * 30) + 15
+		let xptogive = Math.floor(Math.random() * 25) + 10
 		const user = oldState.guild.members.cache.get(member.id)
 
 		if (user?.roles?.cache.has(process.env.BOOSTER_ROLE)) {
@@ -40,7 +40,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 				await executeQuery(queryXpupdate)
 
 				let levelChannel = oldState.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fais ${user}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
+				levelChannel.send(`Tu l'as fait ${user}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
 
 			} else {
 

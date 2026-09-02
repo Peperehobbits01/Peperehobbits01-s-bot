@@ -72,7 +72,7 @@ jobs:
         run: |
           cat > /tmp/git-cliff.toml << 'EOF'
           [changelog]
-          header = "# What's Changed in ${{ steps.bump.outputs.version }}\n"
+          header = "# What's new in ${{ steps.bump.outputs.version }} ?\n"
           body = """
           {% for group, commits in commits | group_by(attribute='group') %}
               ## {{ group | striptags | trim | upper }}
@@ -92,10 +92,12 @@ jobs:
           conventional_commits = true
           filter_unconventional = true
           commit_parsers = [
-                   { message = "^feat", group = "**🚀Features**" },
-                   { message = "^fix|^hotfix", group = "**🐛 Bug Fixes**" },
-                   { message = "^refactor", group = "**🏗 Refactors**" },
-                   { message = "^docs", group = "**📚 Documentation**" },
+            { message = "BREAKING", group = "**🚨BREAKING CHANGES"},
+            { message = "^feat", group = "**🚀Features**" },
+            { message = "^fix|^hotfix", group = "**🐛 Bug Fixes**" },
+            { message = "^refactor", group = "**🏗 Refactors**" },
+            { message = "^chore", group = "**📋 Chore**" },
+            { message = "^docs", group = "**📚 Documentation**" },
           ]
           EOF
 
@@ -103,12 +105,8 @@ jobs:
         id: changelog
         run: |
           pip install git-cliff
-          LAST_TAG=$(git describe --tags --abbrev=0 HEAD 2>/dev/null | head -1 || echo "")
-          if [ -n "$LAST_TAG" ]; then
-            git-cliff --latest "$LAST_TAG"...HEAD --config /tmp/git-cliff.toml > /tmp/changelog.md
-          else
-            git-cliff --config /tmp/git-cliff.toml > /tmp/changelog.md
-          fi
+          git fetch origin main:main
+          git-cliff main..dev --config /tmp/git-cliff.toml > /tmp/changelog.md
           {
             echo ""
             cat /tmp/changelog.md
@@ -125,7 +123,7 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
           branch: prepare-release-${{ steps.bump.outputs.version }}
           title: Prepare release ${{ steps.bump.outputs.version }}
-          commit-message: "chore: bump version to ${{ steps.bump.outputs.version }}"
+          commit-message: "bump version to ${{ steps.bump.outputs.version }}"
           body: ${{ steps.changelog.outputs.body }}
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>

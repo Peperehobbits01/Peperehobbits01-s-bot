@@ -46,7 +46,7 @@ module.exports = {
 			.setTitle("ℹ️ Information sur le changement du statut ℹ️")
 			.setDescription(`Activité : ${activity}\nStatut : ${status}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

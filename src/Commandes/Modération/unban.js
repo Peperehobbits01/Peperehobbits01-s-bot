@@ -51,11 +51,11 @@ module.exports = {
 
 		try {
 			const Unban1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle("Informations du débanisement")
 				.setDescription(`Vous avez été débannis par ${message.user.tag} pour la raison : \`${reason}\` avec succès !`)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -70,7 +70,7 @@ module.exports = {
 			.setTitle("Inforamtion débanisement")
 			.setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

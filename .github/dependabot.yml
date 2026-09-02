@@ -7,8 +7,6 @@ updates:
     open-pull-requests-limit: 10
     assignees:
       - "Peperehobbits01"
-    reviewers:
-      - "Peperehobbits01"
     labels:
       - "dependencies"
     commit-message:

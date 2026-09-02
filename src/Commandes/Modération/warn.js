@@ -42,11 +42,11 @@ module.exports = {
 
 		try {
 			const Warn1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Vous avez été avertie ! `)
 				.setDescription(`${message.user.tag} vous a averti sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -65,11 +65,11 @@ module.exports = {
 			)
 
 		const Warn2 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations du warn")
 			.setDescription(`Vous avez warn ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

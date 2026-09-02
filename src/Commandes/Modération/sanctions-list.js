@@ -30,7 +30,7 @@ module.exports = {
 			.setThumbnail(user.displayAvatarURL({dynamic: true}))
 			.setTimestamp()
 			.setFooter({
-				text: "Gérer par l'instance de Peperehobbits01's bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

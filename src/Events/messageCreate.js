@@ -35,7 +35,7 @@ module.exports = async (bot, message) => {
 			await executeQuery(queryXpupdate)
 
 			let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-			levelChannel.send(`Tu l'as fais ${message.author}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
+			levelChannel.send(`Tu l'as fait ${message.author}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
 
 		} else {
 

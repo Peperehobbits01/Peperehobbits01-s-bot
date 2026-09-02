@@ -56,11 +56,11 @@ module.exports = {
 
 		try {
 			const Unmute1 = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Vous avez été retirée du silence ! `)
 				.setDescription(`${message.user.tag} vous a retirée du silence sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
@@ -71,11 +71,11 @@ module.exports = {
 		await message.deferReply()
 
 		const Unmute2 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations du unmute")
 			.setDescription(`Vous avez unmute ${user.tag} pour la raison : \`${reason}\` avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 

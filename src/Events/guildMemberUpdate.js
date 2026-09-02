@@ -5,7 +5,7 @@ module.exports = async (bot, oldMember, newMember) => {
 	const boosterChannel = oldMember.guild.channels.cache.get(process.env.BOOSTER_CHANNEL)
 
 	if (!oldMember.roles.cache.has(process.env.BOOSTER_ROLE) && newMember.roles.cache.has(process.env.BOOSTER_ROLE)) {
-		boosterChannel.send(`Merci à ${newMember} pour avoir boost le serveur!`);
+		boosterChannel.send(`Merci à ${newMember} pour avoir boosté le serveur !`);
 	}
 
 	const logsChannel = oldMember.guild.channels.cache.get(process.env.LOGS_CHANNEL_MEMBER)
@@ -33,7 +33,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setDescription(`${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -50,7 +50,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setDescription(`${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()
@@ -66,9 +66,9 @@ module.exports = async (bot, oldMember, newMember) => {
 				name: executor.displayName,
 				iconURL: executor.displayAvatarURL({dynamic: true})
 			})
-			.setDescription(`Le membre ${oldMember} à changée de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
+			.setDescription(`Le membre ${oldMember} a changé de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()

@@ -83,7 +83,7 @@ module.exports = {
 			.setTitle("Ajout d'experience au membre dans la base de donnée réussie.")
 			.setDescription(`Le membre ${member.user} a reçu ${xptogive}xp !`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp()

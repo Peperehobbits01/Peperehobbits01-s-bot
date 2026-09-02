@@ -34,16 +34,6 @@ module.exports = async (bot, interaction) => {
 			})))
 		}
 
-		if (interaction.commandName === "addxp") {
-
-			let choices = ["Level", "Xp"]
-			let sortie = choices.filter(c => c.includes(entry))
-			await interaction.respond(entry === "" ? sortie.map(c => ({name: c, value: c})) : sortie.map(c => ({
-				name: c,
-				value: c
-			})))
-		}
-
 		if (interaction.commandName === "clear") {
 
 			let choices = ["Level", "Xp", "Tout effacer"]
@@ -74,7 +64,7 @@ module.exports = async (bot, interaction) => {
 				                         AND note = "${noteID}"`
 			const ResultsUnnote = await executeQuery(queryUnnoteSearch)
 			if (ResultsUnnote.length < 1) return interaction.reply({
-				content: "Aucune note trouvé pour ce membre",
+				content: "Aucune note trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -105,7 +95,7 @@ module.exports = async (bot, interaction) => {
 				                         AND warn = "${warnId}"`
 			const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
 			if (ResultsUnwarn.length < 1) return interaction.reply({
-				content: "Aucun avertissement trouvé pour ce membre",
+				content: "Aucun avertissement trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -118,11 +108,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Warn1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Un avertissement a été retiré ! `)
 					.setDescription(`${interaction.user.tag} a retiré votre avertissement sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -150,7 +140,7 @@ module.exports = async (bot, interaction) => {
 				                         AND mute = "${muteId}"`
 			const ResultsUnmute = await executeQuery(queryUnmuteSearch)
 			if (ResultsUnmute.length < 1) return interaction.reply({
-				content: "Aucun mute trouvé pour ce membre",
+				content: "Aucun mute trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -167,11 +157,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Mute1 = new Discord.EmbedBuilder()
+					.setColor(process.env.BOT_COLOR)
 					.setTitle(`Vous avez été démute ! `)
 					.setDescription(`${interaction.user.tag} vous a démute sur le serveur ${interaction.guild.name} pour la raison : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -182,58 +172,15 @@ module.exports = async (bot, interaction) => {
 			return interaction.reply({content: "Mute retiré !", flags: [Discord.MessageFlags.Ephemeral]});
 		}
 
-		if (interaction.customId.startsWith("unban_")) {
+		if (interaction.customId.startsWith("unban_") || interaction.customId.startsWith("unban-")) {
 
-			const banId = interaction.customId.split("_")[1];
-
-			const member = await interaction.guild.members.fetch(interaction.user.id);
-			if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({
-				content: "Vous ne pouvez pas utiliser ce bouton !",
-				flags: [Discord.MessageFlags.Ephemeral]
-			});
-
-			const queryUnbanSearch = `SELECT *
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND ban = "${banId}"`
-			const ResultsUnban = await executeQuery(queryUnbanSearch)
-			if (ResultsUnban.length < 1) return interaction.reply({
-				content: "Aucun ban trouvé pour ce membre",
-				flags: [Discord.MessageFlags.Ephemeral]
-			})
-
-			const queryUnbanDelete = `DELETE
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND ban = "${banId}"`
-			await executeQuery(queryUnbanDelete)
-
-			const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
-			await interaction.guild.members.unban(user)
-
-			try {
-				const Ban1 = new Discord.EmbedBuilder()
-					.setTitle(`Vous avez été débannis ! `)
-					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
-					.setColor(process.env.BOT_COLOR)
-					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
-						iconURL: bot.user.displayAvatarURL({dynamic: true})
-					})
-
-				await user.send({embeds: [Ban1]})
-			} catch (err) {
+			let banId;
+			if(interaction.customId.startsWith("unban_")) {
+				banId = interaction.customId.split("_")[1]
+			} else {
+				banId = interaction.customId.split("-")[1]
 			}
 
-			return interaction.reply({content: "Ban retiré !", flags: [Discord.MessageFlags.Ephemeral]});
-		}
-
-		if (interaction.customId.startsWith("unban-")) {
-
-			const banUser = interaction.customId.split("-")[1];
-
 			const member = await interaction.guild.members.fetch(interaction.user.id);
 			if (!member.permissions.has("MANAGE_MESSAGES")) return interaction.reply({
 				content: "Vous ne pouvez pas utiliser ce bouton !",
@@ -244,10 +191,10 @@ module.exports = async (bot, interaction) => {
 			                          FROM ban
 			                          WHERE guild = "${interaction.guild.id}"
 				                        AND author = "${interaction.user.id}"
-				                        AND user = "${banUser}"`
+				                        AND ban = "${banId}"`
 			const ResultsUnban = await executeQuery(queryUnbanSearch)
 			if (ResultsUnban.length < 1) return interaction.reply({
-				content: "Aucun ban trouvé pour ce membre",
+				content: "Aucun ban trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
@@ -255,7 +202,7 @@ module.exports = async (bot, interaction) => {
 			                          FROM ban
 			                          WHERE guild = "${interaction.guild.id}"
 				                        AND author = "${interaction.user.id}"
-				                        AND user = "${banUser}"`
+				                        AND ban = "${banId}"`
 			await executeQuery(queryUnbanDelete)
 
 			const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
@@ -263,11 +210,11 @@ module.exports = async (bot, interaction) => {
 
 			try {
 				const Ban1 = new Discord.EmbedBuilder()
-					.setTitle(`Vous avez été débannis ! `)
-					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
 					.setColor(process.env.BOT_COLOR)
+					.setTitle(`Vous avez été débannis !`)
+					.setDescription(`${interaction.user.tag} vous a débanni du serveur ${interaction.guild.name} pour la raison suivante : \`Bonne conduite\` ! `)
 					.setFooter({
-						text: "Gérée par l'instance de Peperehobbits01's Bot",
+						text: process.env.EMBED_FOOTER,
 						iconURL: bot.user.displayAvatarURL({dynamic: true})
 					})
 
@@ -287,14 +234,14 @@ module.exports = async (bot, interaction) => {
 				const giveawayAdd = `INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`
 				await executeQuery(giveawayAdd)
 
-				return interaction.reply({content: "Tu a bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Tu as bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
 			} else if (giveawaySearchResults.length === 1) {
 				const giveawayRemove = `DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
 				await executeQuery(giveawayRemove)
 
-				return interaction.reply({content: "Tu a bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Tu as bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
  			} else {
-				return interaction.reply({content: "Une erreur c'est produite lors de la vérifications de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
+				return interaction.reply({content: "Une erreur s'est produite lors de la vérification de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
 			}
 		}
 
@@ -323,7 +270,7 @@ module.exports = async (bot, interaction) => {
 						.setTitle(`Giveaway: ${giveawayPrize}`)
 						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
 						.setFooter({
-							text: "Gérer par l'instance de Peperehobbits01's Bot",
+							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
 						})
 						.setTimestamp()
@@ -344,11 +291,11 @@ module.exports = async (bot, interaction) => {
 			const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
 
 			const nouvelEmbed = new Discord.EmbedBuilder()
+				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
 				.setDescription(commandString)
-				.setColor(process.env.BOT_COLOR)
 				.setFooter({
-					text: "Gérée par l'instance de Peperehobbits01's Bot",
+					text: process.env.EMBED_FOOTER,
 					conURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 				.setTimestamp()

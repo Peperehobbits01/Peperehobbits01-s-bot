@@ -56,11 +56,11 @@ module.exports = {
 			)
 
 		const Note1 = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations de la note")
 			.setDescription(`Vous avez mis une note à ${user.tag} et voici la note : \`${reason}\` avec succès !`)
-			.setColor(process.env.BOT_COLOR)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 		await message.followUp({embeds: [Note1], components: [unnote]})

@@ -36,7 +36,7 @@ module.exports = {
 			.setTitle("Nombre d'invitations de l'utilisateur")
 			.setDescription(`${user.tag} a **${i}** invitations.`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			});
 

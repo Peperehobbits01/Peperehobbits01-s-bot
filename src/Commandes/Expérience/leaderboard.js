@@ -1,7 +1,6 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
 const {executeQuery} = require(`../../Fonctions/databaseConnect.js`);
-const {calculXp} = require("../../Fonctions/calculXp.js")
 const {registerFont} = require("canvas")
 
 module.exports = {
@@ -13,14 +12,12 @@ module.exports = {
 
 	async run(bot, message) {
 
-		const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}'`
-		const results = await executeQuery(querySearch)
+		const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC LIMIT 10`
+		const leaderboard = await executeQuery(querySearch)
 
-		if(results.length < 1) return message.reply("Aucun utilisateur n'est enregistré sur ce serveur !")
+		if(leaderboard.length < 1) return message.reply("Aucun utilisateur n'est enregistré sur ce serveur !")
 
 		await message.deferReply()
-
-		let leaderboard = results.toSorted((a, b) => calculXp(parseInt(b.xp), parseInt(b.level)) - calculXp(parseInt(a.xp), parseInt(a.level)))
 
 		const canvas = Canvas.createCanvas(1280, 700);
 		const ctx = canvas.getContext("2d");
@@ -52,10 +49,9 @@ module.exports = {
 			ctx.closePath();
 			ctx.clip();
 
-			if (user) {
-				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
-				ctx.drawImage(avatar, 104 - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
-			}
+			const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+			ctx.drawImage(avatar, 104 - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
+
 			ctx.restore();
 
 			ctx.fillStyle = "#ffffff";
@@ -95,10 +91,9 @@ module.exports = {
 				ctx.closePath();
 				ctx.clip();
 
-				if (user) {
-					const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
-					ctx.drawImage(avatar, column2X - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
-				}
+				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+				ctx.drawImage(avatar, column2X - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
+
 				ctx.restore();
 
 				ctx.fillStyle = "#ffffff";
