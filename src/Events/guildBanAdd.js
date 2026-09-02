@@ -43,7 +43,9 @@ module.exports = async (bot, ban) => {
 	const xpSystemResults = await executeQuery(xpSystemSearch)
 
 	if(xpSystemResults.length > 0) {
-		const removeUserFromXpSystem = `DELETE FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
-		await executeQuery(removeUserFromXpSystem)
+		if(xpSystemResults.time !== null){
+			const removeUserFromXpSystem = `DELETE FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
+			await executeQuery(removeUserFromXpSystem)
+		}
 	}
 }
