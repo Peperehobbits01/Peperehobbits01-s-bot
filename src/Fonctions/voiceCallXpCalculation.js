@@ -40,7 +40,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 				await executeQuery(queryXpupdate)
 
 				let levelChannel = oldState.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fais ${user}, tu arrives au niveau ${level + 1}. Bien jouée à toi!`)
+				levelChannel.send(`Tu l'as fait ${user}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
 
 			} else {
 

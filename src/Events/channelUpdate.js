@@ -115,7 +115,7 @@ module.exports = async (bot, oldChannel, newChannel) => {
 				name: executor.displayName,
 				iconURL: executor.displayAvatarURL({dynamic: true})
 			})
-			.setDescription(`Le salon ${oldChannel.name} n'est plus soumis  au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			.setDescription(`Le salon ${oldChannel.name} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

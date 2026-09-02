@@ -20,7 +20,7 @@ module.exports = async (bot, ban) => {
 		.addComponents(
 			new Discord.ButtonBuilder()
 				.setCustomId(`unban-${ban.user.id}`)
-				.setLabel("Retirée le bannisement")
+				.setLabel("Retirer le bannissement")
 				.setStyle(Discord.ButtonStyle.Danger)
 		)
 
