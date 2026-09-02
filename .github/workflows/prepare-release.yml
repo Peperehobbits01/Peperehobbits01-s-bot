@@ -72,7 +72,7 @@ jobs:
         run: |
           cat > /tmp/git-cliff.toml << 'EOF'
           [changelog]
-          header = "# What's Changed in ${{ steps.bump.outputs.version }} ?\n"
+          header = "# What's new in ${{ steps.bump.outputs.version }} ?\n"
           body = """
           {% for group, commits in commits | group_by(attribute='group') %}
               ## {{ group | striptags | trim | upper }}
@@ -92,6 +92,7 @@ jobs:
           conventional_commits = true
           filter_unconventional = true
           commit_parsers = [
+            { message = "BREAKING", group = "**🚨BREAKING CHANGES"}
             { message = "^feat", group = "**🚀Features**" },
             { message = "^fix|^hotfix", group = "**🐛 Bug Fixes**" },
             { message = "^refactor", group = "**🏗 Refactors**" },
