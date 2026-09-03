@@ -54,8 +54,10 @@ module.exports = async (bot, message) => {
 		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
 		const number = Number(messageNumber[1]);
 		const text = messageNumber[2];
+		const highestRole = member.roles.highest;
+		const color = highestRole.hexColor;
 		const CountingEmbed = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
+			.setColor(color)
 			.setDescription(`${message.author} : \`${number}\` ${text}`)
 
 		const previousMessage = messages.last();
