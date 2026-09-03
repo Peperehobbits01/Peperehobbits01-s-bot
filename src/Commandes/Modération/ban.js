@@ -37,20 +37,22 @@ module.exports = {
 		let member = message.guild.members.cache.get(user.id)
 		if (!member) return message.reply("Aucun membre à bannir !")
 
+		await message.deferReply()
+
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect du règlement ! (raison auto ajoutée)";
 
 		let time = args.getString("temps")
 		if (!time) time = null
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas te bannir !")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être banni !")
-		if (member && !member.bannable) return message.reply("Je ne peux le bannir !")
-		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le bannir !")
-		if ((await message.guild.bans.fetch()).get(member)) return message.reply("Il est déjà banni !")
+		if (message.user.id === user.id) return message.followUp("Tu ne peux pas te bannir !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.followUp("Le fondateur ne peut pas être banni !")
+		if (member && !member.bannable) return message.followUp("Je ne peux le bannir !")
+		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.followUp("Tu ne peux pas le bannir !")
+		if ((await message.guild.bans.fetch()).get(member)) return message.followUp("Il est déjà banni !")
 
 		if (time !== null) {
-			if(isNaN(time)) return message.reply("La valeur entrée n'est pas un nombre.")
+			if(isNaN(time)) return message.followUp("La valeur entrée n'est pas un nombre.")
 		}
 
 		try {
@@ -72,8 +74,6 @@ module.exports = {
 			await user.send({embeds: [Ban1]})
 		} catch (err) {
 		}
-
-		await message.deferReply()
 
 		let ID = await bot.function.createId("BAN")
 

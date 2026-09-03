@@ -30,13 +30,15 @@ module.exports = {
 		let member = message.guild.members.cache.get(user.id)
 		if (!member) return message.reply("Aucun membre a expulsé !")
 
+		await message.deferReply()
+
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect du règlement ! (raison auto ajoutée)";
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas t'expulser !")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être expulsé !")
-		if (member && !member.kickable) return message.reply("Je ne peux pas l'expulser !")
-		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulser !")
+		if (message.user.id === user.id) return message.followUp("Tu ne peux pas t'expulser !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.followUp("Le fondateur ne peut pas être expulsé !")
+		if (member && !member.kickable) return message.followUp("Je ne peux pas l'expulser !")
+		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.followUp("Tu ne peux pas l'expulser !")
 
 		try {
 			const Kick1 = new Discord.EmbedBuilder()
@@ -51,8 +53,6 @@ module.exports = {
 			await user.send({embeds: [Kick1]})
 		} catch (err) {
 		}
-
-		await message.deferReply()
 
 		await member.kick(reason)
 

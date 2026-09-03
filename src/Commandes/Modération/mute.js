@@ -37,20 +37,22 @@ module.exports = {
 		let member = message.guild.members.cache.get(user.id)
 		if (!member) return message.reply("Aucun membre à rendre muet !")
 
+		await message.deferReply()
+
 		let time = args.getString("temps")
-		if (!time) return message.reply("Aucun temps donné !")
-		if (isNaN(ms(time))) return message.reply("Mauvais format !")
-		if (ms(time) > 2419200000) return message.reply("Le robot ne peut pas rendre muet aussi longtemps !")
-		if (ms(time) < 300000) return message.reply("La durée de la mise en muet est trop courte !")
+		if (!time) return message.followUp("Aucun temps donné !")
+		if (isNaN(ms(time))) return message.followUp("Mauvais format !")
+		if (ms(time) > 2419200000) return message.followUp("Le robot ne peut pas rendre muet aussi longtemps !")
+		if (ms(time) < 300000) return message.followUp("La durée de la mise en muet est trop courte !")
 
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect des règles (raison auto ajouté)";
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas te rendre muet !")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas rendre muet le fondateur !")
-		if (!member.moderatable) return message.reply("Je ne peux pas le rendre muet !")
-		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le rendre muet !")
-		if (member.isCommunicationDisabled()) return message.reply("Il est déjà rendu muet !")
+		if (message.user.id === user.id) return message.followUp("Tu ne peux pas te rendre muet !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.followUp("Tu ne peux pas rendre muet le fondateur !")
+		if (!member.moderatable) return message.followUp("Je ne peux pas le rendre muet !")
+		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.followUp("Tu ne peux pas le rendre muet !")
+		if (member.isCommunicationDisabled()) return message.followUp("Il est déjà rendu muet !")
 
 		try {
 			const Mute1 = new Discord.EmbedBuilder()
@@ -65,8 +67,6 @@ module.exports = {
 			await user.send({embeds: [Mute1]})
 		} catch (err) {
 		}
-
-		await message.deferReply()
 
 		let ID = await bot.function.createId("MUTE")
 

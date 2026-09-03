@@ -30,15 +30,15 @@ module.exports = {
 		let member = message.guild.members.cache.get(user.id)
 		if (!member) return message.reply("Aucun membre a noté !")
 
-		let reason = args.getString("note")
-		if (!reason) return message.reply("Note manquante.")
-
-		if (message.user.id === member) return message.reply("Tu ne peux pas te noter !")
-		if ((await message.guild.fetchOwner()).id === member) return message.reply("Le fondateur ne peut pas être noté !")
-		if (member && !member.kickable) return message.reply("Je ne peux le noter !")
-		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le noter !")
-
 		await message.deferReply()
+
+		let reason = args.getString("note")
+		if (!reason) return message.followUp("Note manquante.")
+
+		if (message.user.id === member) return message.followUp("Tu ne peux pas te noter !")
+		if ((await message.guild.fetchOwner()).id === member) return message.followUp("Le fondateur ne peut pas être noté !")
+		if (member && !member.kickable) return message.followUp("Je ne peux le noter !")
+		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.followUp("Tu ne peux pas le noter !")
 
 		let ID = await bot.function.createId("NOTE")
 

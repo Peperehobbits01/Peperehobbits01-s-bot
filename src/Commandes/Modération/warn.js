@@ -30,12 +30,14 @@ module.exports = {
 		let member = message.guild.members.cache.get(user.id)
 		if (!member) return message.reply("Aucun membre à avertir !")
 
+		await message.deferReply()
+
 		let reason = args.getString("raison")
 		if (!reason) reason = "Premier non-respect des règles !"
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas te donner un avertissement !")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être averti !")
-		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'avertir !")
+		if (message.user.id === user.id) return message.followUp("Tu ne peux pas te donner un avertissement !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.followUp("Le fondateur ne peut pas être averti !")
+		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.followUp("Tu ne peux pas l'avertir !")
 
 		let ID = await bot.function.createId("WARN")
 
@@ -55,8 +57,6 @@ module.exports = {
 			await user.send({embeds: [Warn1]})
 		} catch (err) {
 		}
-
-		await message.deferReply()
 
 		const unwarn = new Discord.ActionRowBuilder()
 			.addComponents(
