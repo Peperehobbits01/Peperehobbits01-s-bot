@@ -5,7 +5,7 @@ const {shuffleArray} = require("../../Fonctions/shuffleArray");
 
 module.exports = {
 	name: 'giveaway',
-	description: 'Lancer un giveaway',
+	description: 'Lancer un giveaway.',
 	permission: Discord.PermissionFlagsBits.Administrator,
 	category: "🎁・giveaway",
 	options: [
@@ -19,14 +19,14 @@ module.exports = {
 		{
 			name: 'winners',
 			type: 'integer',
-			description: 'Le nombre de gagnant',
+			description: 'Le nombre de gagnants.',
 			required: true,
 			autocomplete: false
 		},
 		{
 			name: 'prize',
 			type: 'string',
-			description: 'Le prix du giveaway',
+			description: 'Le prix du giveaway.',
 			required: true,
 			autocomplete: false
 		},
@@ -53,9 +53,9 @@ module.exports = {
 		const offrir = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle(`Giveaway: ${prize}`)
-			.setDescription(`Cliquez sur le bouton pour participer !\nDuration: <t:${Math.floor(endTime / 1000)}:R>\nNombre de gagnant: **${winners}**`)
+			.setDescription(`Cliquez sur le bouton pour participer !\nDurée : <t:${Math.floor(endTime / 1000)}:R>\nNombre de gagnants : ${winners}`)
 			.setFooter({
-				text: "Gérée par l'instance de Peperehobbits01's Bot",
+				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 			.setTimestamp(endTime)
@@ -72,7 +72,7 @@ module.exports = {
 					const failedEmbed = new Discord.EmbedBuilder()
 						.setColor(process.env.BOT_COLOR)
 						.setTitle(`Giveaway: ${prize}`)
-						.setDescription(`Il n'y a pas assez de participants pour déterminer les winners`)
+						.setDescription(`Il n'y a pas assez de participants pour déterminer les gagnants.`)
 						.setFooter({
 							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -92,7 +92,7 @@ module.exports = {
 					const successEmbed = new Discord.EmbedBuilder()
 						.setColor('#36ff00')
 						.setTitle(`Giveaway: ${prize}`)
-						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné **${prize}** ! Si vous ne venez pas récupéré votre récompense sous 24h, le cadeau sera remit en jeu !`)
+						.setDescription(`Félicitations ${winnerList} ! Vous avez gagné ${prize} ! Si vous ne venez pas récupérer votre récompense sous 24 h, le cadeau sera remis en jeu !`)
 						.setFooter({
 							text: process.env.EMBED_FOOTER,
 							iconURL: bot.user.displayAvatarURL({dynamic: true})

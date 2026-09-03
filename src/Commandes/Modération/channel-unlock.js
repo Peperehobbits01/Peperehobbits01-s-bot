@@ -2,14 +2,14 @@ const Discord = require("discord.js")
 
 module.exports = {
 	name: "channel-unlock",
-	description: "Permet d'ouvrir un salon",
+	description: "Permet d'ouvrir un salon.",
 	permission: Discord.PermissionFlagsBits.ManageChannels,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "channel",
 			name: "salon",
-			description: "le salon a ouvrir",
+			description: "Le salon à ouvrir.",
 			required: true,
 			autocomplete: false
 		}
@@ -25,7 +25,7 @@ module.exports = {
 
 		let Unlockmessage = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Ce salon vient d'être déverrouiller !")
+			.setTitle("Ce salon vient d'être déverrouillé !")
 			.setDescription(`Ce salon a été fermé par ${message.user}.`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
@@ -37,7 +37,7 @@ module.exports = {
 
 		let Unlock = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Information unlock")
+			.setTitle("Information concernant la réouverture du salon.")
 			.setDescription(`Réalisée: \`${message.user.username}\`\nDate: \`${Date.now}\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,

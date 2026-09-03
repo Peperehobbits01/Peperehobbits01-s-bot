@@ -11,19 +11,19 @@ module.exports = {
 		{
 			type: "user",
 			name: "utilisateur",
-			description: "L'utilisateur a débannir",
+			description: "L'utilisateur a débannir.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "id",
-			description: "L'ID du ban",
+			description: "L'ID du bannissement.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "raison",
-			description: "La raison du débannissement",
+			description: "La raison du débannissement.",
 			required: false,
 			autocomplete: false
 		}
@@ -32,19 +32,19 @@ module.exports = {
 	async run(bot, message, args) {
 
 		let user = args.getUser("utilisateur")
-		if (!user) return message.reply("Aucun utilisateur sélectionnée !")
+		if (!user) return message.reply("Aucun membre sélectionné !")
 
 		let id = args.getString("id")
-		if (!id) return message.reply("Veuillez entrée une ID !")
+		if (!id) return message.reply("Veuillez entrer une ID !")
 
 		let reason = args.getString("raison")
-		if (!reason) reason = "Debannie pour bonne conduite (raison auto ajouté)."
+		if (!reason) reason = "Débannie pour bonne conduite (raison auto ajouté)."
 
 		if (!(await message.guild.bans.fetch()).get(user.id)) return message.reply("Il est déjà débanni !")
 
 		const querySearch = `SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`
 		const results = await executeQuery(querySearch)
-		if (results.length < 1) return message.reply('Aucune banisement pour ce membre/ID du ban invalide');
+		if (results.length < 1) return message.reply('Aucun bannissement pour ce membre/ID du ban invalide.');
 
 		const queryBanRemove = `DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`
 		await executeQuery(queryBanRemove)
@@ -52,7 +52,7 @@ module.exports = {
 		try {
 			const Unban1 = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle("Informations du débanisement")
+				.setTitle("Informations concernant le débannissement.")
 				.setDescription(`Vous avez été débannis par ${message.user.tag} pour la raison : \`${reason}\` avec succès !`)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -67,8 +67,8 @@ module.exports = {
 
 		let Unban2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Inforamtion débanisement")
-			.setDescription(`Vous avez unban ${user.tag} pour la raison : \`${reason}\` avec succès !`)
+			.setTitle("Information concernant le débannissement.")
+			.setDescription(`Vous avez unban ${user.displayName} pour la raison : \`${reason}\` avec succès !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

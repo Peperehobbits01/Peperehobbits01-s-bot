@@ -6,7 +6,7 @@ const {registerFont} = require("canvas")
 module.exports = {
 
 	name: "leaderboard",
-	description: "Classement des membres en xp sur le serveur.",
+	description: "Montre le classement des membres en XP sur le serveur.",
 	permission: "Aucune",
 	category: "📊・Système d'expérience",
 
@@ -49,7 +49,7 @@ module.exports = {
 			ctx.closePath();
 			ctx.clip();
 
-			const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+			const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "png"}) : user.displayAvatarURL({extension: "png"}) : user.displayAvatarURL({extension: "png"}));
 			ctx.drawImage(avatar, 104 - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
 
 			ctx.restore();
@@ -91,7 +91,7 @@ module.exports = {
 				ctx.closePath();
 				ctx.clip();
 
-				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}) : user.displayAvatarURL({extension: "jpg"}));
+				const avatar = await Canvas.loadImage(member ? member.avatar ? member.avatarURL({extension: "png"}) : user.displayAvatarURL({extension: "png"}) : user.displayAvatarURL({extension: "png"}));
 				ctx.drawImage(avatar, column2X - 85 / 2, 74 + ((i) * 128) - 85 / 2, 85, 85);
 
 				ctx.restore();

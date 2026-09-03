@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect.js")
 const {shuffleArray} = require("../Fonctions/shuffleArray");
+const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
 
 module.exports = async (bot, interaction) => {
 
@@ -286,22 +287,65 @@ module.exports = async (bot, interaction) => {
 	if (interaction.customId === "help") {
 		if (interaction.isStringSelectMenu()) {
 
+			let categories = []
+			let cat = []
+			bot.commands.forEach(command => {
+				if (!cat.includes(command.category)) cat.push(command.category)
+
+				const categoriesExistante = categories.some(category => category.value === command.category.toLowerCase() && category.label === command.category)
+
+				if (!categoriesExistante) categories.push({
+					label: command.category,
+					value: command.category.toLowerCase()
+				})
+			})
+
+			let commands = bot.commands.filter(command => {
+				if (command.permission === "Aucune") {
+					return true;
+				} else {
+					return interaction.member.permissions.has(command.permission);
+				}
+			});
+
+			let commandCategories = []
+			commands.forEach(command => {
+				if (!commandCategories.includes(command.category)) {
+					commandCategories.push(command.category)
+				}
+			})
+
+			let menuOptions = []
+			commandCategories.forEach(category => {
+				menuOptions.push({label: category, value: category.toUpperCase()})
+			})
+
 			const category = interaction.values[0];
 			const categoryCommands = bot.commands.filter(command => command.category.toUpperCase() === category)
-			const commandString = categoryCommands.map(command => `**${command.name}** : \`${command.description}\``).join('\n');
+			const commandString = categoryCommands.map(command => `> **${command.name}** : ${command.description}	`).join('\n');
 
-			const nouvelEmbed = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Commandes de la catégorie ${category.toLowerCase()}`)
-				.setDescription(commandString)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					conURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
+			const container = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace('#', ''), 16))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(`# Commandes de la catégorie ${category.toLowerCase()}`),
+				)
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(commandString)
+				)
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addActionRowComponents(
+					new Discord.ActionRowBuilder().addComponents(
+						new Discord.StringSelectMenuBuilder()
+							.setCustomId("help")
+							.setPlaceholder("Quel catégorie de commande souhaitez-vous voir ?")
+							.addOptions(
+								...menuOptions
+							)
+					)
+				)
 
-			return interaction.update({embeds: [nouvelEmbed]});
+			return interaction.update({flags: Discord.MessageFlags.IsComponentsV2, components: [container]});
 		}
 	}
 }

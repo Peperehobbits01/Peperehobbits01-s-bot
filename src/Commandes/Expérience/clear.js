@@ -26,15 +26,15 @@ module.exports = {
 		const queryAllClearSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
 		const AllClearResults = await executeQuery(queryAllClearSearch)
 
-		if (AllClearResults.length < 1) return message.followUp(`Le membre ${member.user.tag} n'est pas dans la base de donnée !`)
+		if (AllClearResults.length < 1) return message.followUp(`Le membre ${member} n'est pas dans la base de données !`)
 
 		const queryAllClear = `DELETE FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
 		await executeQuery(queryAllClear)
 
 		const succesAllClear = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Effacement du membre de la base de donnée réussie.")
-			.setDescription(`Le membre ${member.user.tag} a bien été effacer de la base de donnée!`)
+			.setTitle("Effacement du membre de la base de données réussi.")
+			.setDescription(`Le membre ${member} a bien été effacé de la base de données !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

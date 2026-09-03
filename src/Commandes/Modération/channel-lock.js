@@ -2,20 +2,20 @@ const Discord = require("discord.js")
 
 module.exports = {
 	name: "channel-lock",
-	description: "Permet de fermer un salon",
+	description: "Permet de fermer un salon.",
 	permission: Discord.PermissionFlagsBits.ManageChannels,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "channel",
 			name: "salon",
-			description: "le salon a fermer",
+			description: "Le salon a fermé.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "raison",
-			description: "la raison de la fermeture",
+			description: "La raison de la fermeture du salon.",
 			required: false,
 			autocomplete: false
 		}
@@ -25,7 +25,7 @@ module.exports = {
 		let channel = await message.guild.channels.cache.get(args.getChannel("salon").id)
 		if (!channel) return message.reply({content: `Le salon n'a pas été trouvé !`})
 		let reason = args.getString('raison')
-		if (!reason) reason = "Non respect de règle."
+		if (!reason) reason = "Non-respect de règle."
 
 		await channel.permissionOverwrites.create(message.guild.roles.everyone, {
 			SendMessages: false
@@ -33,8 +33,8 @@ module.exports = {
 
 		let lockmessage = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Ce salon vient d'être fermer !")
-			.setDescription(`Ce salon a été fermé par ${message.user} pour la raison suivante : **${reason}**`)
+			.setTitle("Ce salon vient d'être fermé !")
+			.setDescription(`Ce salon a été fermé par ${message.user} pour la raison suivante : **${reason}**.`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -45,7 +45,7 @@ module.exports = {
 
 		let Lock = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Inforamtion sur la fermeture du salon")
+			.setTitle("Information concernant la fermeture du salon.")
 			.setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,

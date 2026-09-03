@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 
 module.exports = {
 	name: "set-statut",
-	description: "Permet de changer le statut du bot",
+	description: "Permet de changer le statut du bot.",
 	permission: Discord.PermissionFlagsBits.Administrator,
 	category: "📚・Informations",
 	options: [
@@ -21,7 +21,7 @@ module.exports = {
 		}, {
 			type: "string",
 			name: "lien",
-			description: "URL du stream",
+			description: "L'URL du stream.",
 			required: false,
 			autocomplete: false
 		}
@@ -36,7 +36,7 @@ module.exports = {
 		let lien = args.getString("lien")
 
 		if (activity === "Streaming") {
-			if (!lien.match(new RegExp(/^(?:https?:\/\/)?(?:www\.|go\.)?twitch\.tv\/([a-z0-9_]+)($|\?)/))) return message.reply("URL manquante !")
+			if (!lien.match(new RegExp(/^(?:https?:\/\/)?(?:www\.|go\.)?twitch\.tv\/([a-z0-9_]+)($|\?)/))) return message.reply("L'URL est manquante !")
 
 			await bot.user.setActivity(status, {type: Discord.ActivityType[activity], url: lien})
 		}

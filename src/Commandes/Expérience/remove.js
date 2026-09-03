@@ -3,7 +3,7 @@ const {executeQuery} = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 	name: "remove",
-	description: "Retire de l'expérience à un membre",
+	description: "Retirer de l'expérience à un membre.",
 	permission: Discord.PermissionFlagsBits.Administrator,
 	category: "📊・Système d'expérience",
 	options: [
@@ -29,14 +29,14 @@ module.exports = {
 		if (!member) return message.reply({content: "Aucun membre sélectionné !"})
 
 		const xptoremove = parseInt(args.getString("experience"))
-		if (!xptoremove) return message.reply({content: "Veuillez donner une quantité d'expérience à retirer au membre !"})
+		if (!xptoremove) return message.reply({content: "Veuillez indiquer une quantité d'expérience à retirer au membre !"})
 
 		await message.deferReply()
 
 		const queryAddSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
 		const AddResults = await executeQuery(queryAddSearch)
 
-		if (AddResults.length < 1) return message.followUp({content: "Ce membre n'est pas dans la base de donnée !"})
+		if (AddResults.length < 1) return message.followUp({content: "Ce membre n'est pas dans la base de données !"})
 
 		let newXp    = parseInt(AddResults[0].xp);
 		let newLevel = parseInt(AddResults[0].level);
@@ -70,7 +70,7 @@ module.exports = {
 			.setColor(process.env.BOT_COLOR)
 			.setTitle("Retrait d'expérience réussi.")
 			.setDescription(
-				`Le membre ${member.user} a perdu **${actualRemoval} XP** et est maintenant au niveau **${newLevel}** (XP: ${newXp}).`
+				`Le membre ${member} a perdu **${actualRemoval} XP** et est maintenant au niveau **${newLevel}** (XP : ${newXp}).`
 			);
 
 		if (wasCapped) {
