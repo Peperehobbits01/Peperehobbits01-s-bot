@@ -9,7 +9,7 @@ module.exports = async (bot, oldState, newState) => {
 
 	const member = newState.guild.members.cache.get(newState.id);
 	if(!member) {
-		console.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouver.");
+		console.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouvé.");
 		return;
 	}
 
@@ -19,7 +19,7 @@ module.exports = async (bot, oldState, newState) => {
 
 		const JoinCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle(`${member.displayName} a rejoint un salon vocal`)
+			.setTitle(`${member.displayName} a rejoint un salon vocal.`)
 			.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
@@ -38,7 +38,7 @@ module.exports = async (bot, oldState, newState) => {
 
 		const LeaveCall = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle(`${member.displayName} a quittée un salon vocal`)
+			.setTitle(`${member.displayName} a quittée un salon vocal.`)
 			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
@@ -59,7 +59,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNowSelfDeaf = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} c'est mis en sourdine.`)
+				.setTitle(`${member.displayName} s'est mis en sourdine.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -96,7 +96,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNowSelfMute = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} c'est muté`)
+				.setTitle(`${member.displayName} s'est rendu muet.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -112,7 +112,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNoLongerSelfMute = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} c'est démuté`)
+				.setTitle(`${member.displayName} s'est démuté.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -131,7 +131,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNowDeaf = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été mis en sourdine`)
+				.setTitle(`${member.displayName} a été mis en sourdine.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -149,7 +149,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNoLongerDeaf = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine`)
+				.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -168,7 +168,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNowMute = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été muté`)
+				.setTitle(`${member.displayName} a été muté.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -184,7 +184,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNoLongerMute = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été démuté`)
+				.setTitle(`${member.displayName} a été démuté.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -230,7 +230,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const MooveCall = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a changée de vocal`)
+				.setTitle(`${member.displayName} a changée de vocal.`)
 				.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel}\nAncien salon : ${oldChannel}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
