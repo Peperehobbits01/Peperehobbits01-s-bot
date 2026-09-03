@@ -51,9 +51,12 @@ module.exports = async (bot, message) => {
 		const messages = await channel.messages.fetch({limit: 2});
 		const lastMessage = messages.first();
 		const currentNumber = parseInt(lastMessage);
+		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
+		const number = Number(messageNumber[1]);
+		const text = messageNumber[2];
 		const CountingEmbed = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setDescription(`${message.author} : \`${message.content}\``)
+			.setDescription(`${message.author} : \`${number}\` ${text}`)
 
 		const previousMessage = messages.last();
 
