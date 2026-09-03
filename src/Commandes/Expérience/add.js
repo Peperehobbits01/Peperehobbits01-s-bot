@@ -17,7 +17,7 @@ module.exports = {
 		{
 			type: "string",
 			name: "experience",
-			description: "La quantité d'expérience que vous voulez donner au membres sélectionner.",
+			description: "La quantité d'expérience que vous voulez donner au membre sélectionné.",
 			required: true,
 			autocomplete: false
 		}
@@ -29,7 +29,7 @@ module.exports = {
 		if (!member) return message.reply({content: "Aucun membre sélectionné !"})
 
 		const xptogive = parseInt(args.getString("experience"))
-		if (!xptogive) return message.reply({content: "Veuillez donner une quantité d'expérience à donner au membre !"})
+		if (!xptogive) return message.reply({content: "Veuillez indiquer une quantité d'expérience à donner au membre !"})
 
 		await message.deferReply()
 
@@ -54,7 +54,7 @@ module.exports = {
 
 			if(Math.round(100 * Math.pow(1.25, 1)) <= xptogive) {
 				let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fais ${member}, tu arrives au niveau ${newLevel}. Bien jouée à toi!`)
+				levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`)
 			}
 
 		} else {
@@ -74,13 +74,13 @@ module.exports = {
 
 			if(Math.round(100 * Math.pow(1.25, level)) <= xptogive) {
 				let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fais ${member}, tu arrives au niveau ${newLevel}. Bien jouée à toi!`)
+				levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`)
 			}
 		}
 
 		const succesAddEmbed = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Ajout d'experience au membre dans la base de donnée réussie.")
+			.setTitle("Ajout d'expérience au membre dans la base de données réussi.")
 			.setDescription(`Le membre ${member.user} a reçu ${xptogive}xp !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,

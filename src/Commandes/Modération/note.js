@@ -4,20 +4,20 @@ const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 module.exports = {
 
 	name: "note",
-	description: "Mettre une note sur un membre.",
+		description: "Mettre une note sur un membre.",
 	permission: Discord.PermissionFlagsBits.KickMembers,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "user",
 			name: "membre",
-			description: "Le membre à notée",
+			description: "Le membre à noter.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "note",
-			description: "La note à mettre",
+			description: "La note à mettre.",
 			required: true,
 			autocomplete: false
 		}
@@ -26,9 +26,9 @@ module.exports = {
 	async run(bot, message, args) {
 
 		let user = args.getUser("membre")
-		if (!user) return message.reply("Aucun membre a noté.")
+		if (!user) return message.reply("Aucun membre sélectionné !")
 		let member = message.guild.members.cache.get(user.id)
-		if (!member) return message.reply("Aucun membre a noté.")
+		if (!member) return message.reply("Aucun membre a noté !")
 
 		let reason = args.getString("note")
 		if (!reason) return message.reply("Note manquante.")
@@ -51,14 +51,14 @@ module.exports = {
 			.addComponents(
 				new Discord.ButtonBuilder()
 					.setCustomId(`unnote_${ID}`)
-					.setLabel("Retiré la note")
+					.setLabel("Retirer la note")
 					.setStyle(Discord.ButtonStyle.Danger)
 			)
 
 		const Note1 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Informations de la note")
-			.setDescription(`Vous avez mis une note à ${user.tag} et voici la note : \`${reason}\` avec succès !`)
+			.setTitle("Informations concernant la note.")
+			.setDescription(`Vous avez mis une note à ${user.displayName} et voici la note : \`${reason}\` avec succès !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

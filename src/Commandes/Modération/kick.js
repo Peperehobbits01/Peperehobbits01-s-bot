@@ -4,20 +4,20 @@ const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 module.exports = {
 
 	name: "kick",
-	description: "Expulse les personnes ne respectant pas les règles.",
+	description: "Expulser les personnes ne respectant pas les règles.",
 	permission: Discord.PermissionFlagsBits.KickMembers,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "user",
 			name: "membre",
-			description: "Le membre à kick",
+			description: "Le membre à expulser.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "raison",
-			description: "La raison de l'expulsion",
+			description: "La raison de l'expulsion.",
 			required: true,
 			autocomplete: false
 		}
@@ -26,23 +26,23 @@ module.exports = {
 	async run(bot, message, args) {
 
 		let user = args.getUser("membre")
-		if (!user) return message.reply("Aucun membre a expulsé.")
+		if (!user) return message.reply("Aucun membre sélectionné !")
 		let member = message.guild.members.cache.get(user.id)
-		if (!member) return message.reply("Aucun membre a expulsé.")
+		if (!member) return message.reply("Aucun membre a expulsé !")
 
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect du règlement ! (raison auto ajoutée)";
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas t'expulsé !")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peux pas être banni !")
-		if (member && !member.kickable) return message.reply("Je ne peux l'expulsé !")
-		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulsé !")
+		if (message.user.id === user.id) return message.reply("Tu ne peux pas t'expulser !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Le fondateur ne peut pas être expulsé !")
+		if (member && !member.kickable) return message.reply("Je ne peux pas l'expulser !")
+		if (member && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas l'expulser !")
 
 		try {
 			const Kick1 = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Vous avez été expulsé ! `)
-				.setDescription(`${message.user.tag} vous a expulsé sur le serveur ${message.guild.name} pour la raison : \`${reason}\` ! `)
+				.setTitle(`Vous avez été expulsé !`)
+				.setDescription(`${message.user.displayName} vous a expulsé sur le serveur ${message.guild.name} pour la raison : \`${reason}\` !`)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -63,8 +63,8 @@ module.exports = {
 
 		const Kick2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Informations du kick")
-			.setDescription(`Vous avez kick ${user.tag} pour la raison : \`${reason}\` avec succès !`)
+			.setTitle("Informations concernant l'expulsion.")
+			.setDescription(`Vous avez expulsé ${user.tag} pour la raison : \`${reason}\` avec succès !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

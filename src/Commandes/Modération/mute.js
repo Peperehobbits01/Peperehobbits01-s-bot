@@ -5,26 +5,26 @@ const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 module.exports = {
 
 	name: "mute",
-	description: "Mute un membre",
+	description: "Rendre muet un membre.",
 	permission: Discord.PermissionFlagsBits.ModerateMembers,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "user",
 			name: "membre",
-			description: "Le membre à mute",
+			description: "Le membre a rendre muet.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "temps",
-			description: "Le temps du mute",
+			description: "Le temps de la mise en muet.",
 			required: true,
 			autocomplete: false
 		}, {
 			type: "string",
 			name: "raison",
-			description: "La raison du mute",
+			description: "La raison de la mise en muet.",
 			required: false,
 			autocomplete: false
 		}
@@ -33,30 +33,30 @@ module.exports = {
 	async run(bot, message, args) {
 
 		let user = args.getUser("membre")
-		if (!user) return message.reply("Aucun membre sélectioné !")
+		if (!user) return message.reply("Aucun membre sélectionné !")
 		let member = message.guild.members.cache.get(user.id)
-		if (!member) return message.reply("Aucun membre sélectionné !")
+		if (!member) return message.reply("Aucun membre à rendre muet !")
 
 		let time = args.getString("temps")
 		if (!time) return message.reply("Aucun temps donné !")
 		if (isNaN(ms(time))) return message.reply("Mauvais format !")
-		if (ms(time) > 2419200000) return message.reply("Le bot ne peut pas mute autant de temps !")
-		if (ms(time) < 300000) return message.reply("La durée du mute est trop courte !")
+		if (ms(time) > 2419200000) return message.reply("Le robot ne peut pas rendre muet aussi longtemps !")
+		if (ms(time) < 300000) return message.reply("La durée de la mise en muet est trop courte !")
 
 		let reason = args.getString("raison")
 		if (!reason) reason = "Non-respect des règles (raison auto ajouté)";
 
-		if (message.user.id === user.id) return message.reply("Tu ne peux pas te mute!")
-		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas mute le fondateur!")
-		if (!member.moderatable) return message.reply("Je ne peux pas le mute!")
-		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le mute!")
-		if (member.isCommunicationDisabled()) return message.reply("Il est déjà muet!")
+		if (message.user.id === user.id) return message.reply("Tu ne peux pas te rendre muet !")
+		if ((await message.guild.fetchOwner()).id === user.id) return message.reply("Tu ne peux pas rendre muet le fondateur !")
+		if (!member.moderatable) return message.reply("Je ne peux pas le rendre muet !")
+		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le rendre muet !")
+		if (member.isCommunicationDisabled()) return message.reply("Il est déjà rendu muet !")
 
 		try {
 			const Mute1 = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Vous avez été mute ! `)
-				.setDescription(`${message.user.tag} vous a muté sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` ! `)
+				.setTitle(`Vous avez été rendu muet !`)
+				.setDescription(`${message.user.displayName} vous a rendu muet sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` !`)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -81,14 +81,14 @@ module.exports = {
 			.addComponents(
 				new Discord.ButtonBuilder()
 					.setCustomId(`unmute_${ID}`)
-					.setLabel("Retiré le mute")
+					.setLabel("Retiré la mise en muet")
 					.setStyle(Discord.ButtonStyle.Danger)
 			)
 
 		const Mute2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle("Informations du mute")
-			.setDescription(`Vous avez muté ${user.tag} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
+			.setTitle("Informations concernant la mise en muet.")
+			.setDescription(`Vous avez rendu muet ${user.displayName} pour la raison : \`${reason}\` et le temps : \`${time}\` avec succès !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

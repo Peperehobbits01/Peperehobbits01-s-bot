@@ -6,14 +6,14 @@ const {TextDisplayBuilder, SeparatorSpacingSize} = require("discord.js");
 module.exports = {
 
 	name: "help",
-	description: "Affiche les commandes du bot",
+	description: "Afficher les commandes du bot",
 	permission: "Aucune",
 	category: "📚・Informations",
 	options: [
 		{
 			type: "string",
 			name: "commande",
-			description: "La commande dont vous voulez connaitre son fonctionnement.",
+			description: "La commande dont vous voulez connaitre le fonctionnement.",
 			required: false,
 			autocomplete: true
 		}
@@ -63,7 +63,7 @@ module.exports = {
 					new Discord.SectionBuilder()
 						.addTextDisplayComponents(
 							new TextDisplayBuilder().setContent("# __Bienvenue dans le menu d'aide.__"),
-							new TextDisplayBuilder().setContent(`Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider ! **:warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**\n\nCatégories : \`${commandCategories.length}\`\nCommandes : \`${commands.size}\``)
+							new TextDisplayBuilder().setContent(`Voici le menu d'aide ! Vous n'avez qu'à cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider ! **:warning: Je tiens à préciser que le menu d'aide affiche seulement les commandes auxquelles vous avez accès !**\n\nCatégories : \`${commandCategories.length}\`\nCommandes : \`${commands.size}\``)
 						)
 						.setThumbnailAccessory(
 							new Discord.ThumbnailBuilder().setURL(bot.user.displayAvatarURL({dynamic: true, extension: "png"}))
@@ -74,7 +74,7 @@ module.exports = {
 					new Discord.ActionRowBuilder().addComponents(
 						new Discord.StringSelectMenuBuilder()
 							.setCustomId("help")
-							.setPlaceholder("Quel catégorie de commande souhaitez-vous voir ?")
+							.setPlaceholder("Quelle catégorie de commande souhaitez-vous voir ?")
 							.addOptions(
 							...menuOptions
 							)

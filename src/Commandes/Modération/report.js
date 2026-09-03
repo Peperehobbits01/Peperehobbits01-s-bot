@@ -3,7 +3,7 @@ const Discord = require("discord.js")
 module.exports = {
 
 	name: "report",
-	description: "💬 Envois un message de report à l'équipe.",
+	description: "Envoyer un rapport à l'équipe.",
 	permission: "Aucune",
 	category: "🛡・Modération",
 
@@ -11,9 +11,9 @@ module.exports = {
 
 		let question1 = new Discord.TextInputBuilder({
 			customId: 'sayreport',
-			label: 'Que souhaitez-vous signalée ?',
+			label: 'Que souhaitez-vous signaler ?',
 			required: true,
-			placeholder: 'Indiquez votre signalement ici',
+			placeholder: 'Indiquez votre signalement ici.',
 			style: Discord.TextInputStyle.Paragraph
 		})
 
@@ -35,8 +35,8 @@ module.exports = {
 
 			const EmbedReport = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Votre report a bien été reçu.`)
-				.setDescription("Merci d'avoir effectuer votre rapport. Nous regarderons à celui-ci dès que possible !")
+				.setTitle(`Votre rapport a bien été reçu.`)
+				.setDescription("Merci d'avoir effectué votre rapport. Nous regarderons à celui-ci dès que possible !")
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -46,7 +46,7 @@ module.exports = {
 
 			const EmbedwhatToReport = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Report effectuer par __${message.user.tag}__`)
+				.setTitle(`Rapport effectué par __${message.user.displayName}__`)
 				.setDescription(`${whatToReport}`)
 				.setFooter({
 					text: `${message.user.displayName}・ID : ${message.user.id}`,

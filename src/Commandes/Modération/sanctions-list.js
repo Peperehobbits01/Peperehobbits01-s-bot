@@ -4,14 +4,14 @@ const {executeQuery} = require("../../Fonctions/databaseConnect")
 module.exports = {
 
 	name: "sanctions-list",
-	description: "Affiche les sanctions d'un membre",
+	description: "Afficher les sanctions d'un membre.",
 	permission: Discord.PermissionFlagsBits.ManageMessages,
 	category: "🛡・Modération",
 	options: [
 		{
 			type: "user",
 			name: "membre",
-			description: "Le membre dont ont veux voir les sanctions",
+			description: "Le membre dont on veut voir les sanctions.",
 			required: true,
 			autocomplete: false
 		}
@@ -20,13 +20,13 @@ module.exports = {
 	async run(bot, message, args) {
 
 		let user = args.getUser("membre")
-		if (!user) return message.reply("Aucun utilisateur sélectionnée!")
+		if (!user) return message.reply("Aucun membre sélectionné !")
 
 		await message.deferReply()
 
 		let Embed = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
-			.setTitle(`Infractions de ${user.tag}`)
+			.setTitle(`Infractions de ${user.displayName}`)
 			.setThumbnail(user.displayAvatarURL({dynamic: true}))
 			.setTimestamp()
 			.setFooter({

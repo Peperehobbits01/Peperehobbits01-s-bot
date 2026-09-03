@@ -6,7 +6,7 @@ const {registerFont} = require("canvas")
 module.exports = {
 
 	name: "leaderboard",
-	description: "Classement des membres en xp sur le serveur.",
+	description: "Montre le classement des membres en XP sur le serveur.",
 	permission: "Aucune",
 	category: "📊・Système d'expérience",
 
