@@ -38,7 +38,7 @@ module.exports = {
 		let Unlock = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle("Information concernant la réouverture du salon.")
-			.setDescription(`Réalisée: \`${message.user.username}\`\nDate: \`${Date.now}\``)
+			.setDescription(`Réalisée: \`${message.user.displayName}\`\nDate: \`${Date.now}\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

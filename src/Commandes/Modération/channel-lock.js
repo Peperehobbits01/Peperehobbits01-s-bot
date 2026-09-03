@@ -46,7 +46,7 @@ module.exports = {
 		let Lock = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle("Information concernant la fermeture du salon.")
-			.setDescription(`Réalisée: \`${message.user.username}\`\nRaison: \`${reason}\``)
+			.setDescription(`Réalisée: \`${message.user.displayName}\`\nRaison: \`${reason}\``)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
