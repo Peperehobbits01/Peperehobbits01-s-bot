@@ -59,7 +59,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNowSelfDeaf = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} c'est mis en sourdine`)
+				.setTitle(`${member.displayName} c'est mis en sourdine.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -76,7 +76,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const IsNoLongerSelfDeaf = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a quitté le mode sourdine`)
+				.setTitle(`${member.displayName} a quitté le mode sourdine.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -200,7 +200,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const StartStream = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a commencé à streamer`)
+				.setTitle(`${member.displayName} a commencé à stream.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
@@ -214,7 +214,7 @@ module.exports = async (bot, oldState, newState) => {
 
 			const EndStream = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a coupé son stream`)
+				.setTitle(`${member.displayName} a coupé son stream.`)
 				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
