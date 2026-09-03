@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const {levenshteinDistance} = require('../../Fonctions/levenshteinDistance');
 const permissionName = require('../../enum/permissionName');
+const {TextDisplayBuilder, SeparatorSpacingSize} = require("discord.js");
 
 module.exports = {
 
@@ -56,30 +57,31 @@ module.exports = {
 				menuOptions.push({label: category, value: category.toUpperCase()})
 			})
 
-			let menu = new Discord.StringSelectMenuBuilder()
-				.setCustomId("help")
-				.setOptions(menuOptions)
+			const containerHelp = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace('#', ''), 16))
+				.addSectionComponents(
+					new Discord.SectionBuilder()
+						.addTextDisplayComponents(
+							new TextDisplayBuilder().setContent("# __Bienvenue dans le menu d'aide.__"),
+							new TextDisplayBuilder().setContent(`Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider ! **:warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**\n\nCatégories : \`${commandCategories.length}\`\nCommandes : \`${commands.size}\``)
+						)
+						.setThumbnailAccessory(
+							new Discord.ThumbnailBuilder().setURL(bot.user.displayAvatarURL({dynamic: true, extension: "png"}))
+						)
+				)
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addActionRowComponents(
+					new Discord.ActionRowBuilder().addComponents(
+						new Discord.StringSelectMenuBuilder()
+							.setCustomId("help")
+							.setPlaceholder("Quel catégorie de commande souhaitez-vous voir ?")
+							.addOptions(
+							...menuOptions
+							)
+					)
+				)
 
-			let menuRow = new Discord.ActionRowBuilder().addComponents(menu)
-
-			let EmbedHelp = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Menu d'aide  `)
-				.setDescription(`
-                Voici le menu d'aide ! Vous n'avez cas cliquer sur la catégorie de commande correspondante et je serai ravi de vous aider !
-                **\ :warning: Je tiens a préciser que le menu d'aide affiche seulement les commandes auquel vous avez accès !**
-
-                Catégories : \`${commandCategories.length}\`
-                Commandes : \`${commands.size}\`
-                `)
-				.setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
-				.setTimestamp()
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-
-			message.reply({embeds: [EmbedHelp], components: [menuRow]})
+			message.reply({flags: Discord.MessageFlags.IsComponentsV2, components: [containerHelp]})
 
 		} else {
 
@@ -110,17 +112,17 @@ module.exports = {
 				? "Aucune"
 				: new Discord.PermissionsBitField(command.permission).toArray().map(perm => permissionName[perm] || perm).join(', ')
 
-			let EmbedCommande = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Commande ${command.name}`)
-				.setDescription(`Nom : \`${command.name}\`\nDescription : \`${command.description}\`\nPermissions requises : \`${permissionsText}\`\nCatégorie : \`${command.category}\`\n`)
-				.setThumbnail(`${bot.user.displayAvatarURL({dynamic: true})}`)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
+			let containterCommande = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace('#', ''), 16))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(`# __Commande ${command.name}__`),
+				)
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(`> **Nom** : \`${command.name}\`\n> **Description** : \`${command.description}\`\n> **Permissions requises** : \`${permissionsText}\`\n> **Catégorie** : \`${command.category}\``)
+				)
 
-			await message.reply({embeds: [EmbedCommande]})
+			await message.reply({flags: Discord.MessageFlags.IsComponentsV2, components: [containterCommande]})
 		}
 	}
 }
