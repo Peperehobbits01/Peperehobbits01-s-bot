@@ -19,126 +19,61 @@ module.exports = async (bot, oldChannel, newChannel) => {
 
 	const executor = channelLog?.executor;
 
+	const channelUpdateEmbed = new Discord.EmbedBuilder()
+		.setColor(process.env.BOT_COLOR)
+		.setAuthor({
+			name: executor.displayName,
+			iconURL: executor.displayAvatarURL({dynamic: true})
+		})
+		.setFooter({
+			text: process.env.EMBED_FOOTER,
+			iconURL: bot.user.displayAvatarURL({dynamic: true})
+		})
+		.setTimestamp()
+
 	if (oldChannel.name !== newChannel.name) {
 
-		const UpdateChannelName = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le nom du salon ${oldChannel.name} a été changer par ${executor} en ${newChannel.name}\n\nAncien nom du salon : ${oldChannel.name}\nNouveau nom du salon : ${newChannel.name}\nType de salon : ${oldReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le nom du salon ${oldChannel.name} a été changer par ${executor} en ${newChannel.name}\n\nAncien nom du salon : ${oldChannel.name}\nNouveau nom du salon : ${newChannel.name}\nType de salon : ${oldReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelName]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.type !== newChannel.type) {
 
-		const UpdateChannelType = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le type du salon ${oldChannel.name} a été changer par ${executor} de ${oldReadableChannelType} à ${newReadableChannelType}\n\nNom du salon : ${oldChannel}\nAncien type du salon : ${oldReadableChannelType}\nNouveau type du salon : ${newReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le type du salon ${oldChannel.name} a été changer par ${executor} de ${oldReadableChannelType} à ${newReadableChannelType}\n\nNom du salon : ${oldChannel}\nAncien type du salon : ${oldReadableChannelType}\nNouveau type du salon : ${newReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelType]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.parentId !== newChannel.parentId) {
 
-		const UpdateChannelParentID = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le salon ${oldChannel.name} a été déplacé par un utilisateur de la catégorie ${oldChannel.parent} à la catégorie ${newChannel.parent}\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne catégorie du salon : ${oldChannel.parentId}\nNouvelle catégorie du salon : ${newChannel.parentId}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nAncienne catégorie : \`${oldChannel.parentId}\`\nNouvelle catégorie : \`${newChannel.parentId}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a été déplacé par un utilisateur de la catégorie ${oldChannel.parent} à la catégorie ${newChannel.parent}\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne catégorie du salon : ${oldChannel.parentId}\nNouvelle catégorie du salon : ${newChannel.parentId}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nAncienne catégorie : \`${oldChannel.parentId}\`\nNouvelle catégorie : \`${newChannel.parentId}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelParentID]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.topic !== newChannel.topic) {
 
-		const UpdateChannelTopic = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le salon ${oldChannel.name} a vue sa description modifier par ${executor} de "${oldChannel.topic}" à "${newChannel.topic}"\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne description du salon : ${oldChannel.topic}\nNouvelle description du salon : ${newChannel.topic}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a vue sa description modifier par ${executor} de "${oldChannel.topic}" à "${newChannel.topic}"\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne description du salon : ${oldChannel.topic}\nNouvelle description du salon : ${newChannel.topic}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelTopic]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
 
-		const UpdateChannelSlowModeON = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le salon ${oldChannel.name} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Oui\nDurée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Oui\nDurée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelSlowModeON]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser === 0) {
 
-		const UpdateChannelSlowModeOFF = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le salon ${oldChannel.name} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelSlowModeOFF]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser > 0 && oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
 
-		const UpdateChannelSlowModeChange = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le salon ${oldChannel.name} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne durée du mode lent : ${oldChannel.rateLimitPerUser}s\nNouvelle durée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne durée du mode lent : ${oldChannel.rateLimitPerUser}s\nNouvelle durée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-		await logsChannel.send({embeds: [UpdateChannelSlowModeChange]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	const oldPerms = oldChannel.permissionOverwrites.cache;
@@ -217,36 +152,14 @@ module.exports = async (bot, oldChannel, newChannel) => {
 
 		if (oldChannel.nsfw === false) {
 
-			const UpdateChannelNSFW = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setAuthor({
-					name: executor.displayName,
-					iconURL: executor.displayAvatarURL({dynamic: true})
-				})
-				.setDescription(`Le salon ${oldChannel.name} vient d'être soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Oui\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
+			channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} vient d'être soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Oui\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-			await logsChannel.send({embeds: [UpdateChannelNSFW]})
+			await logsChannel.send({embeds: [channelUpdateEmbed]})
 		} else if (oldChannel.nsfw === true) {
 
-			const UpdateChannelNSFW = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setAuthor({
-					name: executor.displayName,
-					iconURL: executor.displayAvatarURL({dynamic: true})
-				})
-				.setDescription(`Le salon ${oldChannel.name} n'est plus soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Non\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
+			channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} n'est plus soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Non\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
 
-			await logsChannel.send({embeds: [UpdateChannelNSFW]})
+			await logsChannel.send({embeds: [channelUpdateEmbed]})
 		}
 	}
 }
