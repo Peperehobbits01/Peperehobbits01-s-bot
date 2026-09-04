@@ -13,22 +13,23 @@ module.exports = async (bot, oldState, newState) => {
 		return;
 	}
 
+	const voiceStateUpdateEmbed = new Discord.EmbedBuilder()
+		.setColor(process.env.BOT_COLOR)
+		.setFooter({
+			text: process.env.EMBED_FOOTER,
+			iconURL: bot.user.displayAvatarURL({dynamic: true})
+		})
+		.setTimestamp()
+		.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+
 	if(!oldChannel && newChannel) {
 
 		await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 
-		const JoinCall = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setTitle(`${member.displayName} a rejoint un salon vocal.`)
-			.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
-			.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a rejoint un salon vocal.`)
+			voiceStateUpdateEmbed.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-		await logsChannel.send({embeds: [JoinCall]})
+		await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 	}
 
 	if(oldChannel && !newChannel) {
@@ -36,18 +37,10 @@ module.exports = async (bot, oldState, newState) => {
 		const oldTimer = activeTimers.get(member.id);
 		if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-		const LeaveCall = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setTitle(`${member.displayName} a quittée un salon vocal.`)
-			.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
-			.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a quittée un salon vocal.`)
+			voiceStateUpdateEmbed.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-		await logsChannel.send({embeds: [LeaveCall]})
+		await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 	}
 
 	if(oldChannel && newChannel) {
@@ -57,35 +50,19 @@ module.exports = async (bot, oldState, newState) => {
 			const oldTimer = activeTimers.get(member.id);
 			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-			const IsNowSelfDeaf = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} s'est mis en sourdine.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} s'est mis en sourdine.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNowSelfDeaf]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 			return
 		} else if (oldState.selfDeaf === true && newState.selfDeaf === false) {
 
 			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 
-			const IsNoLongerSelfDeaf = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a quitté le mode sourdine.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a quitté le mode sourdine.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNoLongerSelfDeaf]});
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]});
 			return
 		}
 
@@ -94,34 +71,18 @@ module.exports = async (bot, oldState, newState) => {
 			const oldTimer = activeTimers.get(member.id);
 			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-			const IsNowSelfMute = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} s'est rendu muet.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} s'est rendu muet.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNowSelfMute]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.selfMute === true && newState.selfMute === false) {
 
 			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 
-			const IsNoLongerSelfMute = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} s'est démuté.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} s'est démuté.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNoLongerSelfMute]});
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]});
 		}
 
 		if(newState.serverDeaf === true && oldState.serverDeaf === false) {
@@ -129,36 +90,20 @@ module.exports = async (bot, oldState, newState) => {
 			const oldTimer = activeTimers.get(member.id);
 			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-			const IsNowDeaf = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été mis en sourdine.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été mis en sourdine.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNowDeaf]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.serverDeaf === true && newState.serverDeaf === false) {
 
 			if(newState.serverMute === false && newState.selfMute === false) {
 				await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 			}
 
-			const IsNoLongerDeaf = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNoLongerDeaf]});
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]});
 		}
 
 		if(newState.serverMute === true && oldState.serverMute === false) {
@@ -166,80 +111,40 @@ module.exports = async (bot, oldState, newState) => {
 			const oldTimer = activeTimers.get(member.id);
 			if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-			const IsNowMute = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été muté.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été muté.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNowMute]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.serverMute === true && newState.serverMute === false) {
 
 			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
 
-			const IsNoLongerMute = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a été démuté.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été démuté.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [IsNoLongerMute]});
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]});
 		}
 
 		if(!oldState.streaming && newState.streaming) {
 
-			const StartStream = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a commencé à stream.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a commencé à stream.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [StartStream]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.streaming && !newState.streaming) {
 
-			const EndStream = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a coupé son stream.`)
-				.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a coupé son stream.`)
+			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [EndStream]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		}
 
 		if(oldChannel !== newChannel) {
 
-			const MooveCall = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`${member.displayName} a changée de vocal.`)
-				.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel}\nAncien salon : ${oldChannel}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-				.setTimestamp()
-				.setThumbnail(member.user.displayAvatarURL({dynamic: true}))
+			voiceStateUpdateEmbed.setTitle(`${member.displayName} a changée de vocal.`)
+			voiceStateUpdateEmbed.setDescription(`**Salon**: Il était dans le salon ${oldChannel.name} et maintenant il est dans ${newChannel}\nAncien salon : ${oldChannel}\nNouveau salon : ${newChannel.name}\nUtilisateur : ${member}\n\n**ID :**\n\nAncien Salon: \`\`\`${oldChannel.id}\`\`\`\nNouveau Salon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
-			await logsChannel.send({embeds: [MooveCall]})
+			await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		}
 	}
 };
