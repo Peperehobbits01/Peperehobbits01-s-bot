@@ -24,10 +24,12 @@ module.exports = async (bot, oldState, newState) => {
 
 	if(!oldChannel && newChannel) {
 
-		await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+		if(newState.selfDeaf === false && newState.selfMute === false && newState.serverMute === false &&	 newState.serverMute === false) {
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+		}
 
-			voiceStateUpdateEmbed.setTitle(`${member.displayName} a rejoint un salon vocal.`)
-			voiceStateUpdateEmbed.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+		voiceStateUpdateEmbed.setTitle(`${member.displayName} a rejoint un salon vocal.`)
+		voiceStateUpdateEmbed.setDescription(`Salon: ${newChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${newChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
 		await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 	}
@@ -37,8 +39,8 @@ module.exports = async (bot, oldState, newState) => {
 		const oldTimer = activeTimers.get(member.id);
 		if (oldTimer) { clearInterval(oldTimer); activeTimers.delete(member.id); }
 
-			voiceStateUpdateEmbed.setTitle(`${member.displayName} a quittée un salon vocal.`)
-			voiceStateUpdateEmbed.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
+		voiceStateUpdateEmbed.setTitle(`${member.displayName} a quittée un salon vocal.`)
+		voiceStateUpdateEmbed.setDescription(`Salon: ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
 
 		await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 	}
