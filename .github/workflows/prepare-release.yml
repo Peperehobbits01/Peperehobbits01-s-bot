@@ -92,7 +92,7 @@ jobs:
           conventional_commits = true
           filter_unconventional = true
           commit_parsers = [
-              { message = "BREAKING", group = "**🚨BREAKING CHANGES"},
+              { message = "BREAKING", group = "**🚨BREAKING CHANGES **"},
               { message = "^(?i:feat)", group = "**🚀Features**" },
               { message = "^(?i:fix|hotfix)", group = "**🐛 Bug Fixes**" },
               { message = "^(?i:refactor)", group = "**🏗 Refactors**" },
