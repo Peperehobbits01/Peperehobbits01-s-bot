@@ -71,7 +71,7 @@ module.exports = async (bot, message) => {
 					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 				}
 			} catch (err) {
-				const previousNumber = parseInt(previousMessage)
+				const previousNumber = parseInt(previousMessage.embeds?.[0].description.split(":")[1].replace(/`/g, ''));
 
 				if (currentNumber === previousNumber + 1) {
 					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
