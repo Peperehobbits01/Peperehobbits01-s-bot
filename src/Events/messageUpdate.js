@@ -3,31 +3,19 @@ const {getFirstImage} = require("../Fonctions/getMessageImage")
 
 module.exports = async (bot, message, oldMessage) => {
 
-	if (message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
-	if (message.partial) return;
-	if (message.content === oldMessage.content) return;
+	if (message.author.bot || message.channel.type === Discord.ChannelType.DM || message.partial || message.content === oldMessage.content) return;
 	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE)
-	const fetchedLogs = await message.guild.fetchAuditLogs({
-		type: Discord.AuditLogEvent.messageUpdate,
-		limit: 1,
-	});
-
-	const channelLog = fetchedLogs.entries.find(entry =>
-		entry.target?.id === message.id || entry.target?.id === message.author.id
-	);
-
-	const executor = channelLog?.executor || message.author;
 
 	const oldImage = getFirstImage(oldMessage)
 	const newImage = getFirstImage(message)
 
 	const messageUpdateEmbed = new Discord.EmbedBuilder()
 		.setAuthor({
-			name: executor.displayName,
-			iconURL: executor.displayAvatarURL({dynamic: true})
+			name: message.author.displayName,
+			iconURL: message.author.displayAvatarURL({dynamic: true})
 		})
 		.setColor(process.env.BOT_COLOR)
-		.setDescription(`Un message a été modifié par ${executor}\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
+		.setDescription(`${message.author.displayName} a modifié un de ces messages.\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\n\n**ID** :\nAuteur : ${message.author.id}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
