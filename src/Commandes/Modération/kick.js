@@ -64,7 +64,7 @@ module.exports = {
 		const Kick2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)
 			.setTitle("Informations concernant l'expulsion.")
-			.setDescription(`Vous avez expulsé ${user.tag} pour la raison : \`${reason}\` avec succès !`)
+			.setDescription(`Vous avez expulsé ${user.displayName} pour la raison : \`${reason}\` avec succès !`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

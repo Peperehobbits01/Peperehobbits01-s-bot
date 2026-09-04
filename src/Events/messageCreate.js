@@ -51,29 +51,34 @@ module.exports = async (bot, message) => {
 		const messages = await channel.messages.fetch({limit: 2});
 		const lastMessage = messages.first();
 		const currentNumber = parseInt(lastMessage);
-		const CountingEmbed = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setDescription(`${message.author} : \`${message.content}\``)
+		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
+		const number = Number(messageNumber[1]);
+		const highestRole = member.roles.highest;
+		const color = highestRole.hexColor;
+		const CountingContainer = new Discord.ContainerBuilder()
+			.setAccentColor(Number.parseInt(color.replace('#', ''), 16))
+			.addTextDisplayComponents(
+				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${number}`)
+			)
 
 		const previousMessage = messages.last();
 
 		if(previousMessage + 1 === currentNumber || currentNumber > 1) {
 			try {
+				const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
+
+				if (currentNumber === previousNumber + 1) {
+					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
+				}
+			} catch (err) {
 				const previousNumber = parseInt(previousMessage.embeds?.[0].description.split(":")[1].replace(/`/g, ''));
 
 				if (currentNumber === previousNumber + 1) {
-					await channel.send({embeds: [CountingEmbed]});
-				}
-			} catch (err) {
-				const previousNumber = parseInt(previousMessage)
-
-				if (currentNumber === previousNumber + 1) {
-					await channel.send({embeds: [CountingEmbed]});
+					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 				}
 			}
-		} else {
-			await channel.send({embeds: [CountingEmbed]});
 		}
+
 		await lastMessage.delete();
 	}
 }
