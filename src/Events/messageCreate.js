@@ -54,16 +54,18 @@ module.exports = async (bot, message) => {
 		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
 		const number = Number(messageNumber[1]);
 		const highestRole = member.roles.highest;
-		const color = highestRole.hexColor;
+		let color = highestRole.hexColor;
+		if(color === "#000000") color = "#95a5a6"
 		const CountingContainer = new Discord.ContainerBuilder()
 			.setAccentColor(Number.parseInt(color.replace('#', ''), 16))
 			.addTextDisplayComponents(
 				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${number}`)
 			)
-
 		const previousMessage = messages.last();
 
-		if(previousMessage + 1 === currentNumber || currentNumber > 1) {
+		if(lastMessage === previousMessage && currentNumber === 1) {
+			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
+		} else if(previousMessage + 1 === currentNumber || currentNumber > 1) {
 			try {
 				const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
 
