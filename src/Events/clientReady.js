@@ -12,7 +12,7 @@ module.exports = async bot => {
 	await loadSlashCommand(bot)
 	if(cacheFolderExists === false) {
 		fs.mkdirSync(cacheDir, { recursive: true })
-		botLogsFile.info("Création de dossier de cache réussi !")
+		botLogsFile.info("Création du dossier de cache réussi !")
 	}
 
 	bot.user.setPresence({activities: [{name: "la version 1.6.2", type: ActivityType.Watching}], status: "online"})
