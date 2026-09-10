@@ -8,6 +8,7 @@ const os = require("node:os");
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
+	botLogsFile: require("./src/Fonctions/botLogsFile"),
 	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
@@ -17,21 +18,32 @@ bot.function = {
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
 }
 
-console.log(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
+const botLogsFile = require("./src/Fonctions/botLogsFile.js");
+
+botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
 bot.login(process.env.TOKEN).then(() =>
 	loadCommands(bot, process.cwd() + '/src/Commandes'),
 	loadEvents(bot)
 )
 
+process.on("unhandledRejection", (reason) => {
+	botLogsFile.error("Unhandled promise rejection", reason);
+});
+
+process.on("uncaughtException", (error) => {
+	botLogsFile.error("Uncaught exception", error);
+	process.exit(1);
+});
+
 process.on('SIGINT', () => {
-	console.log('\n[!] Réception de SIGINT. Déconnexion du bot...');
-	bot.destroy().then(() => console.log('\n[!] Réception de SIGINT. Déconnexion du bot réussie.'));
+	botLogsFile.info('\n[!] Réception de SIGINT. Déconnexion du bot...');
+	bot.destroy().then(() => botLogsFile.info('\n[!] Réception de SIGINT. Déconnexion du bot réussie.'));
 	process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-	console.log('\n[!] Réception de SIGTERM. Déconnexion du bot...');
-	bot.destroy().then(() => console.log('\n[!] Réception de SIGTERM. Déconnexion du bot réussie.'));
+	botLogsFile.info('\n[!] Réception de SIGTERM. Déconnexion du bot...');
+	bot.destroy().then(() => botLogsFile.info('\n[!] Réception de SIGTERM. Déconnexion du bot réussie.'));
 	process.exit(1);
 });

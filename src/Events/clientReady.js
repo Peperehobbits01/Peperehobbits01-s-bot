@@ -1,6 +1,7 @@
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
 const { processExpiredBans } = require("../Fonctions/checkTempBanUsers")
+const botLogsFile = require("../Fonctions/botLogsFile")
 
 module.exports = async bot => {
 
@@ -8,7 +9,7 @@ module.exports = async bot => {
 
 	bot.user.setPresence({activities: [{name: "la version 1.6.2", type: ActivityType.Watching}], status: "online"})
 
-	console.log(`Je suis connecté à ${bot.user.tag}!`)
+	botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
 	await processExpiredBans(bot);
 

@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const {voiceCallXpCalculation, activeTimers} = require("../Fonctions/voiceCallXpCalculation");
+const botLogsFile = require("../Fonctions/botLogsFile");
 
 module.exports = async (bot, oldState, newState) => {
 
@@ -9,7 +10,7 @@ module.exports = async (bot, oldState, newState) => {
 
 	const member = newState.guild.members.cache.get(newState.id);
 	if(!member) {
-		console.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouvé.");
+		botLogsFile.warn("Le membre qui a un changement de statut vocal n'a pas pu être trouvé.");
 		return;
 	}
 
