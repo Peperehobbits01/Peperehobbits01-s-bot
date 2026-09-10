@@ -38,8 +38,6 @@ const levelColors = {
 	ERROR: colors.red,
 };
 
-const useColors = Boolean(process.stdout.isTTY);
-
 function colorize(level, text) {
 	const color = levelColors[level] || colors.reset;
 	return `${color}${text}${colors.reset}`;
