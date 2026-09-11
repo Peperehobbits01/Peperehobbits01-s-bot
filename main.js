@@ -37,13 +37,17 @@ process.on("uncaughtException", (error) => {
 });
 
 process.on('SIGINT', () => {
-	botLogsFile.info('\n[!] Réception de SIGINT. Déconnexion du bot...');
-	bot.destroy().then(() => botLogsFile.info('\n[!] Réception de SIGINT. Déconnexion du bot réussie.'));
-	process.exit(0);
+	botLogsFile.info('Réception de SIGINT. Déconnexion du bot...');
+	bot.destroy().then(() => {
+		botLogsFile.info('Réception de SIGINT. Déconnexion du bot réussie.')
+		process.exit(0);
+	})
 });
 
 process.on('SIGTERM', () => {
-	botLogsFile.info('\n[!] Réception de SIGTERM. Déconnexion du bot...');
-	bot.destroy().then(() => botLogsFile.info('\n[!] Réception de SIGTERM. Déconnexion du bot réussie.'));
-	process.exit(1);
+	botLogsFile.info('Réception de SIGTERM. Déconnexion du bot...');
+	bot.destroy().then(() => {
+		botLogsFile.info('Réception de SIGTERM. Déconnexion du bot réussie.')
+		process.exit(1);
+	});
 });
