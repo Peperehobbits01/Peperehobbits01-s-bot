@@ -1,6 +1,5 @@
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
-const { processExpiredBans } = require("../Fonctions/checkTempBanUsers")
 const botLogsFile = require("../Fonctions/botLogsFile")
 const fs = require("node:fs");
 const path = require("node:path");
@@ -19,7 +18,10 @@ module.exports = async bot => {
 
 	botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
-	await processExpiredBans(bot);
+	await bot.function.processExpiredBans(bot).then(() =>
+		setInterval(() => bot.function.processExpiredBans(bot), 60 * 60 * 1000)
+	)
 
-	setInterval(() => processExpiredBans(bot), 60 * 60 * 1000);
+	await bot.function.checkAllYouTubeChannels(bot).then(() =>
+	setInterval(() => bot.function.checkAllYouTubeChannels(bot), 5 * 60 * 1000))
 }

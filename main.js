@@ -9,6 +9,7 @@ bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
 	botLogsFile: require("./src/Fonctions/botLogsFile"),
+	checkAllYouTubeChannels: require("./src/Fonctions/checkNewYouTubeVideos"),
 	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
