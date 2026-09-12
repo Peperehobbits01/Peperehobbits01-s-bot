@@ -2,7 +2,7 @@ const { executeQuery } = require("./databaseConnect.js");
 const Discord = require("discord.js");
 const botLogsFile = require("../Fonctions/botLogsFile");
 
-async function processExpiredBans(bot) {
+module.exports = async (bot) => {
 	const now = Date.now();
 
 	const rows = await executeQuery(
@@ -37,5 +37,3 @@ async function processExpiredBans(bot) {
 		}
 	}
 }
-
-module.exports = { processExpiredBans };
