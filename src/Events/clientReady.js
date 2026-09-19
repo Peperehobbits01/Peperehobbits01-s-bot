@@ -1,12 +1,15 @@
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
 const botLogsFile = require("../Fonctions/botLogsFile")
+const {migrateEnvToGuildConfig} = require("../Fonctions/migrateEnvToGuildConfig")
 const fs = require("node:fs");
 const path = require("node:path");
 const cacheDir = path.join(__dirname, "../../cache")
 const cacheFolderExists = fs.existsSync(cacheDir)
 
 module.exports = async bot => {
+
+	await migrateEnvToGuildConfig(bot)
 
 	await loadSlashCommand(bot)
 	if(cacheFolderExists === false) {

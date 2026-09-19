@@ -3,31 +3,38 @@ let Parser = require("rss-parser");
 let parser = new Parser();
 const fs = require("fs");
 const botLogsFile = require("./botLogsFile");
+const {getGuildConfig} = require("./guildConfig");
 const STATE_FILE = "./cache/youtube-state.json";
 
-function getYoutubeChannelIds() {
-	if (!process.env.YOUTUBE_CHANNEL_ID) return [];
-
-	return process.env.YOUTUBE_CHANNEL_ID
+function parseYouTubeChannelIds(rawValue) {
+	if (!rawValue) return [];
+	if (Array.isArray(rawValue)) {
+		return rawValue.map((id) => String(id).trim()).filter(Boolean);
+	}
+	return String(rawValue)
 		.split(/[,\s]+/)
 		.map((id) => id.trim())
 		.filter(Boolean);
 }
 
-function loadLastVideoId(YouTubeChannelId) {
+function stateKey(guildId, channelId) {
+	return `${guildId}:${channelId}`;
+}
+
+function loadLastVideoId(guildId, YouTubeChannelId) {
 	if (!fs.existsSync(STATE_FILE)) {
 		return null;
 	}
 
 	try {
 		const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
-		return state[YouTubeChannelId] || null;
+		return state[stateKey(guildId, YouTubeChannelId)] || null;
 	} catch {
 		return null;
 	}
 }
 
-function saveLastVideoId(YouTubeChannelId, videoId) {
+function saveLastVideoId(guildId, YouTubeChannelId, videoId) {
 	if (!fs.existsSync(STATE_FILE)) {
 		fs.writeFileSync(STATE_FILE, JSON.stringify({}, null, 2), "utf8");
 	}
@@ -36,7 +43,7 @@ function saveLastVideoId(YouTubeChannelId, videoId) {
 		? JSON.parse(fs.readFileSync(STATE_FILE, "utf8"))
 		: {};
 
-	state[YouTubeChannelId] = videoId;
+	state[stateKey(guildId, YouTubeChannelId)] = videoId;
 
 	fs.writeFile(
 		STATE_FILE,
@@ -69,7 +76,6 @@ function getVideoId(item) {
 		const v = url.searchParams.get("v");
 		if (v) return v;
 
-		// Handles path-style URLs such as /shorts/<id>, /watch/<id>, /live/<id>, /v/<id>.
 		const specialKinds = ["watch", "shorts", "live", "v", "embed", "embeds"];
 		const parts = url.pathname.split("/").filter(Boolean);
 		const idx = parts.findIndex((part) => specialKinds.includes(part));
@@ -83,7 +89,7 @@ function getVideoId(item) {
 
 let isChecking = false;
 
-async function checkYouTubeChannel(bot, YouTubeChannelId) {
+async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 	const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YouTubeChannelId}`;
 
 	try {
@@ -113,14 +119,14 @@ async function checkYouTubeChannel(bot, YouTubeChannelId) {
 			return;
 		}
 
-		let lastVideoId = loadLastVideoId(YouTubeChannelId);
+		let lastVideoId = loadLastVideoId(guild.id, YouTubeChannelId);
 
 		if (!lastVideoId) {
 			lastVideoId = videos[0].id;
-			saveLastVideoId(YouTubeChannelId, lastVideoId);
+			saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
 
 			botLogsFile.info(
-				`Référence initiale YouTube définie sur ${lastVideoId} (${YouTubeChannelId})`
+				`Référence initiale YouTube définie sur ${lastVideoId} (${YouTubeChannelId}) pour le serveur ${guild.id}`
 			);
 			return;
 		}
@@ -141,15 +147,25 @@ async function checkYouTubeChannel(bot, YouTubeChannelId) {
 			return;
 		}
 
-		const channel = await bot.channels.fetch(
-			process.env.YOUTUBE_ANNOUNCEMENT_CHANNEL
-		);
+		const announcementChannel = guild.channels.cache.get(config.youtubeAnnouncementChannel)
+
+		if (!announcementChannel) {
+			botLogsFile.warn(
+				`Aucun salon d'annonce YouTube configuré pour le serveur ${guild.id}, publication ignorée.`
+			);
+			lastVideoId = videos[0].id;
+			saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
+			return;
+		}
+
+		const notifMention = config.youtubeNotifRole
 
 		for (const video of newVideos) {
-			const description =
-				video.description.length > 1000
-					? `${video.description.slice(0, 997)}...`
-					: video.description;
+			let description = video.description
+
+			if (video.description.length > 1000) {
+				description = `${video.description.slice(0, 997)}...`
+			}
 
 			const embed = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
@@ -161,21 +177,21 @@ async function checkYouTubeChannel(bot, YouTubeChannelId) {
 				)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
-					icon_url: bot.displayAvatarURL({ dynamic: true }),
+					icon_url: bot.user.displayAvatarURL({ dynamic: true }),
 				});
 
 			if (!Number.isNaN(video.publishedAt.getTime())) {
 				embed.setTimestamp(video.publishedAt);
 			}
 
-			await channel.send({
-				content: `${channelName} a publié une nouvelle vidéo ! ${process.env.YOUTUBE_NOTIF_ROLE}`,
+			await announcementChannel.send({
+				content: `${channelName} a publié une nouvelle vidéo ! ${notifMention}`,
 				embeds: [embed],
 			});
 		}
 
 		lastVideoId = videos[0].id;
-		saveLastVideoId(YouTubeChannelId, lastVideoId);
+		saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
 	} catch (error) {
 		botLogsFile.error("Une erreur est survenue pour la détection YouTube :", error);
 	}
@@ -187,13 +203,18 @@ module.exports = async (bot) => {
 	isChecking = true;
 
 	try {
-		for (const YouTubeChannelId of getYoutubeChannelIds()) {
-			try {
-				await checkYouTubeChannel(bot, YouTubeChannelId);
-			} catch (error) {
-				botLogsFile.error(
-					`Erreur lors du check de ${YouTubeChannelId} :`, error
-				);
+		for (const [guildId, guild] of bot.guilds.cache) {
+			const config = await getGuildConfig(guildId);
+			const channelIds = parseYouTubeChannelIds(config.youtubeChannelIds);
+
+			for (const YouTubeChannelId of channelIds) {
+				try {
+					await checkYouTubeChannel(bot, guild, YouTubeChannelId, config);
+				} catch (error) {
+					botLogsFile.error(
+						`Erreur lors du check de ${YouTubeChannelId} (${guildId}) :`, error
+					);
+				}
 			}
 		}
 	} finally {

@@ -1,9 +1,13 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect");
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, ban) => {
 
-	const logsChannel = ban.guild.channels.cache.get(process.env.LOGS_CHANNEL);
+	const config = await getGuildConfig(ban.guild.id);
+	const logsChannel = config.logsChannelSanctions
+		? ban.guild.channels.cache.get(config.logsChannelSanctions)
+		: null;
 
 	const fetchedLogs = await ban.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.guildBanAdd,
@@ -37,7 +41,9 @@ module.exports = async (bot, ban) => {
 		})
 		.setTimestamp()
 
-	await logsChannel.send({embeds: [BanEmbed], components: [unban]});
+	if (logsChannel) {
+		await logsChannel.send({embeds: [BanEmbed], components: [unban]});
+	}
 
 	const xpSystemSearch = `SELECT * FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
 	const xpSystemResults = await executeQuery(xpSystemSearch)

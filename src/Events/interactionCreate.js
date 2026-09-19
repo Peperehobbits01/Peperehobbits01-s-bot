@@ -16,6 +16,15 @@ module.exports = async (bot, interaction) => {
 
 		let entry = interaction.options.getFocused()
 
+		if (interaction.commandName === "config") {
+
+			const {GUILD_CONFIG_SCHEMA} = require("../Fonctions/defaultGuildConfig.js")
+			let choices = Object.keys(GUILD_CONFIG_SCHEMA)
+			let sortie = choices.filter(c => c.includes(entry))
+			await interaction.respond(sortie.map(c => ({name: c, value: c})))
+			return
+		}
+
 		if (interaction.commandName === "help") {
 
 			let choices = bot.commands.filter(cmd => cmd.name.includes(entry))
