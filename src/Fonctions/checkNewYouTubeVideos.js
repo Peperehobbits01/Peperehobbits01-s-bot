@@ -1,6 +1,12 @@
 const Discord = require('discord.js');
 let Parser = require("rss-parser");
-let parser = new Parser();
+let parser = new Parser({
+	customFields: {
+		item: [
+			["media:group", "media:group"],
+		],
+	},
+});
 const fs = require("fs");
 const botLogsFile = require("./botLogsFile");
 const {getGuildConfig} = require("./guildConfig");
@@ -106,9 +112,9 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 		const videos = feed.items
 			.map((item) => ({
 				id: getVideoId(item),
-				title: item.title || "Nouvelle vidéo YouTube",
+				title: item.title,
 				link: item.link,
-				description: item.contentSnippet || item.content || "",
+				description: item["media:group"]?.["media:description"],
 				publishedAt: item.isoDate
 					? new Date(item.isoDate)
 					: new Date(item.pubDate),
@@ -158,20 +164,24 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 			return;
 		}
 
-		const notifMention = config.youtubeNotifRole
+		const notifMention = guild.roles.cache.get(config.youtubeNotifRole)
 
 		for (const video of newVideos) {
 			let description = video.description
 
-			if (video.description.length > 1000) {
-				description = `${video.description.slice(0, 997)}...`
+			if (description.length > 500) {
+				description = `${description.slice(0, 497)}...`
 			}
 
 			const embed = new Discord.EmbedBuilder()
+				.setAuthor({
+					name: channelName,
+					iconURL: channelName.iconURL
+				})
 				.setColor(process.env.BOT_COLOR)
 				.setTitle(video.title)
 				.setURL(video.link)
-				.setDescription(description || "Une nouvelle vidéo a été publiée.")
+				.setDescription("Une nouvelle vidéo a été publiée.\n" + description)
 				.setThumbnail(
 					`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
 				)
