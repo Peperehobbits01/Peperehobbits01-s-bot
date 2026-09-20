@@ -73,18 +73,10 @@ module.exports = async (bot, message) => {
 		if(lastMessage === previousMessage && currentNumber === 1) {
 			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 		} else if(previousMessage + 1 === currentNumber || currentNumber > 1) {
-			try {
-				const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
+			const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
 
-				if (currentNumber === previousNumber + 1) {
-					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-				}
-			} catch (err) {
-				const previousNumber = parseInt(previousMessage.embeds?.[0].description.split(":")[1].replace(/`/g, ''));
-
-				if (currentNumber === previousNumber + 1) {
-					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-				}
+			if (currentNumber === previousNumber + 1) {
+				await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 			}
 		}
 
