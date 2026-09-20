@@ -105,9 +105,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 			return;
 		}
 
-		const channelName = feed.title
-			.replace(/\s*-\s*YouTube\s*$/i, "")
-			.trim();
+		const channelName = feed.title.replace(/\s*-\s*YouTube\s*$/i, "").trim();
 
 		const videos = feed.items
 			.map((item) => ({
@@ -167,27 +165,26 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 		const notifMention = guild.roles.cache.get(config.youtubeNotifRole)
 
 		for (const video of newVideos) {
-			let description = video.description
+			let description = String(video.description)
 
-			if (description.length > 500) {
-				description = `${description.slice(0, 497)}...`
+			if (description.length > 250) {
+				description = `${description.slice(0, 247)}...`
 			}
+
+			const YouTubeImage = new Discord.AttachmentBuilder('./src/Assets/youtube-footer.png')
 
 			const embed = new Discord.EmbedBuilder()
 				.setAuthor({
 					name: channelName,
-					iconURL: channelName.iconURL
 				})
-				.setColor(process.env.BOT_COLOR)
+				.setColor("#FF0000")
 				.setTitle(video.title)
 				.setURL(video.link)
-				.setDescription("Une nouvelle vidéo a été publiée.\n" + description)
-				.setThumbnail(
-					`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
-				)
+				.setDescription("Une nouvelle vidéo a été publiée.\n\n**Description :**\n" + description)
+				.setImage(`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`)
 				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					icon_url: bot.user.displayAvatarURL({ dynamic: true }),
+					text: "YouTube",
+					iconURL: "attachment://youtube-footer.png",
 				});
 
 			if (!Number.isNaN(video.publishedAt.getTime())) {
@@ -197,6 +194,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 			await announcementChannel.send({
 				content: `${channelName} a publié une nouvelle vidéo ! ${notifMention}`,
 				embeds: [embed],
+				files: [YouTubeImage],
 			});
 		}
 
