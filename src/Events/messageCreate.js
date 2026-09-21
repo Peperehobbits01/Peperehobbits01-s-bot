@@ -56,30 +56,25 @@ module.exports = async (bot, message) => {
 
 	if(message.channel.id === config.countingChannel) {
 		const messages = await channel.messages.fetch({limit: 2});
-		const lastMessage = messages.first();
-		const currentNumber = parseInt(lastMessage);
-		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
-		const number = Number(messageNumber[1]);
+		const lastMessage = message.content.replace(/ /g, '').match(/^(\d+)\s*(.*)$/)
+		const currentNumber = Number(lastMessage[1]);
 		const highestRole = member.roles.highest;
 		let color = highestRole.hexColor;
 		if(color === "#000000") color = "#95a5a6"
 		const CountingContainer = new Discord.ContainerBuilder()
 			.setAccentColor(Number.parseInt(color.replace('#', ''), 16))
 			.addTextDisplayComponents(
-				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${number}`)
+				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${currentNumber}`)
 			)
 		const previousMessage = messages.last();
+		const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
 
-		if(lastMessage === previousMessage && currentNumber === 1) {
+		if(currentNumber === previousNumber && currentNumber === 1) {
 			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-		} else if(previousMessage + 1 === currentNumber || currentNumber > 1) {
-			const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
-
-			if (currentNumber === previousNumber + 1) {
-				await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-			}
+		} else if(previousNumber + 1 === currentNumber && currentNumber > 1) {
+			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 		}
 
-		await lastMessage.delete();
+		await message.delete();
 	}
 }
