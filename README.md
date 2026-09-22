@@ -79,6 +79,9 @@ node main
     │	│    
     │	└───Modération       
     │	       Moderation related commands.
+    │
+    ├───Enum
+    │		Enumaration files.
     │      
  	├───Events
  	│       Discord related events.       
