@@ -58,8 +58,8 @@ module.exports = {
 
 		let ID = await bot.function.createId("KICK")
 
-		const queryKickAdd = `INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
-		await executeQuery(queryKickAdd)
+		await executeQuery(`INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${user.id}', 'KICK', '${ID}')`)
 
 		const Kick2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)

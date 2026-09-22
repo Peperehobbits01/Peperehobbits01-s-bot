@@ -78,12 +78,8 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			const queryUnnoteDelete = `DELETE
-			                           FROM note
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND note = "${noteID}"`
-			await executeQuery(queryUnnoteDelete)
+			await executeQuery(`DELETE FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`)
+			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnnote[0].user}" AND sanctionID = "${noteID}"`)
 
 			return interaction.reply({content: "Note retiré !", flags: [Discord.MessageFlags.Ephemeral]});
 		}
@@ -108,13 +104,12 @@ module.exports = async (bot, interaction) => {
 				content: "Aucun avertissement trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
-
-			const queryUnwarnDelete = `DELETE
+			await executeQuery(`DELETE
 			                           FROM warn
 			                           WHERE guild = "${interaction.guild.id}"
 				                         AND author = "${interaction.user.id}"
-				                         AND warn = "${warnId}"`
-			await executeQuery(queryUnwarnDelete)
+				                         AND warn = "${warnId}"`)
+			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnwarn[0].user}" AND sanctionID = "${warnId}"`)
 
 			try {
 				const Warn1 = new Discord.EmbedBuilder()
@@ -154,12 +149,12 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			const queryUnmuteDelete = `DELETE
+			await executeQuery(`DELETE
 			                           FROM mute
 			                           WHERE guild = "${interaction.guild.id}"
 				                         AND author = "${interaction.user.id}"
-				                         AND mute = "${muteId}"`
-			await executeQuery(queryUnmuteDelete)
+				                         AND mute = "${muteId}"`)
+			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnmute[0].user}" AND sanctionID = "${muteId}"`)
 
 			const user = await interaction.guild.members.fetch(ResultsUnmute[0].user)
 
@@ -208,12 +203,12 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			const queryUnbanDelete = `DELETE
+			await executeQuery(`DELETE
 			                          FROM ban
 			                          WHERE guild = "${interaction.guild.id}"
 				                        AND author = "${interaction.user.id}"
-				                        AND ban = "${banId}"`
-			await executeQuery(queryUnbanDelete)
+				                        AND ban = "${banId}"`)
+			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnban[0].user}" AND sanctionID = "${banId}"`)
 
 			const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
 			await interaction.guild.members.unban(user)

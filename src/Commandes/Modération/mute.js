@@ -70,10 +70,10 @@ module.exports = {
 
 		let ID = await bot.function.createId("MUTE")
 
-		const queryMuteAdd = `INSERT INTO mute (guild, user, author, mute, reason, date, time)
+		await executeQuery(`INSERT INTO mute (guild, user, author, mute, reason, date, time)
 		                      VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}',
-		                              '${Date.now()}', '${time}')`
-		await executeQuery(queryMuteAdd)
+		                              '${Date.now()}', '${time}')`)
+		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID, time) VALUES ('${message.guild.id}', '${user.id}', 'MUTE', '${ID}', '${Date.now + time}')`)
 
 		await member.timeout(ms(time), reason)
 

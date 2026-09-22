@@ -134,6 +134,19 @@ CREATE TABLE `guild_config` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Structure de la table `sanctions_list`
+--
+
+CREATE TABLE `sanctions_list`
+(
+	guildId       varchar(255)  not null,
+	userID        varchar(255)  not null,
+	sanction_type varchar(255)  not null,
+	sanctionID    varchar(2000) not null,
+	time          varchar(2000) null
+);
+
 
 --
 -- Index pour les tables déchargées
@@ -174,6 +187,12 @@ ALTER TABLE `warn`
 --
 ALTER TABLE `guild_config`
 	ADD PRIMARY KEY (`guild_id`);
+
+--
+-- Index pour la table `sanctions_list`
+--
+ALTER TABLE `sanctions_list`
+	ADD PRIMARY KEY (`sanctionID`);
 
 -- --------------------------------------------------------
 COMMIT;

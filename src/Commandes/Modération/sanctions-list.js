@@ -34,10 +34,16 @@ module.exports = {
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 
-		const queryNoteSearch = `SELECT * FROM note WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const NoteResults = await executeQuery(queryNoteSearch)
+		const queryUserSanctions = `SELECT * FROM sanctions_list WHERE guildId = '${message.guildId}' AND userId = '${user.id}'`
+		const UserSanctionsList = await executeQuery(queryUserSanctions)
+		if (UserSanctionsList.length < 1) return message.followUp("Cette utilisateur n'a pas d'infraction à sont actif !")
+		const sanctionTypes = new Set(
+			UserSanctionsList.map(sanction => sanction.sanction_type)
+		);
 
-		if (NoteResults.length >= 1) {
+		if (sanctionTypes.has(`NOTE`)) {
+			const queryNoteSearch = `SELECT * FROM note WHERE guild = '${message.guildId}' AND user = '${user.id}'`
+			const NoteResults = await executeQuery(queryNoteSearch)
 			await NoteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < NoteResults.length; i++) {
@@ -49,10 +55,9 @@ module.exports = {
 			}
 		}
 
-		const queryWarnSearch = `SELECT * FROM warn WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const WarnResults = await executeQuery(queryWarnSearch)
-
-		if (WarnResults.length >= 1) {
+		if (sanctionTypes.has(`WARN`)) {
+			const queryWarnSearch = `SELECT * FROM warn WHERE guild = '${message.guildId}' AND user = '${user.id}'`
+			const WarnResults = await executeQuery(queryWarnSearch)
 			await WarnResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < WarnResults.length; i++) {
@@ -64,10 +69,9 @@ module.exports = {
 			}
 		}
 
-		const queryMuteSearch = `SELECT * FROM mute WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const MuteResults = await executeQuery(queryMuteSearch)
-
-		if (MuteResults.length >= 1) {
+		if (sanctionTypes.has(`MUTE`)) {
+			const queryMuteSearch = `SELECT * FROM mute WHERE guild = '${message.guildId}' AND user = '${user.id}'`
+			const MuteResults = await executeQuery(queryMuteSearch)
 			await MuteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < MuteResults.length; i++) {
@@ -79,10 +83,9 @@ module.exports = {
 			}
 		}
 
-		const queryKickSearch = `SELECT * FROM kick WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const KickResults = await executeQuery(queryKickSearch)
-
-		if (KickResults.length >= 1) {
+		if (sanctionTypes.has(`KICK`)) {
+			const queryKickSearch = `SELECT * FROM kick WHERE guild = '${message.guildId}' AND user = '${user.id}'`
+			const KickResults = await executeQuery(queryKickSearch)
 			await KickResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < KickResults.length; i++) {
@@ -94,25 +97,27 @@ module.exports = {
 			}
 		}
 
-		const queryBanSearch = `SELECT * FROM ban WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const BanResults = await executeQuery(queryBanSearch)
-
-		if (BanResults.length >= 1) {
+		if (sanctionTypes.has(`BAN`)) {
+			const queryBanSearch = `SELECT * FROM ban WHERE guild = '${message.guildId}' AND user = '${user.id}'`
+			const BanResults = await executeQuery(queryBanSearch)
 			await BanResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < BanResults.length; i++) {
 
-				Embed.addFields([{
-					name: `Ban n°${i + 1}`,
-					value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>`
-				}])
+				if(BanResults[i].has(`TEMPBAN`)) {
+					Embed.addFields([{
+						name: `Ban n°${i + 1}`,
+						value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Temps** : ${BanResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>`
+					}])
+				} else {
+					Embed.addFields([{
+						name: `Ban n°${i + 1}`,
+						value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>`
+					}])
+				}
 			}
 		}
 
-		if (BanResults.length < 1 && KickResults.length < 1 && MuteResults.length < 1 && WarnResults.length < 1 && NoteResults.length < 1) {
-			await message.followUp("Cette utilisateur n'a pas d'infraction à sont actif !")
-		} else {
-			await message.followUp({embeds: [Embed]})
-		}
+		await message.followUp({embeds: [Embed]})
 	}
 }
