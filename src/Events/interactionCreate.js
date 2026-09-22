@@ -1,6 +1,5 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect.js")
-const {shuffleArray} = require("../Fonctions/shuffleArray");
 const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
 
 module.exports = async (bot, interaction) => {
@@ -266,7 +265,7 @@ module.exports = async (bot, interaction) => {
 
 			if(giveawayDuration < Date.now) {
 				const unshuffled = giveawaySearchResults.map(x => x.user);
-				const shuffledUsers = shuffleArray(unshuffled).slice(0, giveawayWinners);
+				const shuffledUsers = bot.function.shuffleArray(unshuffled).slice(0, giveawayWinners);
 				for (let i = 0; i < giveawayWinners; i++) {
 					const winnerList = await bot.users.fetch(shuffledUsers[i])
 
