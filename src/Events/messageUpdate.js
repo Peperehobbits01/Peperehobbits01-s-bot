@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {getFirstImage} = require("../Fonctions/getMessageImage")
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, message, oldMessage) => {
@@ -12,8 +11,8 @@ module.exports = async (bot, message, oldMessage) => {
 		? message.guild.channels.cache.get(config.logsChannelMessage)
 		: null
 
-	const oldImage = getFirstImage(oldMessage)
-	const newImage = getFirstImage(message)
+	const oldImage = bot.function.getMessageImage(oldMessage)
+	const newImage = bot.function.getMessageImage(message)
 
 	const messageUpdateEmbed = new Discord.EmbedBuilder()
 		.setAuthor({

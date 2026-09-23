@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {getFirstImage} = require("../Fonctions/getMessageImage")
 const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
@@ -58,7 +57,7 @@ module.exports = async (bot, message) => {
 		return;
 	}
 
-	const deletedImage = getFirstImage(message)
+	const deletedImage = bot.function.getMessageImage(message)
 
 	const MessageRemoveEmbed = new Discord.EmbedBuilder()
 		.setAuthor({

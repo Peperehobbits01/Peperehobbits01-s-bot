@@ -1,22 +1,4 @@
-const messageHasImage = (msg) => {
-	if (!msg) return false
-	if (msg.attachments?.size > 0) {
-		for (const [, att] of msg.attachments) {
-			const contentType = att.contentType?.toLowerCase() || ""
-			if (contentType.startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|tiff?)(\?.*)?$/i.test(att.name || "")) {
-				return true
-			}
-		}
-	}
-	if (msg.embeds?.length > 0) {
-		for (const emb of msg.embeds) {
-			if (emb.image?.url || emb.thumbnail?.url) return true
-		}
-	}
-	return false
-}
-
-const getFirstImage = (msg) => {
+module.exports = (msg) => {
 	if (!msg) return null
 	if (msg.attachments?.size > 0) {
 		for (const [, att] of msg.attachments) {
@@ -33,5 +15,3 @@ const getFirstImage = (msg) => {
 		}
 	}
 }
-
-module.exports = {messageHasImage, getFirstImage}
