@@ -19,7 +19,7 @@ module.exports = async bot => {
 		botLogsFile.info("Création du dossier de cache réussi !")
 	}
 
-	bot.user.setPresence({activities: [{name: "la version 1.6.2", type: ActivityType.Watching}], status: "online"})
+	bot.user.setPresence({activities: [{name: "la version 1.7.0", type: ActivityType.Watching}], status: "online"})
 
 	botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
