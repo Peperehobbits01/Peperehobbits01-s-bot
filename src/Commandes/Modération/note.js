@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../../Fonctions/databaseConnect.js")
+const mysql = require("mysql2")
 
 module.exports = {
 
@@ -44,7 +45,7 @@ module.exports = {
 
 		await executeQuery(`INSERT INTO note (guild, user, author, note, reason, date)
 		                      VALUES ('${message.guild.id}', '${member}', '${message.user.id}', '${ID}',
-		                              '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`)
+		                              '${mysql.escape(reason)}', '${Date.now()}')`)
 		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${member}', 'NOTE', '${ID}')`)
 
 		const unnote = new Discord.ActionRowBuilder()

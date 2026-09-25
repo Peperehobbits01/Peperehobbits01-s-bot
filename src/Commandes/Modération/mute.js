@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const ms = require("ms")
 const {executeQuery} = require("../../Fonctions/databaseConnect.js")
+const mysql = require("mysql2")
 
 module.exports = {
 
@@ -71,7 +72,7 @@ module.exports = {
 		let ID = await bot.function.createId("MUTE")
 
 		await executeQuery(`INSERT INTO mute (guild, user, author, mute, reason, date, time)
-		                      VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason}',
+		                      VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${mysql.escape(reason)}',
 		                              '${Date.now()}', '${time}')`)
 		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID, time) VALUES ('${message.guild.id}', '${user.id}', 'MUTE', '${ID}', '${Date.now + time}')`)
 
