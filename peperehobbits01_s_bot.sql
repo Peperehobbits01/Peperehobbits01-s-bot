@@ -138,14 +138,13 @@ CREATE TABLE `guild_config` (
 -- Structure de la table `sanctions_list`
 --
 
-CREATE TABLE `sanctions_list`
-(
+CREATE TABLE `sanctions_list`(
 	guildId       varchar(255)  not null,
 	userID        varchar(255)  not null,
 	sanction_type varchar(255)  not null,
 	sanctionID    varchar(2000) not null,
 	time          varchar(2000) null
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 --
