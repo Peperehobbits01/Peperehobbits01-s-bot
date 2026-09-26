@@ -1,13 +1,18 @@
 const Discord = require("discord.js")
-const {getFirstImage} = require("../Fonctions/getMessageImage")
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, message, oldMessage) => {
 
 	if (message.author.bot || message.channel.type === Discord.ChannelType.DM || message.partial || message.content === oldMessage.content) return;
-	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE)
 
-	const oldImage = getFirstImage(oldMessage)
-	const newImage = getFirstImage(message)
+	const config = await getGuildConfig(message.guild.id);
+
+	const logsChannel = config.logsChannelMessage
+		? message.guild.channels.cache.get(config.logsChannelMessage)
+		: null
+
+	const oldImage = bot.function.getMessageImage(oldMessage)
+	const newImage = bot.function.getMessageImage(message)
 
 	const messageUpdateEmbed = new Discord.EmbedBuilder()
 		.setAuthor({
@@ -25,5 +30,7 @@ module.exports = async (bot, message, oldMessage) => {
 	if (oldImage) messageUpdateEmbed.setThumbnail(oldImage)
 	if (newImage) messageUpdateEmbed.setImage(newImage)
 
-	await logsChannel.send({embeds: [messageUpdateEmbed]});
+	if (logsChannel) {
+		await logsChannel.send({embeds: [messageUpdateEmbed]});
+	}
 }

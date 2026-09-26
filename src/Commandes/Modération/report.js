@@ -1,4 +1,5 @@
 const Discord = require("discord.js")
+const {getGuildConfig} = require("../../Fonctions/guildConfig.js");
 
 module.exports = {
 
@@ -42,7 +43,18 @@ module.exports = {
 					iconURL: bot.user.displayAvatarURL({dynamic: true})
 				})
 
-			let channel = message.guild.channels.cache.get(process.env.REPORT_CHANNEL);
+			const config = await getGuildConfig(message.guild.id);
+			const channel = config.reportChannel
+				? message.guild.channels.cache.get(config.reportChannel)
+				: null;
+
+			if (!channel) {
+				await reponse.reply({
+					content: "Aucun salon de signalement configuré pour ce serveur.",
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+				return;
+			}
 
 			const EmbedwhatToReport = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)

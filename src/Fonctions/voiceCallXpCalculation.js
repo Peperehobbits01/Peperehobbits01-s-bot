@@ -1,4 +1,5 @@
 const {executeQuery} = require('./databaseConnect')
+const {getGuildConfig} = require('./guildConfig')
 
 const activeTimers = new Map()
 
@@ -18,9 +19,11 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 		let xptogive = Math.floor(Math.random() * 25) + 10
 		const user = oldState.guild.members.cache.get(member.id)
 
-		if (user?.roles?.cache.has(process.env.BOOSTER_ROLE)) {
+		const config = await getGuildConfig(oldState.guild.id)
+
+		if (config.boosterRole && user?.roles?.cache.has(config.boosterRole)) {
 			xptogive = Math.floor(xptogive * 1.5)
-		} else if (user?.roles?.cache.has(process.env.MOM_ROLE) || user?.roles?.cache.has(process.env.EVENT_WINNER_ROLE)) {
+		} else if ((config.momRole && user?.roles?.cache.has(config.momRole)) || (config.eventWinnerRole && user?.roles?.cache.has(config.eventWinnerRole))) {
 			xptogive = Math.floor(xptogive * 1.25)
 		}
 
@@ -29,6 +32,8 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 			await executeQuery(queryAdd)
 
 		} else {
+			let levelChannel = oldState.guild.channels.cache.get(config.levelPassChannel)
+
 			let level = parseInt(lookUpUserResults[0].level)
 			let xp = parseInt(lookUpUserResults[0].xp)
 			let xptotal = parseInt(lookUpUserResults[0].xptotal)
@@ -39,8 +44,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 				const queryXpupdate = `UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${oldState.guild.id}' AND user = '${member.id}'`
 				await executeQuery(queryXpupdate)
 
-				let levelChannel = oldState.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fait ${user}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
+			levelChannel.send(`Tu l'as fait ${user}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
 
 			} else {
 

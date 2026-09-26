@@ -51,8 +51,8 @@ module.exports = {
 		const results = await executeQuery(querySearch)
 		if (results.length < 1) return message.reply('Aucune mise en silence pour ce membre/ID de mute.');
 
-		const queryMuteRemove = `DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`
-		await executeQuery(queryMuteRemove)
+		await executeQuery(`DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`)
+		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
 
 		try {
 			const Unmute1 = new Discord.EmbedBuilder()

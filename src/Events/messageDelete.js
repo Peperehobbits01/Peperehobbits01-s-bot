@@ -1,12 +1,18 @@
 const Discord = require("discord.js")
-const {getFirstImage} = require("../Fonctions/getMessageImage")
 const {executeQuery} = require("../Fonctions/databaseConnect");
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, message) => {
 
-	if(message.partial || message.channel.type === Discord.ChannelType.DM || message.channel.id === process.env.COUNTING_CHANNEL) return;
+	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
 
-	const logsChannel = message.guild.channels.cache.get(process.env.LOGS_CHANNEL_MESSAGE);
+	const config = await getGuildConfig(message.guild.id);
+
+	if (config.countingChannel && message.channel.id === config.countingChannel) return;
+
+	const logsChannel = config.logsChannelMessage
+		? message.guild.channels.cache.get(config.logsChannelMessage)
+		: null;
 	const fetchedLogs = await message.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.messageDelete,
 		limit: 1,
@@ -42,14 +48,16 @@ module.exports = async (bot, message) => {
 					})
 					.setTimestamp()
 
-				await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
+				if (logsChannel) {
+					await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
+				}
 				return;
 			}
 		} catch {return;}
 		return;
 	}
 
-	const deletedImage = getFirstImage(message)
+	const deletedImage = bot.function.getMessageImage(message)
 
 	const MessageRemoveEmbed = new Discord.EmbedBuilder()
 		.setAuthor({
@@ -69,5 +77,7 @@ module.exports = async (bot, message) => {
 		MessageRemoveEmbed.setImage(deletedImage)
 	}
 
-	await logsChannel.send({embeds: [MessageRemoveEmbed]})
+	if (logsChannel) {
+		await logsChannel.send({embeds: [MessageRemoveEmbed]})
+	}
 }

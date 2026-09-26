@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const {levenshteinDistance} = require('../../Fonctions/levenshteinDistance');
 const permissionName = require('../../enum/permissionName');
 const {TextDisplayBuilder, SeparatorSpacingSize} = require("discord.js");
 
@@ -94,7 +93,7 @@ module.exports = {
 			let commandeProche = "";
 
 			commandes.forEach((word) => {
-				const distance = levenshteinDistance(word, commande);
+				const distance = bot.function.levenshteinDistance(word, commande);
 
 				if (distance < minDistance) {
 					minDistance = distance;

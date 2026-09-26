@@ -1,11 +1,16 @@
 const Discord = require("discord.js");
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, member) => {
 
-	const welcomeChannel = member.guild.channels.cache.get(process.env.WELCOME_CHANNEL)
-	welcomeChannel.send(`Bienvenue à ${member}, il vient d'arrivée sur le serveur!`)
+	const config = await getGuildConfig(member.guild.id);
 
-	const logsChannel = member.guild.channels.cache.get(process.env.LOGS_CHANNEL_GATEWAY)
+	const welcomeChannel = member.guild.channels.cache.get(config.welcomeChannel)
+	if (welcomeChannel) {
+		welcomeChannel.send(`Bienvenue à ${member}, il vient d'arrivée sur le serveur!`).catch(() => {});
+	}
+
+	const logsChannel = member.guild.channels.cache.get(config.logsChannelGateway)
 
 	const logsNewMember = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
@@ -20,5 +25,7 @@ module.exports = async (bot, member) => {
 		})
 		.setTimestamp()
 
-	await logsChannel.send({embeds: [logsNewMember]})
+	if (logsChannel) {
+		await logsChannel.send({embeds: [logsNewMember]})
+	}
 }

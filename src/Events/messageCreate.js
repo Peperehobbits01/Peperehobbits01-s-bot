@@ -1,9 +1,12 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect.js")
+const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 
 module.exports = async (bot, message) => {
 
 	if(message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
+
+	const config = await getGuildConfig(message.guildId)
 
 	const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 	const results = await executeQuery(querySearch)
@@ -11,9 +14,9 @@ module.exports = async (bot, message) => {
 
 	const member = message.guild.members.cache.get(message.author.id)
 
-	if(member.roles.cache.has(process.env.BOOSTER_ROLE)) {
+	if(config.boosterRole && member.roles.cache.has(config.boosterRole)) {
 		xptogive = xptogive * 1.5
-	} else if(member.roles.cache.has(process.env.MOM_ROLE) || member.roles.cache.has(process.env.EVENT_WINNER_ROLE)) {
+	} else if((config.momRole && member.roles.cache.has(config.momRole)) || (config.eventWinnerRole && member.roles.cache.has(config.eventWinnerRole))) {
 		xptogive = xptogive * 1.25
 	}
 
@@ -34,8 +37,10 @@ module.exports = async (bot, message) => {
 			const queryXpupdate = `UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
 			await executeQuery(queryXpupdate)
 
-			let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-			levelChannel.send(`Tu l'as fait ${message.author}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
+			if (config.levelPassChannel) {
+				let levelChannel = message.guild.channels.cache.get(config.levelPassChannel);
+				if (levelChannel) levelChannel.send(`Tu l'as fait ${message.author}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
+			}
 
 		} else {
 
@@ -45,40 +50,31 @@ module.exports = async (bot, message) => {
 		}
 	}
 
-	const channel = await bot.channels.fetch(process.env.COUNTING_CHANNEL);
+	if(!config.countingChannel) return;
 
-	if(message.channel.id === process.env.COUNTING_CHANNEL) {
+	const channel = await bot.channels.fetch(config.countingChannel);
+
+	if(message.channel.id === config.countingChannel) {
 		const messages = await channel.messages.fetch({limit: 2});
-		const lastMessage = messages.first();
-		const currentNumber = parseInt(lastMessage);
-		const messageNumber = message.content.match(/^(\d+)\s*(.*)$/)
-		const number = Number(messageNumber[1]);
+		const lastMessage = message.content.replace(/ /g, '').match(/^(\d+)\s*(.*)$/)
+		const currentNumber = Number(lastMessage[1]);
 		const highestRole = member.roles.highest;
-		const color = highestRole.hexColor;
+		let color = highestRole.hexColor;
+		if(color === "#000000") color = "#95a5a6"
 		const CountingContainer = new Discord.ContainerBuilder()
 			.setAccentColor(Number.parseInt(color.replace('#', ''), 16))
 			.addTextDisplayComponents(
-				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${number}`)
+				new Discord.TextDisplayBuilder().setContent(`## ${message.author} : ${currentNumber}`)
 			)
-
 		const previousMessage = messages.last();
+		const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
 
-		if(previousMessage + 1 === currentNumber || currentNumber > 1) {
-			try {
-				const previousNumber = parseInt(previousMessage.components?.[0].components?.[0].content.split(":")[1].replace(/`/g, ''));
-
-				if (currentNumber === previousNumber + 1) {
-					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-				}
-			} catch (err) {
-				const previousNumber = parseInt(previousMessage.embeds?.[0].description.split(":")[1].replace(/`/g, ''));
-
-				if (currentNumber === previousNumber + 1) {
-					await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
-				}
-			}
+		if(currentNumber === previousNumber && currentNumber === 1) {
+			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
+		} else if(previousNumber + 1 === currentNumber && currentNumber > 1) {
+			await channel.send({components: [CountingContainer], flags: Discord.MessageFlags.IsComponentsV2, allowedMentions: {parse: [],}});
 		}
 
-		await lastMessage.delete();
+		await message.delete();
 	}
 }

@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const {executeQuery} = require("../../Fonctions/databaseConnect")
+const {getGuildConfig} = require("../../Fonctions/guildConfig.js")
 
 module.exports = {
 	name: "add",
@@ -33,6 +34,8 @@ module.exports = {
 
 		await message.deferReply()
 
+		const config = await getGuildConfig(message.guildId)
+
 		const queryAddSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
 		const AddResults = await executeQuery(queryAddSearch)
 
@@ -53,8 +56,12 @@ module.exports = {
 			await executeQuery(queryAdd)
 
 			if(Math.round(100 * Math.pow(1.25, 1)) <= xptogive) {
-				let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`)
+				const levelChannel = config.levelPassChannel
+					? message.guild.channels.cache.get(config.levelPassChannel)
+					: null;
+				if (levelChannel) {
+					levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`).catch(() => {})
+				}
 			}
 
 		} else {
@@ -73,8 +80,12 @@ module.exports = {
 			await executeQuery(queryXpUpdate)
 
 			if(Math.round(100 * Math.pow(1.25, level)) <= xptogive) {
-				let levelChannel = message.guild.channels.cache.get(process.env.LEVEL_PASS_CHANNEL);
-				levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`)
+				const levelChannel = config.levelPassChannel
+					? message.guild.channels.cache.get(config.levelPassChannel)
+					: null;
+				if (levelChannel) {
+					levelChannel.send(`Tu l'as fait ${member}, tu arrives au niveau ${newLevel}. Bien joué à toi !`).catch(() => {})
+				}
 			}
 		}
 

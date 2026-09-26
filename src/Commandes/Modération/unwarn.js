@@ -44,8 +44,8 @@ module.exports = {
 
 		if (results.length < 1) return message.reply('Aucun avertissement pour ce membre/ID du warn.');
 
-		const queryWarnRemove = `DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`
-		await executeQuery(queryWarnRemove)
+		await executeQuery(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
+		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
 
 		try {
 			const unwarn1 = new Discord.EmbedBuilder()

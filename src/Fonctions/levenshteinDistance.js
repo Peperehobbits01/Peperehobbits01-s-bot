@@ -1,4 +1,4 @@
-function levenshteinDistance(s, t) {
+module.exports = (s, t) => {
 	if (s.length === 0) return t.length;
 	if (t.length === 0) return s.length;
 
@@ -28,5 +28,3 @@ function levenshteinDistance(s, t) {
 
 	return v1[t.length];
 }
-
-module.exports = {levenshteinDistance}

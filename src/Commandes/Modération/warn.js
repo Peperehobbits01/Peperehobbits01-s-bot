@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../../Fonctions/databaseConnect.js")
+const mysql = require("mysql2")
 
 module.exports = {
 
@@ -41,8 +42,8 @@ module.exports = {
 
 		let ID = await bot.function.createId("WARN")
 
-		const queryWarnAdd = `INSERT INTO warn (guild, user, author, warn, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${reason.replace(/'/g, "\\'")}', '${Date.now()}')`
-		await executeQuery(queryWarnAdd)
+		await executeQuery(`INSERT INTO warn (guild, user, author, warn, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${mysql.escape(reason)}', '${Date.now()}')`)
+		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${user.id}', 'WARN', '${ID}')`)
 
 		try {
 			const Warn1 = new Discord.EmbedBuilder()

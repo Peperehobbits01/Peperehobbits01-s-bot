@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 const ms = require("ms");
+const mysql = require("mysql2")
 
 module.exports = {
 
@@ -76,11 +77,15 @@ module.exports = {
 		}
 
 		let ID = await bot.function.createId("BAN")
-
-		const queryBanAdd = `INSERT INTO ban (guild, user, author, ban, reason, date, time)
+		await executeQuery(`INSERT INTO ban (guild, user, author, ban, reason, date, time)
 		                     VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}',
-		                             '${reason.replace(/'/g, "\\'")}', '${Date.now()}', '${Date.now + time}')`
-		await executeQuery(queryBanAdd)
+		                             '${mysql.escape(reason)}', '${Date.now()}', '${Date.now + time}')`)
+
+		if(time !== null) {
+			await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID, time) VALUES ('${message.guild.id}', '${user.id}', 'TEMPBAN', '${ID}', '${Date.now + time}')`)
+		} else {
+			await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${user.id}', 'BAN', '${ID}')`)
+		}
 
 		await message.guild.bans.create(user.id, {reason: reason})
 

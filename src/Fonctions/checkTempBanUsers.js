@@ -1,7 +1,8 @@
 const { executeQuery } = require("./databaseConnect.js");
 const Discord = require("discord.js");
+const botLogsFile = require("../Fonctions/botLogsFile");
 
-async function processExpiredBans(bot) {
+module.exports = async (bot) => {
 	const now = Date.now();
 
 	const rows = await executeQuery(
@@ -32,9 +33,7 @@ async function processExpiredBans(bot) {
 			} catch {}
 
 		} catch (err) {
-			console.error(`[TempBan] Failed to unban ${row.user} in ${row.guild}:`, err);
+			botLogsFile.error(`[TempBan] Failed to unban ${row.user} in ${row.guild}:`, err);
 		}
 	}
 }
-
-module.exports = { processExpiredBans };

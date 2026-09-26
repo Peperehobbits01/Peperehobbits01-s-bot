@@ -1,10 +1,14 @@
 const Discord = require("discord.js")
 const channelTypeName = require("../enum/channelTypeName")
+const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 
 module.exports = async (bot, channel) => {
 
 	if (channel.type === Discord.ChannelType.DM) return;
-	const logsChannel = channel.guild.channels.cache.get(process.env.LOGS_CHANNEL_CHANNEL);
+	const config = await getGuildConfig(channel.guild.id);
+	const logsChannel = config.logsChannelChannel
+		? channel.guild.channels.cache.get(config.logsChannelChannel)
+		: null;
 	const readableChannelType = channelTypeName[channel.type];
 
 	const fetchedLogs = await channel.guild.fetchAuditLogs({
@@ -31,5 +35,7 @@ module.exports = async (bot, channel) => {
 		})
 		.setTimestamp()
 
-	await logsChannel.send({embeds: [DeleteChannel]})
+	if (logsChannel) {
+		await logsChannel.send({embeds: [DeleteChannel]})
+	}
 }

@@ -1,4 +1,5 @@
 const mysql = require(`mysql2/promise`);
+const botLogsFile = require("../Fonctions/botLogsFile");
 
 const databaseConfig = {
 	connectionLimit: process.env.DB_CONNECTION_LIMIT,
@@ -26,7 +27,7 @@ async function executeQuery(query) {
 		const [rows] = await connection.execute(sql, values);
 		return rows;
 	} catch (error) {
-		console.error(`Erreur lors de l'exécution de la requête: \n`, error);
+		botLogsFile.error(`Erreur lors de l'exécution de la requête: \n`, error);
 	} finally {
 		if (connection) connection.release();
 	}

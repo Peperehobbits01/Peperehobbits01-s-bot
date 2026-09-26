@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const ms = require('ms');
 const {executeQuery} = require("../../Fonctions/databaseConnect");
-const {shuffleArray} = require("../../Fonctions/shuffleArray");
 
 module.exports = {
 	name: 'giveaway',
@@ -84,7 +83,7 @@ module.exports = {
 				}
 
 				const unshuffled = contestantResults.map(x => x.user);
-				const shuffledUsers = shuffleArray(unshuffled).slice(0, winners);
+				const shuffledUsers = bot.function.shuffleArray(unshuffled).slice(0, winners);
 
 				for (let i = 0; i < winners; i++) {
 					const winnerList = await bot.users.fetch(shuffledUsers[i])

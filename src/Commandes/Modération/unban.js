@@ -46,8 +46,8 @@ module.exports = {
 		const results = await executeQuery(querySearch)
 		if (results.length < 1) return message.reply('Aucun bannissement pour ce membre/ID du ban invalide.');
 
-		const queryBanRemove = `DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`
-		await executeQuery(queryBanRemove)
+		await executeQuery(`DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`)
+		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
 
 		try {
 			const Unban1 = new Discord.EmbedBuilder()

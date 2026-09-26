@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const {REST} = require('@discordjs/rest')
 const {Routes} = require('discord.js')
+const botLogsFile = require('../Fonctions/botLogsFile.js');
 
 module.exports = async bot => {
 
@@ -8,7 +9,7 @@ module.exports = async bot => {
 
 	for (const [, command] of bot.commands) {
 		if (!command.name) {
-			console.warn('Commande sans nom ignorée:', command)
+			botLogsFile.warn('Commande sans nom ignorée:', command)
 			continue
 		}
 
@@ -29,5 +30,5 @@ module.exports = async bot => {
 	const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
 
 	await rest.put(Routes.applicationCommands(bot.user.id), {body: commands})
-	console.log("Les / Commandes sont crées avec succès!");
+	botLogsFile.info("Les / Commandes sont crées avec succès!");
 }

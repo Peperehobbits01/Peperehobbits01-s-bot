@@ -125,6 +125,29 @@ CREATE TABLE `xp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Structure de la table `guild_config`
+--
+
+CREATE TABLE `guild_config` (
+  `guild_id` varchar(255) NOT NULL,
+  `config` json NOT NULL,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Structure de la table `sanctions_list`
+--
+
+CREATE TABLE `sanctions_list`(
+	guildId       varchar(255)  not null,
+	userID        varchar(255)  not null,
+	sanction_type varchar(255)  not null,
+	sanctionID    varchar(2000) not null,
+	time          varchar(2000) null
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+--
 -- Index pour les tables déchargées
 --
 
@@ -157,6 +180,20 @@ ALTER TABLE `note`
 --
 ALTER TABLE `warn`
   ADD PRIMARY KEY (`warn`);
+
+--
+-- Index pour la table `guild_config`
+--
+ALTER TABLE `guild_config`
+	ADD PRIMARY KEY (`guild_id`);
+
+--
+-- Index pour la table `sanctions_list`
+--
+ALTER TABLE `sanctions_list`
+	ADD PRIMARY KEY (`sanctionID`);
+
+-- --------------------------------------------------------
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

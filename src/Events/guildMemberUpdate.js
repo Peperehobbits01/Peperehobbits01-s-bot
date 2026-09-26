@@ -1,14 +1,25 @@
 const Discord = require('discord.js');
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, oldMember, newMember) => {
 
-	const boosterChannel = oldMember.guild.channels.cache.get(process.env.BOOSTER_CHANNEL)
+	const config = await getGuildConfig(oldMember.guild.id);
 
-	if (!oldMember.roles.cache.has(process.env.BOOSTER_ROLE) && newMember.roles.cache.has(process.env.BOOSTER_ROLE)) {
-		boosterChannel.send(`Merci à ${newMember} pour avoir boosté le serveur !`);
+	const boosterChannel = config.boosterChannel
+		? oldMember.guild.channels.cache.get(config.boosterChannel)
+		: null
+
+	if (config.boosterRole &&
+		!oldMember.roles.cache.has(config.boosterRole) &&
+		newMember.roles.cache.has(config.boosterRole)) {
+		if (boosterChannel) {
+			boosterChannel.send(`Merci à ${newMember} pour avoir boosté le serveur !`).catch(() => {});
+		}
 	}
 
-	const logsChannel = oldMember.guild.channels.cache.get(process.env.LOGS_CHANNEL_MEMBER)
+	const logsChannel = config.logsChannelMember
+		? oldMember.guild.channels.cache.get(config.logsChannelMember)
+		: null
 
 	const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
 	const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
@@ -38,7 +49,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setTimestamp()
 
-		logsChannel.send({embeds: [addRolesEmbed]})
+		if (logsChannel) logsChannel.send({embeds: [addRolesEmbed]})
 	}
 
 	if (removedRoles.size > 0) {
@@ -55,7 +66,7 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setTimestamp()
 
-		logsChannel.send({embeds: [removeRolesEmbed]})
+		if (logsChannel) logsChannel.send({embeds: [removeRolesEmbed]})
 	}
 
 	if (oldMember.displayName !== newMember.displayName) {
@@ -73,6 +84,6 @@ module.exports = async (bot, oldMember, newMember) => {
 			})
 			.setTimestamp()
 
-		logsChannel.send({embeds: [updateName]})
+		if (logsChannel) logsChannel.send({embeds: [updateName]})
 	}
 }

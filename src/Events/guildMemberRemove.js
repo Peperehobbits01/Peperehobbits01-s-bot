@@ -1,9 +1,11 @@
 const Discord = require("discord.js")
 const {executeQuery} = require("../Fonctions/databaseConnect");
+const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, member) => {
 
-	const logsChannel = member.guild.channels.cache.get(process.env.LOGS_CHANNEL_GATEWAY)
+	const config = await getGuildConfig(member.guild.id);
+	const logsChannel = member.guild.channels.cache.get(config.logsChannelGateway)
 
 	const removeMember = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
@@ -11,7 +13,7 @@ module.exports = async (bot, member) => {
 			name: member.displayName,
 			iconURL: member.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`Le membre ${member.username} vient de quitter le serveur.\n**ID** :\nUtilisateur : ${member.id}`)
+		.setDescription(`Le membre ${member.displayName} vient de quitter le serveur.\n**ID** :\nUtilisateur : ${member.id}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -28,5 +30,7 @@ module.exports = async (bot, member) => {
 		}
 	}
 
-	await logsChannel.send({embeds: [removeMember]})
+	if (logsChannel) {
+		await logsChannel.send({embeds: [removeMember]})
+	}
 }
