@@ -4,7 +4,7 @@ module.exports = {
 
 	name: 'invite',
 	description: `Permet de connaître le nombre de membres invités par un autre membre.`,
-	permission: "Aucune",
+	permission: Discord.PermissionFlagsBits.ManageInvite,
 	category: "📚・Informations",
 	options: [
 		{
