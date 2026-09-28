@@ -5,7 +5,7 @@ module.exports = {
 
 	name: "sanctions-list",
 	description: "Afficher les sanctions d'un membre.",
-	permission: Discord.PermissionFlagsBits.ManageMessages,
+	permission: Discord.PermissionFlagsBits.ModerateMembers,
 	category: "🛡・Modération",
 	options: [
 		{
