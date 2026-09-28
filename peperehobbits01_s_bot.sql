@@ -182,6 +182,13 @@ ALTER TABLE `warn`
   ADD PRIMARY KEY (`warn`);
 
 --
+-- Index pour la table `xp`
+--
+ALTER TABLE `xp`
+	ADD UNIQUE KEY `unique_guild_user` (`guild`, `user`),
+	ADD INDEX `leaderboard_index` (`guild`, `xptotal`, `user`);
+
+--
 -- Index pour la table `guild_config`
 --
 ALTER TABLE `guild_config`

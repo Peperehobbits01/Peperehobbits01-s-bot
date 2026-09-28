@@ -24,21 +24,56 @@ module.exports = {
 		let user = args.getUser("utilisateur")
 		if (!user) user = message.user
 
-		const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-		const results = await executeQuery(querySearch);
-
-		if (results.length < 1) return message.reply("Il n'est pas renseignée dans ma liste des gens possèdent de l'expérience!")
-
 		await message.deferReply()
 
-		const querySearchLeaderBoard = `SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC`
-		const leaderboard = await executeQuery(querySearchLeaderBoard);
+		const results = await executeQuery([
+			`
+        SELECT
+            target.\`user\`,
+            target.\`level\`,
+            target.\`xp\`,
+            1 + COUNT(higher.\`user\`) AS \`position\`
+        FROM \`xp\` AS target
+        LEFT JOIN \`xp\` AS higher
+            ON higher.\`guild\` = target.\`guild\`
+           AND (
+                higher.\`level\` > target.\`level\`
+                OR (
+                    higher.\`level\` = target.\`level\`
+                    AND higher.\`xp\` > target.\`xp\`
+                )
+                OR (
+                    higher.\`level\` = target.\`level\`
+                    AND higher.\`xp\` = target.\`xp\`
+                    AND higher.\`user\` < target.\`user\`
+                )
+           )
+        WHERE target.\`guild\` = ?
+          AND target.\`user\` = ?
+        GROUP BY
+            target.\`user\`,
+            target.\`level\`,
+            target.\`xp\`
+    `,
+			[
+				message.guildId,
+				user.id
+			]
+		]);
 
-		let userInLeaderboard = results.find(u => u.user === user.id)
-		let xp = parseInt(userInLeaderboard.xp)
-		let level = parseInt(userInLeaderboard.level)
-		let rank = leaderboard.findIndex(r => r.user === user.id) + 1
-		let need = Math.round(100 * Math.pow(1.25, level));
+		if (results.length < 1) {
+			return message.editReply(
+				"Il n'est pas renseigné dans ma liste des personnes possédant de l'expérience !"
+			);
+		}
+
+		const userData = results[0];
+
+		let xp = parseInt(userData.xp, 10);
+		const level = parseInt(userData.level, 10);
+		const rank = parseInt(userData.position, 10);
+
+		const need = Math.round(100 * Math.pow(1.25, level));
 
 		const canvas = Canvas.createCanvas(800, 300)
 		const ctx = canvas.getContext("2d")
