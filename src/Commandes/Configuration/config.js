@@ -32,7 +32,7 @@ function buildListEmbed(config) {
 module.exports = {
 	name: "config",
 	description: "Afficher ou modifier la configuration du serveur.",
-	permission: "Aucune",
+	permission: Discord.PermissionFlagsBits.Administrator,
 	category: "⚙️・Configuration",
 	options: [
 		{
