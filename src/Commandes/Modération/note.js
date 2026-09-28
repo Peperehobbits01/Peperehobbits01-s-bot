@@ -5,8 +5,8 @@ const mysql = require("mysql2")
 module.exports = {
 
 	name: "note",
-		description: "Mettre une note sur un membre.",
-	permission: Discord.PermissionFlagsBits.KickMembers,
+	description: "Mettre une note sur un membre.",
+	permission: Discord.PermissionFlagsBits.ModerateMembers,
 	category: "🛡・Modération",
 	options: [
 		{
