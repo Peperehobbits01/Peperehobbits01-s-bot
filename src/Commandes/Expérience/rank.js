@@ -113,7 +113,7 @@ module.exports = {
 		ctx.beginPath()
 		ctx.globalAlpha = 1;
 		ctx.lineWidth = 2;
-		ctx.fillStyle = "#fad02c"
+		ctx.fillStyle = "#ba2541"
 		ctx.moveTo(220, 92.5)
 		ctx.quadraticCurveTo(220, 75, 240, 75)
 		ctx.lineTo(240 + barre - 20, 75)
@@ -126,19 +126,17 @@ module.exports = {
 
 		//Pourcentage + Xp
 		ctx.font = '24px "Permanent Marker"'
-		ctx.fillStyle = "#2C55FA"
+		ctx.fillStyle = "#fad02c"
 		ctx.fillText(`${Math.floor(xp * 100 / need)}%`, 665, 100)
 		ctx.fillText(`${xp} / ${need} xp`, 275, 100)
 
 		//Level + Rang
 		ctx.font = '36px "Permanent Marker"'
-		ctx.fillStyle = "#ffffff"
+		ctx.fillStyle = "#fad02c"
 		ctx.fillText(`Niveau : ${level}`, 275, 150)
 		rank === 1 ? ctx.fillText(`Rang : ${rank}er`, 520, 150) : ctx.fillText(`Rang : ${rank}ème`, 475, 150)
 
 		//Tag de l'utilisateur
-		ctx.font = '36px "Permanent Marker"'
-		ctx.fillStyle = "#ffffff"
 		ctx.fillText(`${user.tag.length > 15 ? user.tag.slice(0, 15) + "..." : user.tag}`, 275, 200)
 
 		//Status
