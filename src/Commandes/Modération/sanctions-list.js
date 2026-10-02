@@ -105,10 +105,17 @@ module.exports = {
 			for (let i = 0; i < BanResults.length; i++) {
 
 				if(BanResults[i].has(`TEMPBAN`)) {
-					Embed.addFields([{
-						name: `Ban n°${i + 1}`,
-						value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Temps** : ${BanResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>`
-					}])
+					if(BanResults[i].time > Date.now) {
+						Embed.addFields([{
+							name: `Ban n°${i + 1}`,
+							value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Temps** : ${BanResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>\n **Expirer** : Oui}`
+						}])
+					} else {
+						Embed.addFields([{
+							name: `Ban n°${i + 1}`,
+							value: `> **Auteur** : ${(await bot.users.fetch(BanResults[i].author)).tag}\n> **ID** : \`${BanResults[i].ban}\`\n> **Raison** : \`${BanResults[i].reason}\`\n> **Temps** : ${BanResults[i].time}\n> **Date** : <t:${Math.floor(parseInt(BanResults[i].date) / 1000)}:f>\n **Expirer : Non`
+						}])
+					}
 				} else {
 					Embed.addFields([{
 						name: `Ban n°${i + 1}`,

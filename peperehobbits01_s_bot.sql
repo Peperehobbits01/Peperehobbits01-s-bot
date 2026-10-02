@@ -143,7 +143,8 @@ CREATE TABLE `sanctions_list`(
 	userID        varchar(255)  not null,
 	sanction_type varchar(255)  not null,
 	sanctionID    varchar(2000) not null,
-	time          varchar(2000) null
+	time          varchar(2000) null,
+    expired		  int(11) null default 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
