@@ -34,56 +34,33 @@ module.exports = async (bot, oldMember, newMember) => {
 	);
 
 	const executor = channelLog?.executor;
+	const MemberUpdateEmbed = new Discord.EmbedBuilder()
+		.setColor(process.env.BOT_COLOR)
+		.setAuthor({
+			name: executor.displayName,
+			iconURL: executor.displayAvatarURL({dynamic: true})
+		})
+		.setFooter({
+			text: process.env.EMBED_FOOTER,
+			iconURL: bot.user.displayAvatarURL({dynamic: true})
+		})
+		.setTimestamp()
 
 	if (addedRoles.size > 0) {
-		const addRolesEmbed = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		MemberUpdateEmbed.setDescription(`**Rôle ajouter :**\n${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nDonner par : ${executor}`)
 
-		if (logsChannel) logsChannel.send({embeds: [addRolesEmbed]})
+		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 
 	if (removedRoles.size > 0) {
-		const removeRolesEmbed = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nUtilisateur : ${newMember.user.tag}\nPar : ${executor.displayName}\n\n**ID** :\nUtilisateur : ${oldMember.id}\nPar : ${executor.id}`)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+		MemberUpdateEmbed.setDescription(`**Rôle retirer :**\n${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nRetirer par : ${executor.displayName}`)
 
-		if (logsChannel) logsChannel.send({embeds: [removeRolesEmbed]})
+		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 
 	if (oldMember.displayName !== newMember.displayName) {
+		MemberUpdateEmbed.setDescription(`**Pseudonyme mise à jour :**\nLe membre ${oldMember} a changé de pseudonyme, de **${newMember.displayName}** à **${oldMember.displayName}**\n\nChange par : ${executor}`)
 
-		const updateName = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executor.displayName,
-				iconURL: executor.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Le membre ${oldMember} a changé de pseudonyme.\n\nNouveau pseudo : ${newMember.displayName}\nAncien pseudo : ${oldMember.displayName}\nID du membre : ${newMember.id}`)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
-
-		if (logsChannel) logsChannel.send({embeds: [updateName]})
+		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 }
