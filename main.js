@@ -8,6 +8,7 @@ const os = require("node:os");
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
+	bigNumberFormatter: require("./src/Fonctions/bigNumberFormatter.js"),
 	botLogsFile: require("./src/Fonctions/botLogsFile"),
 	checkAllYouTubeChannels: require("./src/Fonctions/checkNewYouTubeVideos"),
 	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),

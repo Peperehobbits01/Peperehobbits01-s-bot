@@ -128,7 +128,7 @@ module.exports = {
 		ctx.font = '24px "Permanent Marker"'
 		ctx.fillStyle = "#fad02c"
 		ctx.fillText(`${Math.floor(xp * 100 / need)}%`, 665, 100)
-		ctx.fillText(`${xp} / ${need} xp`, 275, 100)
+		ctx.fillText(`${bot.function.bigNumberFormatter(xp)} / ${bot.function.bigNumberFormatter(need)} xp`, 275, 100)
 
 		//Level + Rang
 		ctx.font = '36px "Permanent Marker"'
