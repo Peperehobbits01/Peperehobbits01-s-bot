@@ -12,7 +12,7 @@ const DEFAULT_GUILD_CONFIG = {
 	logsChannelGateway: null,
 	boosterChannel: null,
 	boosterRole: null,
-	momRole: null,
+	mdmRole: null,
 	eventWinnerRole: null,
 	youtubeChannelIds: [],
 	youtubeAnnouncementChannel: null,
@@ -85,9 +85,9 @@ const GUILD_CONFIG_SCHEMA = {
 		description: "Rôle des boosteurs (xp bonus).",
 		nullable: true,
 	},
-	momRole: {
+	mdmRole: {
 		type: "snowflake",
-		description: "Rôle spécial « Maman » (xp bonus).",
+		description: "Rôle spécial de membres du mois (xp bonus).",
 		nullable: true,
 	},
 	eventWinnerRole: {
@@ -113,7 +113,7 @@ const GUILD_CONFIG_SCHEMA = {
 };
 
 function  	getGuildConfigDefaults() {
-	return {...DEFAULT_GUILD_CONFIG, youtubeChannelIds: []};
+	return {...DEFAULT_GUILD_CONFIG};
 }
 
 module.exports = {

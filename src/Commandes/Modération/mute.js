@@ -59,7 +59,7 @@ module.exports = {
 			const Mute1 = new Discord.EmbedBuilder()
 				.setColor(process.env.BOT_COLOR)
 				.setTitle(`Vous avez été rendu muet !`)
-				.setDescription(`${message.user.displayName} vous a rendu muet sur le serveur ${message.guild.name} pour la raison : \`${reason.replace(/'/g, "\\'")}\`, et il durera :  \`${time}\` !`)
+				.setDescription(`${message.user.displayName} vous a rendu muet sur le serveur ${message.guild.name} pour la raison : \`${reason}\`, et il durera :  \`${time}\` !`)
 				.setFooter({
 					text: process.env.EMBED_FOOTER,
 					iconURL: bot.user.displayAvatarURL({dynamic: true})

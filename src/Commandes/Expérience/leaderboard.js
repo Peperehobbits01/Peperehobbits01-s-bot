@@ -54,12 +54,12 @@ module.exports = {
 
 			ctx.restore();
 
-			ctx.fillStyle = "#ffffff";
+			ctx.fillStyle = "#fad02c";
 			ctx.font = '18px "Permanent Marker"';
 			const username = user.tag.length > 20 ? user.tag.slice(0, 20) : user.tag;
 			ctx.fillText(`${username}`, (104 - (ctx.measureText(`${username}`).width / 2)), (135 + (i * 128)));
 
-			ctx.fillStyle = "#ffffff";
+			ctx.fillStyle = "#fad02c";
 			ctx.font = '28px "Permanent Marker"';
 			ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (60 + (i * 128)));
 			ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (90 + (i * 128)));
@@ -96,12 +96,12 @@ module.exports = {
 
 				ctx.restore();
 
-				ctx.fillStyle = "#ffffff";
+				ctx.fillStyle = "#fad02c";
 				ctx.font = '18px "Permanent Marker"';
 				const username = user.tag.length > 20 ? user.tag.slice(0, 20) : user.tag;
 				ctx.fillText(`${username}`, (column2X - (ctx.measureText(`${username}`).width / 2)), (135 + (i * 128)));
 
-				ctx.fillStyle = "#ffffff";
+				ctx.fillStyle = "#fad02c";
 				ctx.font = '28px "Permanent Marker"';
 				ctx.fillText(`Rang : ${i + 6 === 1 ? "1er" : `${i + 6}ème`}`, 840, (60 + (i * 128)));
 				ctx.fillText(`Niveau : ${leaderboard[leaderboardIndex].level}`, 840, (90 + (i * 128)));

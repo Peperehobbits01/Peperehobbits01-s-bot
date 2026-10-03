@@ -36,4 +36,10 @@ module.exports = async (bot, ban) => {
 	if (logsChannel) {
 		await logsChannel.send({embeds: [BanEmbed]})
 	}
+
+	const searchForBanUser = await executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`)
+
+	if(searchForBanUser && searchForBanUser.sanctions_type === "TEMPBAN") {
+		await executeQuery(`UPDATE sanctions_list SET expired = 1 WHERE guildId = ${ban.guild.id} AND userID = '${ban.user.id}' AND sanctionID = '${searchForBanUser.sanctionID}'`)
+	}
 }
