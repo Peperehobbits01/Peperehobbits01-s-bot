@@ -147,6 +147,17 @@ CREATE TABLE `sanctions_list`(
     expired		  int(11) null default 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Structure de la table `subscribed_youtube_channels`
+--
+
+create table subscribed_youtube_channels
+(
+	guildId     varchar(255) not null,
+	channelId   varchar(255) not null,
+	lastVideoId varchar(255) not null,
+	primary key (guildId, channelId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Index pour les tables déchargées
