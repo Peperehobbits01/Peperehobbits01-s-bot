@@ -81,7 +81,7 @@ const botLogsFile = {
 
 	/*debug(message, details) {
 		write("DEBUG", message, details);
-	}, This is planned for later.*/
+	}, TODO: This is planned for later.*/
 
 	info(message, details) {
 		write("INFO", message, details);
