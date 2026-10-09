@@ -16,7 +16,7 @@ module.exports = async (bot, message) => {
 
 	if(config.boosterRole && member.roles.cache.has(config.boosterRole)) {
 		xptogive = xptogive * 1.5
-	} else if((config.momRole && member.roles.cache.has(config.momRole)) || (config.eventWinnerRole && member.roles.cache.has(config.eventWinnerRole))) {
+	} else if((config.momRole && member.roles.cache.has(config.mdmRole)) || (config.eventWinnerRole && member.roles.cache.has(config.eventWinnerRole))) {
 		xptogive = xptogive * 1.25
 	}
 
