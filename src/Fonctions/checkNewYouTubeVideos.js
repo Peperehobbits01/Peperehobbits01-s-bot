@@ -22,20 +22,14 @@ function parseYouTubeChannelIds(rawValue) {
 		.filter(Boolean);
 }
 
-async function loadLastVideoId(guildId, YouTubeChannelId) {
+async function saveLastVideoId(guildId, YouTubeChannelId, videoId) {
 	const checkYouTubeDBInitialasation = await executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`);
 
 	if (checkYouTubeDBInitialasation.length < 1) {
-		await executeQuery(`INSERT INTO subscribed_youtube_channels (guildId, channelId, lastVideoId) VALUES ('${guildId}', '${YouTubeChannelId}', '0')`);
+		await executeQuery(`INSERT INTO subscribed_youtube_channels (guildId, channelId, lastVideoId) VALUES ('${guildId}', '${YouTubeChannelId}', '${videoId}')`);
+	} else {
+		await executeQuery(`UPDATE subscribed_youtube_channels SET lastVideoId = '${videoId}' WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`);
 	}
-	return checkYouTubeDBInitialasation;
-}
-
-async function saveLastVideoId(guildId, YouTubeChannelId, videoId) {
-	await executeQuery(`UPDATE subscribed_youtube_channels
-	                    SET lastVideoId = '${videoId}'
-	                    WHERE guildId = '${guildId}'
-		                  AND channelId = '${YouTubeChannelId}'`);
 }
 
 function getVideoId(item) {
@@ -98,9 +92,9 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 			return;
 		}
 
-		let lastVideoId = loadLastVideoId(guild.id, YouTubeChannelId);
+		let lastVideoId = await executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guild.id}' AND channelId = '${YouTubeChannelId}'`);
 
-		if (!lastVideoId) {
+		if (lastVideoId.length < 1) {
 			lastVideoId = videos[0].id;
 			await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
 
