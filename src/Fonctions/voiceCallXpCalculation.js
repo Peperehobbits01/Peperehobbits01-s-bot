@@ -23,7 +23,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 
 		if (config.boosterRole && user?.roles?.cache.has(config.boosterRole)) {
 			xptogive = Math.floor(xptogive * 1.5)
-		} else if ((config.momRole && user?.roles?.cache.has(config.momRole)) || (config.eventWinnerRole && user?.roles?.cache.has(config.eventWinnerRole))) {
+		} else if ((config.momRole && user?.roles?.cache.has(config.mdmRole)) || (config.eventWinnerRole && user?.roles?.cache.has(config.eventWinnerRole))) {
 			xptogive = Math.floor(xptogive * 1.25)
 		}
 
