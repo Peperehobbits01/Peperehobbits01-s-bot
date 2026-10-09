@@ -3,8 +3,8 @@ const {getGuildConfig, setGuildConfig} = require("../../Fonctions/guildConfig.js
 const {GUILD_CONFIG_SCHEMA} = require("../../Fonctions/defaultGuildConfig.js")
 
 function formatValue(value) {
-	if (value === null || value === undefined || value === "") return "_(vide)_"
-	if (Array.isArray(value)) return value.length > 0 ? value.map((v) => `\`${v}\``).join(", ") : "_(vide)_"
+	if (value === null || value === undefined || value === "") return "_(Aucune valeur)_"
+	if (Array.isArray(value)) return value.length > 0 ? value.map((v) => `\`${v}\``).join(", ") : "_(Aucune valeur)_"
 	return `\`${value}\``
 }
 
@@ -38,14 +38,14 @@ module.exports = {
 		{
 			type: "string",
 			name: "cle",
-			description: "Clé de configuration à modifier (optionnel pour afficher toutes les valeurs).",
+			description: "Paramètres de la configuration à modifier (optionnel pour afficher toutes les valeurs).",
 			required: false,
 			autocomplete: true
 		},
 		{
 			type: "string",
 			name: "valeur",
-			description: "Nouvelle valeur pour la clé (omettre pour réinitialiser).",
+			description: "Nouvelle valeur pour le paramètres (omettre pour réinitialiser).",
 			required: false,
 			autocomplete: false
 		}
@@ -73,7 +73,7 @@ module.exports = {
 
 		if (!GUILD_CONFIG_SCHEMA[cle]) {
 			return message.editReply({
-				content: `Clé inconnue : \`${cle}\`. Utilisez /config sans clé pour lister les clés disponibles.`,
+				content: `Paramètre inconnue : \`${cle}\`. Utilisez /config sans paramètre pour lister tous les paramètres disponibles.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		}
@@ -84,7 +84,7 @@ module.exports = {
 
 		if (valeur === null) {
 			return message.editReply({
-				content: `Clé \`${cle}\` réinitialisée.`,
+				content: `Paramètre \`${cle}\` réinitialisée.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		}
@@ -93,7 +93,7 @@ module.exports = {
 			const updated = await setGuildConfig(guildId, changes);
 
 			return message.editReply({
-				content: `Clé \`${cle}\` définie sur ${formatValue(updated[cle])}.`,
+				content: `Paramètre \`${cle}\` définie sur ${formatValue(updated[cle])}.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		} catch (error) {
