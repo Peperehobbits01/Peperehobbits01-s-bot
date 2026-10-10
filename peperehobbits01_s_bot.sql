@@ -131,6 +131,7 @@ CREATE TABLE `xp` (
 CREATE TABLE `guild_config` (
   `guild_id` varchar(255) NOT NULL,
   `config` json NOT NULL,
+  `version` int NOT NULL DEFAULT 0,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

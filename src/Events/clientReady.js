@@ -1,8 +1,17 @@
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
 const botLogsFile = require("../Fonctions/botLogsFile")
+const {CURRENT_VERSION, migrateAllGuildConfigs} = require("../Fonctions/guildConfigMigrations");
 
 module.exports = async bot => {
+
+	const result = await migrateAllGuildConfigs();
+
+	if (typeof result === "number") {
+		botLogsFile.info(`Aucune ligne à migrer de la v0 → v${CURRENT_VERSION}.`);
+	} else {
+		botLogsFile.info(`Terminé : ${result.migrated} mise(s) à jour, ${result.failed} échec(s).`);
+	}
 
 	await loadSlashCommand(bot)
 

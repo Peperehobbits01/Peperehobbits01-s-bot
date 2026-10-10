@@ -1,5 +1,6 @@
 const {executeQuery} = require("./databaseConnect");
 const {getGuildConfigDefaults, GUILD_CONFIG_SCHEMA} = require("./defaultGuildConfig");
+const {CURRENT_VERSION} = require("./guildConfigMigrations");
 const botLogsFile = require("./botLogsFile");
 
 const cache = new Map();
@@ -72,9 +73,9 @@ async function setGuildConfig(guildId, changes) {
 
 	const configJson = JSON.stringify(merged);
 	await executeQuery([
-		`INSERT INTO guild_config (guild_id, config) VALUES (?, ?)
-		 ON DUPLICATE KEY UPDATE config = VALUES(config)`,
-		[id, configJson],
+		`INSERT INTO guild_config (guild_id, config, version) VALUES (?, ?, ?)
+		 ON DUPLICATE KEY UPDATE config = VALUES(config), version = VALUES(version)`,
+		[id, configJson, CURRENT_VERSION],
 	]);
 
 	cache.set(id, merged);
