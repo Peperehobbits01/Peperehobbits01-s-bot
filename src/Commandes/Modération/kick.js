@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../../Fonctions/databaseConnect.js")
 const mysql = require("mysql2")
 
 module.exports = {
@@ -59,8 +58,8 @@ module.exports = {
 
 		let ID = await bot.function.createId("KICK")
 
-		await executeQuery(`INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${mysql.escape(reason)}', '${Date.now()}')`)
-		await executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${user.id}', 'KICK', '${ID}')`)
+		await bot.function.executeQuery(`INSERT INTO kick (guild, user, author, kick, reason, date) VALUES ('${message.guild.id}', '${user.id}', '${message.user.id}', '${ID}', '${mysql.escape(reason)}', '${Date.now()}')`, bot)
+		await bot.function.executeQuery(`INSERT INTO sanctions_list (guildId, userID, sanction_type, sanctionID) VALUES ('${message.guild.id}', '${user.id}', 'KICK', '${ID}')`, bot)
 
 		const Kick2 = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)

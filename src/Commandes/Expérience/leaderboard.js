@@ -1,6 +1,5 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
-const {executeQuery} = require(`../../Fonctions/databaseConnect.js`);
 const {registerFont} = require("canvas")
 
 module.exports = {
@@ -12,8 +11,7 @@ module.exports = {
 
 	async run(bot, message) {
 
-		const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC LIMIT 10`
-		const leaderboard = await executeQuery(querySearch)
+		const leaderboard = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC LIMIT 10`, bot)
 
 		if(leaderboard.length < 1) return message.reply("Aucun utilisateur n'est enregistré sur ce serveur !")
 

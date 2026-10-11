@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, message) => {
@@ -28,11 +27,7 @@ module.exports = async (bot, message) => {
 		try {
 			if (message.components?.[0].components.find(c => c.customId.startsWith("giveaway_"))) {
 				const giveawayID = message.components?.[0].components.find(c => c.customId.startsWith("giveaway_")).customId.split("_")[1];
-				const giveawayCancel = `DELETE
-				                        FROM giveaway
-				                        WHERE guild = '${message.guild.id}'
-					                      AND ID = '${giveawayID}'`
-				await executeQuery(giveawayCancel)
+				await bot.function.executeQuery(`DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND ID = '${giveawayID}'`, bot)
 
 				const GiveawayCanecelEmbed = new Discord.EmbedBuilder()
 					.setAuthor({

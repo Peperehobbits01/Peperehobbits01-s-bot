@@ -1,4 +1,3 @@
-const {executeQuery} = require("./databaseConnect");
 const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_SCHEMA} = require("../enum/defaultGuildConfig");
 const {CURRENT_VERSION} = require("./guildConfigMigrations");
 
@@ -30,7 +29,7 @@ async function getGuildConfig(bot, guildId) {
 
 	let rows;
 	try {
-		rows = await executeQuery(["SELECT config FROM guild_config WHERE guild_id = ?", [id]]);
+		rows = await bot.function.executeQuery(["SELECT config FROM guild_config WHERE guild_id = ?", [id]], bot);
 	} catch (error) {
 		bot.function.botLogsFile.error(`Erreur lors de la lecture de la config de ${id} :`, error);
 		rows = undefined;
@@ -71,11 +70,11 @@ async function setGuildConfig(bot, guildId, changes) {
 	}
 
 	const configJson = JSON.stringify(merged);
-	await executeQuery([
+	await bot.function.executeQuery([
 		`INSERT INTO guild_config (guild_id, config, version) VALUES (?, ?, ?)
 		 ON DUPLICATE KEY UPDATE config = VALUES(config), version = VALUES(version)`,
 		[id, configJson, CURRENT_VERSION],
-	]);
+	], bot);
 
 	cache.set(id, merged);
 	return merged;

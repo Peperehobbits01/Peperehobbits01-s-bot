@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const {executeQuery} = require("../../Fonctions/databaseConnect")
 const {getGuildConfig} = require("../../Fonctions/guildConfig.js")
 
 module.exports = {
@@ -36,8 +35,7 @@ module.exports = {
 
 		const config = await getGuildConfig(message.guildId)
 
-		const queryAddSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-		const AddResults = await executeQuery(queryAddSearch)
+		const AddResults = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot)
 
 		let newXp, newLevel, newXpTotal, levelsGained = 0;
 
@@ -52,8 +50,7 @@ module.exports = {
 				levelsGained++;
 			}
 
-			const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${member.id}', '${newXp}', '${newLevel}', '${newXpTotal}')`
-			await executeQuery(queryAdd)
+			await bot.function.executeQuery(`INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${member.id}', '${newXp}', '${newLevel}', '${newXpTotal}')`, bot)
 
 			if(Math.round(100 * Math.pow(1.25, 1)) <= xptogive) {
 				const levelChannel = config.levelPassChannel
@@ -65,7 +62,7 @@ module.exports = {
 			}
 
 		} else {
-			newXp    = parseInt(AddResults[0].xp) + xptogive;
+			newXp = parseInt(AddResults[0].xp) + xptogive;
 			const level = parseInt(AddResults[0].level);
 			newLevel = parseInt(AddResults[0].level);
 			newXpTotal = parseInt(AddResults[0].xptotal) + xptogive;
@@ -76,8 +73,7 @@ module.exports = {
 				levelsGained++;
 			}
 
-			const queryXpUpdate = `UPDATE xp SET xp = '${newXp}', xptotal = '${newXpTotal}', level = '${newLevel}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-			await executeQuery(queryXpUpdate)
+			await bot.function.executeQuery(`UPDATE xp SET xp = '${newXp}', xptotal = '${newXpTotal}', level = '${newLevel}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot)
 
 			if(Math.round(100 * Math.pow(1.25, level)) <= xptogive) {
 				const levelChannel = config.levelPassChannel

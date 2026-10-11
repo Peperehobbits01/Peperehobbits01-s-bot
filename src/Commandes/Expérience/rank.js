@@ -1,6 +1,5 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
-const {executeQuery} = require(`../../Fonctions/databaseConnect.js`);
 const {registerFont} = require("canvas");
 
 module.exports = {
@@ -26,7 +25,7 @@ module.exports = {
 
 		await message.deferReply()
 
-		const results = await executeQuery([
+		const results = await bot.function.executeQuery([
 			`
         SELECT
             target.\`user\`,
@@ -59,7 +58,7 @@ module.exports = {
 				message.guildId,
 				user.id
 			]
-		]);
+		], bot);
 
 		if (results.length < 1) {
 			return message.editReply(

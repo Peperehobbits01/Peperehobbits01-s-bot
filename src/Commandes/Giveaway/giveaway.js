@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const ms = require('ms');
-const {executeQuery} = require("../../Fonctions/databaseConnect");
 
 module.exports = {
 	name: 'giveaway',
@@ -64,8 +63,7 @@ module.exports = {
 		setTimeout(async () => {
 
 			try {
-				const contestantQuery = `SELECT * FROM giveaway WHERE guild = '${message.guild.id}' AND id = '${ID}'`;
-				const contestantResults = await executeQuery(contestantQuery);
+				const contestantResults = await bot.function.executeQuery(`SELECT * FROM giveaway WHERE guild = '${message.guild.id}' AND id = '${ID}'`, bot);
 
 				if (contestantResults.length < winners) {
 					const failedEmbed = new Discord.EmbedBuilder()

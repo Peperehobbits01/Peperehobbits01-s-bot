@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect.js")
 const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
 
 module.exports = async (bot, interaction) => {
@@ -66,19 +65,14 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 
-			const queryUnnoteSearch = `SELECT *
-			                           FROM note
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND note = "${noteID}"`
-			const ResultsUnnote = await executeQuery(queryUnnoteSearch)
+			const ResultsUnnote = await bot.function.executeQuery(`SELECT * FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`, bot)
 			if (ResultsUnnote.length < 1) return interaction.reply({
 				content: "Aucune note trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			await executeQuery(`DELETE FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`)
-			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnnote[0].user}" AND sanctionID = "${noteID}"`)
+			await bot.function.executeQuery(`DELETE FROM note WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND note = "${noteID}"`)
+			await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnnote[0].user}" AND sanctionID = "${noteID}"`)
 
 			return interaction.reply({content: "Note retiré !", flags: [Discord.MessageFlags.Ephemeral]});
 		}
@@ -93,22 +87,13 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 
-			const queryUnwarnSearch = `SELECT *
-			                           FROM warn
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND warn = "${warnId}"`
-			const ResultsUnwarn = await executeQuery(queryUnwarnSearch)
+			const ResultsUnwarn = await bot.function.executeQuery(`SELECT * FROM warn WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND warn = "${warnId}"`, bot)
 			if (ResultsUnwarn.length < 1) return interaction.reply({
 				content: "Aucun avertissement trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
-			await executeQuery(`DELETE
-			                           FROM warn
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND warn = "${warnId}"`)
-			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnwarn[0].user}" AND sanctionID = "${warnId}"`)
+			await bot.function.executeQuery(`DELETE FROM warn WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND warn = "${warnId}"`, bot)
+			await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnwarn[0].user}" AND sanctionID = "${warnId}"`, bot)
 
 			try {
 				const Warn1 = new Discord.EmbedBuilder()
@@ -137,23 +122,14 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 
-			const queryUnmuteSearch = `SELECT *
-			                           FROM mute
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND mute = "${muteId}"`
-			const ResultsUnmute = await executeQuery(queryUnmuteSearch)
+			const ResultsUnmute = await bot.function.executeQuery(`SELECT * FROM mute WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND mute = "${muteId}"`, bot)
 			if (ResultsUnmute.length < 1) return interaction.reply({
 				content: "Aucun mute trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			await executeQuery(`DELETE
-			                           FROM mute
-			                           WHERE guild = "${interaction.guild.id}"
-				                         AND author = "${interaction.user.id}"
-				                         AND mute = "${muteId}"`)
-			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnmute[0].user}" AND sanctionID = "${muteId}"`)
+			await bot.function.executeQuery(`DELETE FROM mute WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND mute = "${muteId}"`, bot)
+			await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnmute[0].user}" AND sanctionID = "${muteId}"`, bot)
 
 			const user = await interaction.guild.members.fetch(ResultsUnmute[0].user)
 
@@ -191,23 +167,14 @@ module.exports = async (bot, interaction) => {
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 
-			const queryUnbanSearch = `SELECT *
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND ban = "${banId}"`
-			const ResultsUnban = await executeQuery(queryUnbanSearch)
+			const ResultsUnban = await bot.function.executeQuery(`SELECT * FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND ban = "${banId}"`, bot)
 			if (ResultsUnban.length < 1) return interaction.reply({
 				content: "Aucun ban trouvé pour ce membre.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			})
 
-			await executeQuery(`DELETE
-			                          FROM ban
-			                          WHERE guild = "${interaction.guild.id}"
-				                        AND author = "${interaction.user.id}"
-				                        AND ban = "${banId}"`)
-			await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnban[0].user}" AND sanctionID = "${banId}"`)
+			await bot.function.executeQuery(`DELETE FROM ban WHERE guild = "${interaction.guild.id}" AND author = "${interaction.user.id}" AND ban = "${banId}"`, bot)
+			await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${interaction.guild.id}" AND userID = "${ResultsUnban[0].user}" AND sanctionID = "${banId}"`, bot)
 
 			const user = await interaction.guild.members.fetch(ResultsUnban[0].user)
 			await interaction.guild.members.unban(user)
@@ -231,28 +198,22 @@ module.exports = async (bot, interaction) => {
 
 		if(interaction.customId.startsWith("giveaway_")) {
 			const giveawayID = interaction.customId.split("_")[1];
-			const giveawaySearch = `SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
+			const giveawaySearchResults = await bot.function.executeQuery(`SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`, bot)
 
-			const giveawaySearchResults = await executeQuery(giveawaySearch)
 			if(giveawaySearchResults.length < 1) {
-				const giveawayAdd = `INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`
-				await executeQuery(giveawayAdd)
-
+				await bot.function.executeQuery(`INSERT INTO giveaway (guild, user, ID) VALUES ('${interaction.guild.id}', '${interaction.user.id}', '${giveawayID}')`, bot)
 				return interaction.reply({content: "Tu as bien été ajouté à la liste de participants !", flags: [Discord.MessageFlags.Ephemeral]})
 			} else if (giveawaySearchResults.length === 1) {
-				const giveawayRemove = `DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
-				await executeQuery(giveawayRemove)
-
+				await bot.function.executeQuery(`DELETE FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`, bot)
 				return interaction.reply({content: "Tu as bien été retiré de la liste des participants !", flags: [Discord.MessageFlags.Ephemeral]})
  			} else {
-				return interaction.reply({content: "Une erreur s'est produite lors de la vérification de votre participation !", flags: [Discord.MessageFlags.Ephemeral]})
+				interaction.reply({content: "Cette action est impossible pour le moment !", flags: Discord.MessageFlags.Ephemeral})
 			}
 		}
 
 		if(interaction.customId.startsWith("reroll_button_")) {
 			const giveawayID = interaction.customId.split("_")[2];
-			const giveawaySearch = `SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`
-			const giveawaySearchResults = await executeQuery(giveawaySearch)
+			const giveawaySearchResults = await bot.function.executeQuery(`SELECT * FROM giveaway WHERE guild = "${interaction.guild.id}" AND ID = "${giveawayID}" AND user = "${interaction.user.id}"`, bot)
 			const giveawayWinners = interaction.customId.split("_")[3];
 			const giveawayDuration = interaction.customId.split("_")[4];
 			const giveawayPrize = interaction.customId.split("_")[5];

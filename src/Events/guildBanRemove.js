@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, ban) => {
@@ -37,9 +36,9 @@ module.exports = async (bot, ban) => {
 		await logsChannel.send({embeds: [BanEmbed]})
 	}
 
-	const searchForBanUser = await executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`)
+	const searchForBanUser = await bot.function.executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`, bot)
 
 	if(searchForBanUser && searchForBanUser.sanctions_type === "TEMPBAN") {
-		await executeQuery(`UPDATE sanctions_list SET expired = 1 WHERE guildId = ${ban.guild.id} AND userID = '${ban.user.id}' AND sanctionID = '${searchForBanUser.sanctionID}'`)
+		await bot.function.executeQuery(`UPDATE sanctions_list SET expired = 1 WHERE guildId = ${ban.guild.id} AND userID = '${ban.user.id}' AND sanctionID = '${searchForBanUser.sanctionID}'`, bot)
 	}
 }

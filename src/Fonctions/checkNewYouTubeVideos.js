@@ -8,7 +8,6 @@ let parser = new Parser({
 	},
 });
 const {getGuildConfig} = require("./guildConfig");
-const {executeQuery} = require("./databaseConnect.js");
 
 function parseYouTubeChannelIds(rawValue) {
 	if (!rawValue) return [];
@@ -21,13 +20,13 @@ function parseYouTubeChannelIds(rawValue) {
 		.filter(Boolean);
 }
 
-async function saveLastVideoId(guildId, YouTubeChannelId, videoId) {
-	const checkYouTubeDBInitialasation = await executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`);
+async function saveLastVideoId(guildId, YouTubeChannelId, videoId, bot) {
+	const checkYouTubeDBInitialasation = await bot.function.executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`, bot);
 
 	if (checkYouTubeDBInitialasation.length < 1) {
-		await executeQuery(`INSERT INTO subscribed_youtube_channels (guildId, channelId, lastVideoId) VALUES ('${guildId}', '${YouTubeChannelId}', '${videoId}')`);
+		await bot.function.executeQuery(`INSERT INTO subscribed_youtube_channels (guildId, channelId, lastVideoId) VALUES ('${guildId}', '${YouTubeChannelId}', '${videoId}')`, bot);
 	} else {
-		await executeQuery(`UPDATE subscribed_youtube_channels SET lastVideoId = '${videoId}' WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`);
+		await bot.function.executeQuery(`UPDATE subscribed_youtube_channels SET lastVideoId = '${videoId}' WHERE guildId = '${guildId}' AND channelId = '${YouTubeChannelId}'`, bot);
 	}
 }
 
@@ -91,7 +90,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 			return;
 		}
 
-		let lastVideoId = await executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guild.id}' AND channelId = '${YouTubeChannelId}'`);
+		let lastVideoId = await bot.function.executeQuery(`SELECT lastVideoId FROM subscribed_youtube_channels WHERE guildId = '${guild.id}' AND channelId = '${YouTubeChannelId}'`, bot);
 
 		if (lastVideoId.length < 1) {
 			lastVideoId = videos[0].id;
@@ -122,7 +121,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 		if (!announcementChannel) {
 			bot.function.botLogsFile.warn(`Aucun salon d'annonce YouTube configuré pour le serveur ${guild.id}, publication ignorée.`);
 			lastVideoId = videos[0].id;
-			await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
+			await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId, bot);
 			return;
 		}
 
@@ -176,7 +175,7 @@ module.exports = async (bot) => {
 
 	try {
 		for (const [guildId, guild] of bot.guilds.cache) {
-			const config = await getGuildConfig(guildId);
+			const config = await getGuildConfig(bot, guildId);
 			const channelIds = parseYouTubeChannelIds(config.youtubeChannelIds);
 
 			for (const YouTubeChannelId of channelIds) {

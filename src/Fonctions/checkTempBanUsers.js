@@ -1,14 +1,13 @@
-const { executeQuery } = require("./databaseConnect.js");
 const Discord = require("discord.js");
 
 module.exports = async (bot) => {
 	const now = Date.now();
 
-	const rows = await executeQuery(
+	const rows = await bot.function.executeQuery(
 		`SELECT guild, user, ban, reason
          FROM ban
          WHERE time IS NOT NULL
-           AND time <= ${now}`
+           AND time <= ${now}`, bot
 	);
 
 	if (!rows || rows.length === 0) return;
@@ -18,8 +17,8 @@ module.exports = async (bot) => {
 			const guild = await bot.guilds.fetch(row.guild);
 			await guild.bans.remove(row.user, `Bannissement temporaire expiré (ID: ${row.ban})`);
 
-			await executeQuery(
-				`UPDATE ban SET time = 'null' WHERE ban = '${row.ban}'`
+			await bot.function.executeQuery(
+				`UPDATE ban SET time = 'null' WHERE ban = '${row.ban}'`, bot
 			);
 
 			try {

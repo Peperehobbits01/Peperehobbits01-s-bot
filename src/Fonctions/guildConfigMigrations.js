@@ -1,7 +1,4 @@
-const {executeQuery} = require("./databaseConnect");
-
 const CURRENT_VERSION = 1;
-
 const MIGRATIONS = [
 	{
 		from: 0,
@@ -41,23 +38,23 @@ function parseStored(raw) {
 	return JSON.parse(raw);
 }
 
-async function migrateGuildConfigRow(guildId, rawConfig, fromVersion) {
+async function migrateGuildConfigRow(guildId, rawConfig, fromVersion, bot) {
 	const stored = parseStored(rawConfig);
 	const {value, version} = migrateStored(stored, fromVersion);
 
-	return await executeQuery([
+	return await bot.function.executeQuery([
 		"UPDATE guild_config SET config = ?, version = ? WHERE guild_id = ?",
 		[JSON.stringify(value), version, String(guildId)],
-	]);
+	], bot);
 }
 
 async function migrateAllGuildConfigs(bot) {
 	let rows;
 	try {
-		rows = await executeQuery([
+		rows = await bot.function.executeQuery([
 			"SELECT guild_id, config, version FROM guild_config WHERE version < ?",
 			[CURRENT_VERSION],
-		]);
+		], bot);
 	} catch (error) {
 		bot.function.botLogsFile.error("Erreur de lecture des lignes à migrer : ", error);
 		return 0;
@@ -73,7 +70,7 @@ async function migrateAllGuildConfigs(bot) {
 	for (const row of rows) {
 		try {
 			const fromVersion = Number(row.version) || 0;
-			await migrateGuildConfigRow(row.guild_id, row.config, fromVersion);
+			await migrateGuildConfigRow(row.guild_id, row.config, fromVersion, bot);
 			migrated += 1;
 		} catch (error) {
 			failed += 1;

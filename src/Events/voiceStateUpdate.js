@@ -30,7 +30,7 @@ module.exports = async (bot, oldState, newState) => {
 	if(!oldChannel && newChannel) {
 
 		if(newState.selfDeaf === false && newState.selfMute === false && newState.serverMute === false &&	 newState.serverMute === false) {
-			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member, bot)
 		}
 
 		voiceStateUpdateEmbed.setTitle(`${member.displayName} a rejoint un salon vocal.`)
@@ -64,7 +64,7 @@ module.exports = async (bot, oldState, newState) => {
 			return
 		} else if (oldState.selfDeaf === true && newState.selfDeaf === false) {
 
-			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member, bot)
 
 			voiceStateUpdateEmbed.setTitle(`${member.displayName} a quitté le mode sourdine.`)
 			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
@@ -84,7 +84,7 @@ module.exports = async (bot, oldState, newState) => {
 			if (logsChannel) await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.selfMute === true && newState.selfMute === false) {
 
-			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member, bot)
 
 			voiceStateUpdateEmbed.setTitle(`${member.displayName} s'est démuté.`)
 			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)
@@ -104,7 +104,7 @@ module.exports = async (bot, oldState, newState) => {
 		} else if (oldState.serverDeaf === true && newState.serverDeaf === false) {
 
 			if(newState.serverMute === false && newState.selfMute === false) {
-				await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+				await voiceCallXpCalculation(null, newChannel, newState, oldState, member, bot)
 			}
 
 			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été autorisé à quitter le mode sourdine.`)
@@ -124,7 +124,7 @@ module.exports = async (bot, oldState, newState) => {
 			if (logsChannel) await logsChannel.send({embeds: [voiceStateUpdateEmbed]})
 		} else if (oldState.serverMute === true && newState.serverMute === false) {
 
-			await voiceCallXpCalculation(null, newChannel, newState, oldState, member)
+			await voiceCallXpCalculation(null, newChannel, newState, oldState, member, bot)
 
 			voiceStateUpdateEmbed.setTitle(`${member.displayName} a été démuté.`)
 			voiceStateUpdateEmbed.setDescription(`Salon : ${oldChannel}\nUtilisateur : ${member}\n\n**ID :**\n\nSalon: \`\`\`${oldChannel.id}\`\`\`\nUtilisateur: \`\`\`${member.id}\`\`\``)

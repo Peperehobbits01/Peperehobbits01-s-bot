@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect.js")
 const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 
 module.exports = async (bot, message) => {
@@ -8,23 +7,19 @@ module.exports = async (bot, message) => {
 
 	const config = await getGuildConfig(message.guildId)
 
-	const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
-	const results = await executeQuery(querySearch)
+	const results = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`, bot)
 	let xptogive = Math.floor(Math.random() * 20) + 12;
 
 	const member = message.guild.members.cache.get(message.author.id)
 
 	if(config.boosterRole && member.roles.cache.has(config.boosterRole)) {
 		xptogive = xptogive * 1.5
-	} else if((config.momRole && member.roles.cache.has(config.mdmRole)) || (config.eventWinnerRole && member.roles.cache.has(config.eventWinnerRole))) {
+	} else if((config.mdmRole && member.roles.cache.has(config.mdmRole)) || (config.eventWinnerRole && member.roles.cache.has(config.eventWinnerRole))) {
 		xptogive = xptogive * 1.25
 	}
 
 	if(results.length < 1) {
-
-		const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '1', '${xptogive}')`
-		await executeQuery(queryAdd)
-
+		await bot.function.executeQuery(`INSERT INTO xp (guild, user, xp, level, xptotal) VALUES (${message.guildId}, '${message.author.id}', '${xptogive}', '1', '${xptogive}')`, bot)
 	} else {
 
 		let level = parseInt(results[0].level)
@@ -34,8 +29,7 @@ module.exports = async (bot, message) => {
 		if(Math.round(100 * Math.pow(1.25, level)) <= xp + xptogive) {
 			const xpneeded = Math.round(100 * Math.pow(1.25, level))
 
-			const queryXpupdate = `UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
-			await executeQuery(queryXpupdate)
+			await bot.function.executeQuery(`UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`, bot)
 
 			if (config.levelPassChannel) {
 				let levelChannel = message.guild.channels.cache.get(config.levelPassChannel);
@@ -43,10 +37,7 @@ module.exports = async (bot, message) => {
 			}
 
 		} else {
-
-			const queryXpUpdate = `UPDATE xp SET xp = '${xp + xptogive}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`
-			await executeQuery(queryXpUpdate)
-
+			await bot.function.executeQuery(`UPDATE xp SET xp = '${xp + xptogive}', xptotal = '${xptotal + xptogive}' WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`, bot)
 		}
 	}
 
