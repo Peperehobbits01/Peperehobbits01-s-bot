@@ -5,7 +5,7 @@ const CURRENT_VERSION = 1;
 const MIGRATIONS = [
 	{
 		from: 0,
-		to: 1,
+		to: CURRENT_VERSION,
 		up(stored) {
 			if (stored && typeof stored === "object") {
 				delete stored.momRole;
