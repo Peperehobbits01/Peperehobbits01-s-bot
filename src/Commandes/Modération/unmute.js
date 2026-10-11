@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const ms = require("ms");
 const {executeQuery} = require("../../Fonctions/databaseConnect");
 
 module.exports = {

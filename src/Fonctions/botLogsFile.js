@@ -75,7 +75,7 @@ function write(level, message, details) {
 	fs.appendFileSync(logFile, fileLine);
 }
 
-const botLogsFile = {
+module.exports = {
 	runId,
 	logFile,
 
@@ -95,5 +95,3 @@ const botLogsFile = {
 		write("ERROR", message, details);
 	},
 };
-
-module.exports = botLogsFile;

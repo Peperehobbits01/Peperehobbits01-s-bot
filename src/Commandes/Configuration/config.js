@@ -90,7 +90,7 @@ module.exports = {
 		}
 
 		try {
-			const updated = await setGuildConfig(guildId, changes);
+			const updated = await setGuildConfig(bot, guildId, changes);
 
 			return message.editReply({
 				content: `Paramètre \`${cle}\` définie sur ${formatValue(updated[cle])}.`,

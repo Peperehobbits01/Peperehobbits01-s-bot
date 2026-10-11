@@ -1,7 +1,6 @@
 const {executeQuery} = require("./databaseConnect");
 const {getGuildConfigDefaults, GUILD_CONFIG_SCHEMA} = require("./defaultGuildConfig");
 const {CURRENT_VERSION} = require("./guildConfigMigrations");
-const botLogsFile = require("./botLogsFile");
 
 const cache = new Map();
 
@@ -25,7 +24,7 @@ function normalizeValue(key, value) {
 	return value;
 }
 
-async function getGuildConfig(guildId) {
+async function getGuildConfig(bot, guildId) {
 	const id = String(guildId);
 	if (cache.has(id)) return cache.get(id);
 
@@ -33,7 +32,7 @@ async function getGuildConfig(guildId) {
 	try {
 		rows = await executeQuery(["SELECT config FROM guild_config WHERE guild_id = ?", [id]]);
 	} catch (error) {
-		botLogsFile.error(`Erreur lors de la lecture de la config de ${id} :`, error);
+		bot.function.botLogsFile.error(`Erreur lors de la lecture de la config de ${id} :`, error);
 		rows = undefined;
 	}
 
@@ -46,7 +45,7 @@ async function getGuildConfig(guildId) {
 				config = {...config, ...stored};
 			}
 		} catch (error) {
-			botLogsFile.error(`Config invalide pour ${id}, utilisation des valeurs par défaut :`, error);
+			bot.function.botLogsFile.error(`Config invalide pour ${id}, utilisation des valeurs par défaut :`, error);
 			config = getGuildConfigDefaults();
 		}
 	}
@@ -55,7 +54,7 @@ async function getGuildConfig(guildId) {
 	return config;
 }
 
-async function setGuildConfig(guildId, changes) {
+async function setGuildConfig(bot, guildId, changes) {
 	const id = String(guildId);
 	const schema = GUILD_CONFIG_SCHEMA;
 
@@ -64,7 +63,7 @@ async function setGuildConfig(guildId, changes) {
 		throw new Error(`Clés de configuration inconnues : ${unknownKeys.join(", ")}`);
 	}
 
-	const current = await getGuildConfig(id);
+	const current = await getGuildConfig(bot, id);
 	const merged = {...current};
 
 	for (const [key, value] of Object.entries(changes)) {

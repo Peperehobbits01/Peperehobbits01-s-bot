@@ -1,5 +1,4 @@
 const {executeQuery} = require("./databaseConnect");
-const botLogsFile = require("./botLogsFile");
 
 const CURRENT_VERSION = 1;
 
@@ -52,7 +51,7 @@ async function migrateGuildConfigRow(guildId, rawConfig, fromVersion) {
 	]);
 }
 
-async function migrateAllGuildConfigs() {
+async function migrateAllGuildConfigs(bot) {
 	let rows;
 	try {
 		rows = await executeQuery([
@@ -60,7 +59,7 @@ async function migrateAllGuildConfigs() {
 			[CURRENT_VERSION],
 		]);
 	} catch (error) {
-		botLogsFile.error("Erreur de lecture des lignes à migrer : ", error);
+		bot.function.botLogsFile.error("Erreur de lecture des lignes à migrer : ", error);
 		return 0;
 	}
 
@@ -78,11 +77,11 @@ async function migrateAllGuildConfigs() {
 			migrated += 1;
 		} catch (error) {
 			failed += 1;
-			botLogsFile.error(`Migration de la config pour ${row.guild_id} (v${row.version} → v${CURRENT_VERSION}) :`, error);
+			bot.function.botLogsFile.error(`Migration de la config pour ${row.guild_id} (v${row.version} → v${CURRENT_VERSION}) :`, error);
 		}
 	}
 
-	botLogsFile.info(`Migration des configs guild terminée : ${migrated} mise(s) à jour, ${failed} échec(s) → v${CURRENT_VERSION}.`);
+	bot.function.botLogsFile.info(`Migration des configs guild terminée : ${migrated} mise(s) à jour, ${failed} échec(s) → v${CURRENT_VERSION}.`);
 	return {migrated, failed};
 }
 
