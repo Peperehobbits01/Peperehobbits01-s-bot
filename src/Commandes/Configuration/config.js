@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
 const {getGuildConfig, setGuildConfig} = require("../../Fonctions/guildConfig.js")
-const {GUILD_CONFIG_SCHEMA} = require("../../Fonctions/defaultGuildConfig.js")
+const {GUILD_CONFIG_SCHEMA} = require("../../enum/defaultGuildConfig.js")
 
 function formatValue(value) {
 	if (value === null || value === undefined || value === "") return "_(Aucune valeur)_"

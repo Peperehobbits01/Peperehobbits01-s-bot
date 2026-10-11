@@ -17,7 +17,7 @@ module.exports = async (bot, interaction) => {
 
 		if (interaction.commandName === "config") {
 
-			const {GUILD_CONFIG_SCHEMA} = require("../Fonctions/defaultGuildConfig.js")
+			const {GUILD_CONFIG_SCHEMA} = require("../enum/defaultGuildConfig.js")
 			let choices = Object.keys(GUILD_CONFIG_SCHEMA)
 			let sortie = choices.filter(c => c.includes(entry))
 			await interaction.respond(sortie.map(c => ({name: c, value: c})))

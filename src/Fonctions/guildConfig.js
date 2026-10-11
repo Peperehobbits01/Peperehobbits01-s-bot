@@ -1,5 +1,5 @@
 const {executeQuery} = require("./databaseConnect");
-const {getGuildConfigDefaults, GUILD_CONFIG_SCHEMA} = require("./defaultGuildConfig");
+const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_SCHEMA} = require("../enum/defaultGuildConfig");
 const {CURRENT_VERSION} = require("./guildConfigMigrations");
 
 const cache = new Map();
@@ -36,7 +36,7 @@ async function getGuildConfig(bot, guildId) {
 		rows = undefined;
 	}
 
-	let config = getGuildConfigDefaults();
+	let config = DEFAULT_GUILD_CONFIG
 
 	if (rows && rows.length > 0) {
 		try {
@@ -46,7 +46,7 @@ async function getGuildConfig(bot, guildId) {
 			}
 		} catch (error) {
 			bot.function.botLogsFile.error(`Config invalide pour ${id}, utilisation des valeurs par défaut :`, error);
-			config = getGuildConfigDefaults();
+			config = DEFAULT_GUILD_CONFIG
 		}
 	}
 

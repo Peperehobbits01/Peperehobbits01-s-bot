@@ -112,12 +112,7 @@ const GUILD_CONFIG_SCHEMA = {
 	},
 };
 
-function  	getGuildConfigDefaults() {
-	return {...DEFAULT_GUILD_CONFIG};
-}
-
 module.exports = {
 	DEFAULT_GUILD_CONFIG,
 	GUILD_CONFIG_SCHEMA,
-	getGuildConfigDefaults,
 };
