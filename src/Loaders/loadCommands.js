@@ -1,32 +1,33 @@
 const {opendir} = require('node:fs/promises');
 const {join: pathJoin} = require('node:path');
 const {Collection, Bot} = require('discord.js');
-const botLogsFile = require('../Fonctions/botLogsFile.js');
 
 /**
  * Log commands as individual INFO messages
  *
  * @param {(string|object)[]} array
+ * @param bot
  */
-function logDirectoryTree(array) {
-	botLogsFile.info("Chargement des commandes en cours...");
+function logDirectoryTree(array, bot) {
+	bot.function.botLogsFile.info("Chargement des commandes en cours...");
 
-	logCommandEntries(array);
+	logCommandEntries(array, bot);
 }
 
 /**
  * Recursively log command entries without repeating the loading message
  *
  * @param {(string|object)[]} array
+ * @param bot
  */
-function logCommandEntries(array) {
+function logCommandEntries(array, bot) {
 	for (const element of array) {
 		if (typeof element === "object" && element !== null) {
-			botLogsFile.info(`${element.name} (${element.sub.length})`);
+			bot.function.botLogsFile.info(`${element.name} (${element.sub.length})`);
 
-			logCommandEntries(element.sub);
+			logCommandEntries(element.sub, bot);
 		} else if (typeof element === "string") {
-			botLogsFile.info(element);
+			bot.function.botLogsFile.info(element);
 		} else {
 			throw new Error("Invalid element type");
 		}
@@ -90,7 +91,7 @@ async function loadCommands(bot, path) {
 		const command = require(path);
 		bot.commands.set(command.name, command);
 	}
-	logDirectoryTree(directoryTree);
+	logDirectoryTree(directoryTree, bot);
 }
 
 module.exports = loadCommands;
