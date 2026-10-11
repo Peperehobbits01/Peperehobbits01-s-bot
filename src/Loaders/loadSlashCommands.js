@@ -26,7 +26,7 @@ module.exports = async bot => {
 		commands.push(slashcommand);
 	}
 
-	const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
+	const rest = new REST({version: "10"}).setToken(process.env.DISCORD_TOKEN);
 
 	await rest.put(Routes.applicationCommands(bot.user.id), {body: commands})
 	bot.function.botLogsFile.info("Les / Commandes sont crées avec succès!");

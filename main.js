@@ -24,7 +24,7 @@ const botLogsFile = require("./src/Fonctions/botLogsFile.js");
 
 botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
-bot.login(process.env.TOKEN).then(() =>
+bot.login(process.env.DISCORD_TOKEN).then(() =>
 	loadCommands(bot, process.cwd() + '/src/Commandes'),
 	loadEvents(bot)
 )
