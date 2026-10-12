@@ -8,7 +8,7 @@ function formatValue(value) {
 	return `\`${value}\``
 }
 
-function buildListEmbed(config) {
+function buildListEmbed(bot, config) {
 	const embed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
 		.setTitle("Configuration du serveur")
@@ -23,7 +23,7 @@ function buildListEmbed(config) {
 
 	embed.setFooter({
 		text: process.env.EMBED_FOOTER,
-		iconURL: null,
+		iconURL: bot.user.displayAvatarURL({dynamic: true}),
 	})
 
 	return embed
@@ -68,7 +68,7 @@ module.exports = {
 
 		if (!cle) {
 			const config = await getGuildConfig(bot, guildId);
-			return message.editReply({embeds: [buildListEmbed(config)]});
+			return message.editReply({embeds: [buildListEmbed(bot, config)]});
 		}
 
 		if (!GUILD_CONFIG_SCHEMA[cle]) {
