@@ -67,7 +67,7 @@ module.exports = {
 		const valeur = args.getString("valeur");
 
 		if (!cle) {
-			const config = await getGuildConfig(guildId);
+			const config = await getGuildConfig(bot, guildId);
 			return message.editReply({embeds: [buildListEmbed(config)]});
 		}
 
