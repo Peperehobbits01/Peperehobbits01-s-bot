@@ -79,9 +79,9 @@ module.exports = {
 	runId,
 	logFile,
 
-	/*debug(message, details) {
+	debug(message, details) {
 		write("DEBUG", message, details);
-	}, TODO: This is planned for later.*/
+	},
 
 	info(message, details) {
 		write("INFO", message, details);

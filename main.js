@@ -12,6 +12,7 @@ bot.function = {
 	botLogsFile: require("./src/Fonctions/botLogsFile"),
 	checkAllYouTubeChannels: require("./src/Fonctions/checkNewYouTubeVideos"),
 	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),
+	checkAllTwitchChannels: require("./src/Fonctions/checkTwitchChannelsLive.js"),
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
 	executeQuery: require("./src/Fonctions/databaseConnect.js"),
@@ -22,6 +23,7 @@ bot.function = {
 
 const botLogsFile = require("./src/Fonctions/botLogsFile.js");
 
+if((process.env.DEBUG_MODE)?.trim().toLowerCase() === "true") botLogsFile.debug("Le mode débogage est actif !")
 botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
 bot.login(process.env.DISCORD_TOKEN).then(() =>
