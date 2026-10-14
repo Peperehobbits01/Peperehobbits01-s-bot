@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const permissionName = require('../../enum/permissionName');
+const permissionName = require('../../Enum/permissionName');
 const {TextDisplayBuilder, SeparatorSpacingSize} = require("discord.js");
 
 module.exports = {

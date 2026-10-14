@@ -1,5 +1,5 @@
 const Discord = require("discord.js")
-const channelTypeName = require("../enum/channelTypeName")
+const channelTypeName = require("../Enum/channelTypeName")
 const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 
 module.exports = async (bot, channel) => {

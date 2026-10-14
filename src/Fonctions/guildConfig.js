@@ -1,4 +1,4 @@
-const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_SCHEMA} = require("../enum/defaultGuildConfig");
+const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_SCHEMA} = require("../Enum/defaultGuildConfig");
 const {CURRENT_VERSION} = require("./guildConfigMigrations");
 
 const cache = new Map();
