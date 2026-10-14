@@ -11,9 +11,7 @@ const runId = `${new Date().toISOString().replace(/[:.]/g, "-")}-${crypto
 
 const logFile = path.join(logsDir, `run-${runId}.log`);
 const debugEnabled =
-	process.env.DEBUG === "true" ||
-	process.env.DEBUG === "1" ||
-	process.env.NODE_ENV !== "production";
+	process.env.DEBUG_MODE === "true"
 
 function formatError(error) {
 	if (error instanceof Error) {

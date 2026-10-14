@@ -23,7 +23,7 @@ bot.function = {
 
 const botLogsFile = require("./src/Fonctions/botLogsFile.js");
 
-if((process.env.DEBUG_MODE)?.trim().toLowerCase() === "true") botLogsFile.debug("Le mode débogage est actif !")
+botLogsFile.debug("Le mode débogage est actif !")
 botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
 bot.login(process.env.DISCORD_TOKEN).then(() =>
