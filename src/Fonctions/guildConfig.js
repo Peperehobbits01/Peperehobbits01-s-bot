@@ -4,18 +4,15 @@ const {CURRENT_VERSION} = require("./guildConfigMigrations");
 const cache = new Map();
 
 function normalizeValue(key, value) {
-	const schema = GUILD_CONFIG_SCHEMA[key];
-	if (!schema) return value;
-
 	if (value === undefined || value === null || value === "") {
 		return null;
 	}
 
-	if (schema.type === "snowflake") {
+	if (GUILD_CONFIG_SCHEMA[key].type === "snowflake") {
 		return String(value);
 	}
 
-	if (schema.type === "list") {
+	if (GUILD_CONFIG_SCHEMA[key].type === "list") {
 		if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean);
 		return String(value).split(/[,\s]+/).map((v) => v.trim()).filter(Boolean);
 	}
@@ -54,15 +51,7 @@ async function getGuildConfig(bot, guildId) {
 }
 
 async function setGuildConfig(bot, guildId, changes) {
-	const id = String(guildId);
-	const schema = GUILD_CONFIG_SCHEMA;
-
-	const unknownKeys = Object.keys(changes).filter((key) => !schema[key]);
-	if (unknownKeys.length > 0) {
-		throw new Error(`Clés de configuration inconnues : ${unknownKeys.join(", ")}`);
-	}
-
-	const current = await getGuildConfig(bot, id);
+	const current = await getGuildConfig(bot, guildId);
 	const merged = {...current};
 
 	for (const [key, value] of Object.entries(changes)) {
@@ -73,10 +62,10 @@ async function setGuildConfig(bot, guildId, changes) {
 	await bot.function.executeQuery([
 		`INSERT INTO guild_config (guild_id, config, version) VALUES (?, ?, ?)
 		 ON DUPLICATE KEY UPDATE config = VALUES(config), version = VALUES(version)`,
-		[id, configJson, CURRENT_VERSION],
+		[guildId, configJson, CURRENT_VERSION],
 	], bot);
 
-	cache.set(id, merged);
+	cache.set(guildId, merged);
 	return merged;
 }
 
