@@ -106,14 +106,10 @@ async function sendLiveEmbedForGuild(bot, guild, stream) {
 	const twitchFooter = new Discord.AttachmentBuilder('./src/Assets/twitch-footer.webp');
 
 	await channel.send({
-		content: `${stream.user_name} est en direct sur Twitch ! ${notifRole ?? ''}`.trimEnd(),
+		content: `${stream.user_name} est en direct sur Twitch ! ${notifRole}`,
 		embeds: [embed],
 		files: [twitchFooter],
 	});
-
-	bot.function.botLogsFile.info(
-		`Notification Twitch pour ${stream.user_login} envoyée au serveur ${guild.id}.`
-	);
 }
 
 module.exports = async (bot) => {
