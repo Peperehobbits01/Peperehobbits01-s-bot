@@ -5,6 +5,7 @@ module.exports = async (bot, member) => {
 
 	const config = await getGuildConfig(member.guild.id);
 	const logsChannel = member.guild.channels.cache.get(config.logsChannelGateway)
+	if (!logsChannel) return;
 
 	const removeMember = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
@@ -27,7 +28,5 @@ module.exports = async (bot, member) => {
 		}
 	}
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [removeMember]})
-	}
+	await logsChannel.send({embeds: [removeMember]})
 }

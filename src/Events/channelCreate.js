@@ -6,9 +6,8 @@ module.exports = async (bot, channel) => {
 
 	if (channel.type === Discord.ChannelType.DM) return;
 	const config = await getGuildConfig(channel.guild.id);
-	const logsChannel = config.logsChannelChannel
-		? channel.guild.channels.cache.get(config.logsChannelChannel)
-		: null;
+	const logsChannel = channel.guild.channels.cache.get(config.logsChannelChannel)
+	if (!logsChannel) return;
 	const readableChannelType = channelTypeName[channel.type];
 
 	const fetchedLogs = await channel.guild.fetchAuditLogs({
@@ -35,7 +34,5 @@ module.exports = async (bot, channel) => {
 		})
 		.setTimestamp()
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [CreateChannel]})
-	}
+	await logsChannel.send({embeds: [CreateChannel]})
 }

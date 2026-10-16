@@ -4,10 +4,8 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 module.exports = async (bot, ban) => {
 
 	const config = await getGuildConfig(ban.guild.id);
-	const logsChannel = config.logsChannelSanctions
-		? ban.guild.channels.cache.get(config.logsChannelSanctions)
-		: null;
-
+	const logsChannel = ban.guild.channels.cache.get(config.logsChannelSanctions)
+	if (!logsChannel) return;
 	const fetchedLogs = await ban.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.guildBanRemove,
 		limit: 5,
@@ -32,9 +30,7 @@ module.exports = async (bot, ban) => {
 		})
 		.setTimestamp()
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [BanEmbed]})
-	}
+	await logsChannel.send({embeds: [BanEmbed]})
 
 	const searchForBanUser = await bot.function.executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`, bot)
 

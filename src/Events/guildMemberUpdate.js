@@ -5,9 +5,7 @@ module.exports = async (bot, oldMember, newMember) => {
 
 	const config = await getGuildConfig(oldMember.guild.id);
 
-	const boosterChannel = config.boosterChannel
-		? oldMember.guild.channels.cache.get(config.boosterChannel)
-		: null
+	const boosterChannel = oldMember.guild.channels.cache.get(config.boosterChannel)
 
 	if (config.boosterRole &&
 		!oldMember.roles.cache.has(config.boosterRole) &&
@@ -17,9 +15,8 @@ module.exports = async (bot, oldMember, newMember) => {
 		}
 	}
 
-	const logsChannel = config.logsChannelMember
-		? oldMember.guild.channels.cache.get(config.logsChannelMember)
-		: null
+	const logsChannel = oldMember.guild.channels.cache.get(config.logsChannelMember)
+	if (!logsChannel) return;
 
 	const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
 	const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
@@ -49,18 +46,18 @@ module.exports = async (bot, oldMember, newMember) => {
 	if (addedRoles.size > 0) {
 		MemberUpdateEmbed.setDescription(`**Rôle ajouter :**\n${newMember} a reçu les rôles suivants : ${addedRoles.map(r => `${r}`).join(', ')}\n\nDonner par : ${executor}`)
 
-		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
+		logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 
 	if (removedRoles.size > 0) {
 		MemberUpdateEmbed.setDescription(`**Rôle retirer :**\n${newMember} a perdu les rôles suivants : ${removedRoles.map(r => `${r}`).join(', ')}\n\nRetirer par : ${executor.displayName}`)
 
-		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
+		logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 
 	if (oldMember.displayName !== newMember.displayName) {
 		MemberUpdateEmbed.setDescription(`**Pseudonyme mise à jour :**\nLe membre ${oldMember} a changé de pseudonyme, de **${newMember.displayName}** à **${oldMember.displayName}**\n\nChange par : ${executor}`)
 
-		if (logsChannel) logsChannel.send({embeds: [MemberUpdateEmbed]})
+		logsChannel.send({embeds: [MemberUpdateEmbed]})
 	}
 }

@@ -9,9 +9,8 @@ module.exports = async (bot, message) => {
 
 	if (config.countingChannel && message.channel.id === config.countingChannel) return;
 
-	const logsChannel = config.logsChannelMessage
-		? message.guild.channels.cache.get(config.logsChannelMessage)
-		: null;
+	const logsChannel = message.guild.channels.cache.get(config.logsChannelMessage)
+	if (!logsChannel) return;
 	const fetchedLogs = await message.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.messageDelete,
 		limit: 1,
@@ -43,9 +42,7 @@ module.exports = async (bot, message) => {
 					})
 					.setTimestamp()
 
-				if (logsChannel) {
-					await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
-				}
+				await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
 				return;
 			}
 		} catch {return;}
@@ -72,7 +69,5 @@ module.exports = async (bot, message) => {
 		MessageRemoveEmbed.setImage(deletedImage)
 	}
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [MessageRemoveEmbed]})
-	}
+	await logsChannel.send({embeds: [MessageRemoveEmbed]})
 }

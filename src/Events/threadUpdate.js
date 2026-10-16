@@ -4,11 +4,8 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 module.exports = async (bot, oldThread, newThread) => {
 
 	const config = await getGuildConfig(oldThread.guild.id);
-
-	const logsChannel = config.logsChannelChannel
-		? oldThread.guild.channels.cache.get(config.logsChannelChannel)
-		: null;
-
+	const logsChannel = oldThread.guild.channels.cache.get(config.logsChannelChannel)
+	if (!logsChannel) return;
 	const fetchedLogs = await oldThread.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.ThreadUpdate,
 		limit: 5,
@@ -33,8 +30,6 @@ module.exports = async (bot, oldThread, newThread) => {
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 
-		if (logsChannel) {
-			await logsChannel.send({embeds: [ThreadUpdateEmbed]})
-		}
+		await logsChannel.send({embeds: [ThreadUpdateEmbed]})
 	}
 }
