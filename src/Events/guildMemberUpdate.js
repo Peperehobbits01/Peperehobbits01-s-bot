@@ -3,7 +3,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, oldMember, newMember) => {
 
-	const config = await getGuildConfig(oldMember.guild.id);
+	const config = await getGuildConfig(bot, oldMember.guild.id);
 
 	const boosterChannel = oldMember.guild.channels.cache.get(config.boosterChannel)
 

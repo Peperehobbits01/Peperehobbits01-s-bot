@@ -5,7 +5,7 @@ module.exports = async (bot, message) => {
 
 	if(message.author.bot || message.channel.type === Discord.ChannelType.DM) return;
 
-	const config = await getGuildConfig(message.guildId)
+	const config = await getGuildConfig(bot, message.guildId)
 
 	const results = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${message.author.id}'`, bot)
 	let xptogive = Math.floor(Math.random() * 20) + 12;

@@ -5,7 +5,7 @@ module.exports = async (bot, message, oldMessage) => {
 
 	if (message.author.bot || message.channel.type === Discord.ChannelType.DM || message.partial || message.content === oldMessage.content) return;
 
-	const config = await getGuildConfig(message.guild.id);
+	const config = await getGuildConfig(bot, message.guild.id);
 	const logsChannel = message.guild.channels.cache.get(config.logsChannelMessage)
 	if (!logsChannel) return;
 	const oldImage = bot.function.getMessageImage(oldMessage)

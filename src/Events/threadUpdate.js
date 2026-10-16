@@ -3,7 +3,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 
 module.exports = async (bot, oldThread, newThread) => {
 
-	const config = await getGuildConfig(oldThread.guild.id);
+	const config = await getGuildConfig(bot, oldThread.guild.id);
 	const logsChannel = oldThread.guild.channels.cache.get(config.logsChannelChannel)
 	if (!logsChannel) return;
 	const fetchedLogs = await oldThread.guild.fetchAuditLogs({

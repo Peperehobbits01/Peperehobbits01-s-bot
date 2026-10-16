@@ -3,7 +3,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, ban) => {
 
-	const config = await getGuildConfig(ban.guild.id);
+	const config = await getGuildConfig(bot, ban.guild.id);
 	const logsChannel = ban.guild.channels.cache.get(config.logsChannelSanctions)
 	if (!logsChannel) return;
 	const fetchedLogs = await ban.guild.fetchAuditLogs({

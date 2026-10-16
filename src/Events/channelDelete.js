@@ -5,7 +5,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 module.exports = async (bot, channel) => {
 
 	if (channel.type === Discord.ChannelType.DM) return;
-	const config = await getGuildConfig(channel.guild.id);
+	const config = await getGuildConfig(bot, channel.guild.id);
 	const logsChannel = channel.guild.channels.cache.get(config.logsChannelChannel)
 	if (!logsChannel) return;
 	const readableChannelType = channelTypeName[channel.type];

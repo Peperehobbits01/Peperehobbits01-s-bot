@@ -5,7 +5,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js")
 module.exports = async (bot, oldChannel, newChannel) => {
 
 	if (oldChannel.type === Discord.ChannelType.DM) return;
-	const config = await getGuildConfig(oldChannel.guild.id);
+	const config = await getGuildConfig(bot, oldChannel.guild.id);
 	const logsChannel = oldChannel.guild.channels.cache.get(config.logsChannelChannel)
 	if (!logsChannel) return;
 	const oldReadableChannelType = channelTypeName[oldChannel.type];

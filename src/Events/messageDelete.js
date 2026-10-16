@@ -5,7 +5,7 @@ module.exports = async (bot, message) => {
 
 	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
 
-	const config = await getGuildConfig(message.guild.id);
+	const config = await getGuildConfig(bot, message.guild.id);
 
 	if (config.countingChannel && message.channel.id === config.countingChannel) return;
 

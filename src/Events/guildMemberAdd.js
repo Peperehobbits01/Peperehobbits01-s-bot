@@ -3,7 +3,7 @@ const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, member) => {
 
-	const config = await getGuildConfig(member.guild.id);
+	const config = await getGuildConfig(bot, member.guild.id);
 	const logsChannel = member.guild.channels.cache.get(config.logsChannelGateway)
 	const welcomeChannel = member.guild.channels.cache.get(config.welcomeChannel)
 	if (welcomeChannel) {
