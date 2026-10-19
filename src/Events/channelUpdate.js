@@ -67,25 +67,41 @@ module.exports = async (bot, oldChannel, newChannel) => {
 	}
 
 	if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+		function secondsToHms(d) {
+			d = Number(d);
+			const h = Math.floor(d / 3600);
+			const m = Math.floor(d % 3600 / 60);
+			const s = Math.floor(d % 3600 % 60);
+
+			const hDisplay = h > 0 ? h + (h === 1 ? "h, " : "h, ") : "";
+			const mDisplay = m > 0 ? m + (m === 1 ? "m, " : "m, ") : "";
+			const sDisplay = s > 0 ? s + (s === 1 ? "s" : "s") : "";
+			return hDisplay + mDisplay + sDisplay;
+		}
+
 		if (oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
+			const duration = secondsToHms(newChannel.rateLimitPerUser);
 
 			channelUpdateEmbed.setTitle("Un salon vient d'être soumis au mode lent.")
-			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.`)
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} vient d'être soumis au mode lent de ${duration} par ${executor}.`)
 
 			await logsChannel.send({embeds: [channelUpdateEmbed]})
 		} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser === 0) {
+			const duration = secondsToHms(oldChannel.rateLimitPerUser);
 
 			channelUpdateEmbed.setTitle("Un salon n'est plus soumis au mode lent.")
-			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.`)
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} n'est plus soumis au mode lent de ${duration} par ${executor}.`)
 
 			await logsChannel.send({embeds: [channelUpdateEmbed]})
-		} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser > 0 && oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+		} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser > 0) {
+			const oldDuration = secondsToHms(oldChannel.rateLimitPerUser);
+			const newDuration = secondsToHms(newChannel.rateLimitPerUser);
 
 			channelUpdateEmbed.setTitle("La durée du mode lent a été changé dans un salon.")
-			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.`)
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} a un changement de la durée du mode lent de ${oldDuration} à ${newDuration} par ${executor}.`)
 
 			await logsChannel.send({embeds: [channelUpdateEmbed]})
-		} // TODO Format time to represent so we put an h/m/s depending on the duration for better readability
+		}
 	}
 
 	const oldPerms = oldChannel.permissionOverwrites.cache;
