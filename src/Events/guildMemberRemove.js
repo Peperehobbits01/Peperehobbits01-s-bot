@@ -13,7 +13,8 @@ module.exports = async (bot, member) => {
 			name: member.displayName,
 			iconURL: member.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`Le membre ${member.displayName} vient de quitter le serveur.\n**ID** :\nUtilisateur : ${member.id}`)
+		.setTitle("Un membre vient de quitter le serveur.")
+		.setDescription(`${member} vient de quitter le serveur.`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})

@@ -57,7 +57,8 @@ module.exports = async (bot, message) => {
 			iconURL: executor.displayAvatarURL({dynamic: true})
 		})
 		.setColor(process.env.BOT_COLOR)
-		.setDescription(`Un message de ${message.author} a été supprimé par ${executor}.\n\nMessage supprimer : ${message}\nAuteur : ${message.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
+		.setTitle("Un message a été supprimé.")
+		.setDescription(`Un message de ${message.author} a été supprimé par ${executor} dont le contenue étais le suivant :\n\n${message}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})

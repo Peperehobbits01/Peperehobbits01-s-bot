@@ -23,7 +23,8 @@ module.exports = async (bot, ban) => {
 			name: ban.user.displayName,
 			iconURL: ban.user.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`${ban.user.username} a été débanni par ${executor}\nNom de l'utilisateur : ${ban.user}\nRaison du ban : ${ban.reason}\nPar l'utilisateur : ${executor.name}\n**ID** :\nL'utilisateur : \`${ban.user.id}\`\nPar l'utilisateur : \`${executor.id}\``)
+		.setTitle("Un utilisateur a été débanni.")
+		.setDescription(`${ban.user} a été débanni par ${executor}, la raison du bannisement était :\n\n${ban.reason}.`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})

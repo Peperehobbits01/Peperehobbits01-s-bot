@@ -17,7 +17,8 @@ module.exports = async (bot, member) => {
 				name: member.displayName,
 				iconURL: member.displayAvatarURL({dynamic: true})
 			})
-			.setDescription(`${member} a rejoint le serveur.\nUtilisateur : ${member.displayName}\nPlus d'info : https://discord.com/channels/${member.guild.id}/member-safety\n\n**ID** :\n\nUtilisateur : ${member.id}`)
+			.setTitle("Une personne vient de rejoindre le serveur.")
+			.setDescription(`${member} a rejoint le serveur.\nPlus d'info disponible : https://discord.com/channels/${member.guild.id}/member-safety`)
 			.setFooter({
 				text: process.env.EMBED_FOOTER,
 				iconURL: bot.user.displayAvatarURL({dynamic: true})

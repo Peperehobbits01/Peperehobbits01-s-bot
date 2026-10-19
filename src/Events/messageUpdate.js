@@ -17,7 +17,8 @@ module.exports = async (bot, message, oldMessage) => {
 			iconURL: message.author.displayAvatarURL({dynamic: true})
 		})
 		.setColor(process.env.BOT_COLOR)
-		.setDescription(`${message.author.displayName} a modifié un de ces messages.\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\n\n**ID** :\nAuteur : ${message.author.id}`)
+		.setTitle("Un message a été modifier !")
+		.setDescription(`${message.author.displayName} a modifié un de ces messages, en voici l'ancienne version :\n${message.content}\n\nEn voici la nouvelle version :\n${oldMessage.content}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})

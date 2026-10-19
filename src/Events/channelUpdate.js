@@ -20,7 +20,7 @@ module.exports = async (bot, oldChannel, newChannel) => {
 		entry.target?.id === oldChannel.id && Date.now() - entry.createdTimestamp < 5000
 	);
 
-	const executor = channelLog?.executor;
+	let executor = channelLog?.executor;
 
 	const channelUpdateEmbed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
@@ -36,47 +36,56 @@ module.exports = async (bot, oldChannel, newChannel) => {
 
 	if (oldChannel.name !== newChannel.name) {
 
-		channelUpdateEmbed.setDescription(`Le nom du salon ${oldChannel.name} a été changer par ${executor} en ${newChannel.name}\n\nAncien nom du salon : ${oldChannel.name}\nNouveau nom du salon : ${newChannel.name}\nType de salon : ${oldReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+		channelUpdateEmbed.setTitle("Un nom de salon a été changer.")
+		channelUpdateEmbed.setDescription(`Le nom du salon ${oldReadableChannelType} ${oldChannel.name} a été changer par ${executor} en ${newChannel}.`)
 
 		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.type !== newChannel.type) {
 
-		channelUpdateEmbed.setDescription(`Le type du salon ${oldChannel.name} a été changer par ${executor} de ${oldReadableChannelType} à ${newReadableChannelType}\n\nNom du salon : ${oldChannel}\nAncien type du salon : ${oldReadableChannelType}\nNouveau type du salon : ${newReadableChannelType}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+		channelUpdateEmbed.setTitle("Un salon vient de changer de type.")
+		channelUpdateEmbed.setDescription(`Le type du salon ${oldChannel} a été changer par ${executor} de ${oldReadableChannelType} à ${newReadableChannelType}.`)
 
 		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.parentId !== newChannel.parentId) {
 
-		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a été déplacé par un utilisateur de la catégorie ${oldChannel.parent} à la catégorie ${newChannel.parent}\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne catégorie du salon : ${oldChannel.parentId}\nNouvelle catégorie du salon : ${newChannel.parentId}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nAncienne catégorie : \`${oldChannel.parentId}\`\nNouvelle catégorie : \`${newChannel.parentId}\``)
+		channelUpdateEmbed.setTitle("Un salon a été déplacé dans une nouvelle catégorie.")
+		channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} a été déplacé par un utilisateur de la catégorie ${oldChannel.parent} à la catégorie ${newChannel.parent}.`)
 
 		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.topic !== newChannel.topic) {
 
-		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a vue sa description modifier par ${executor} de "${oldChannel.topic}" à "${newChannel.topic}"\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne description du salon : ${oldChannel.topic}\nNouvelle description du salon : ${newChannel.topic}\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+		channelUpdateEmbed.setTitle("La description d'un salon a été modifié.")
+		channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} a vue sa description modifier par ${executor} de "${oldChannel.topic}" à "${newChannel.topic}"`)
 
 		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
-	if (oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
+	if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+		if (oldChannel.rateLimitPerUser === 0 && newChannel.rateLimitPerUser > 0) {
 
-		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Oui\nDurée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			channelUpdateEmbed.setTitle("Un salon vient d'être soumis au mode lent.")
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} vient d'être soumis au mode lent de ${newChannel.rateLimitPerUser}s par ${executor}.`)
 
-		await logsChannel.send({embeds: [channelUpdateEmbed]})
-	} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser === 0) {
+			await logsChannel.send({embeds: [channelUpdateEmbed]})
+		} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser === 0) {
 
-		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode lent : Non\nDurée du mode lent : ${oldChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			channelUpdateEmbed.setTitle("Un salon n'est plus soumis au mode lent.")
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} n'est plus soumis au mode lent de ${oldChannel.rateLimitPerUser}s par ${executor}.`)
 
-		await logsChannel.send({embeds: [channelUpdateEmbed]})
-	} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser > 0 && oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
+			await logsChannel.send({embeds: [channelUpdateEmbed]})
+		} else if (oldChannel.rateLimitPerUser > 0 && newChannel.rateLimitPerUser > 0 && oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) {
 
-		channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nAncienne durée du mode lent : ${oldChannel.rateLimitPerUser}s\nNouvelle durée du mode lent : ${newChannel.rateLimitPerUser}s\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			channelUpdateEmbed.setTitle("La durée du mode lent a été changé dans un salon.")
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} a un changement de la durée du mode lent de ${oldChannel.rateLimitPerUser}s à ${newChannel.rateLimitPerUser}s par ${executor}.`)
 
-		await logsChannel.send({embeds: [channelUpdateEmbed]})
+			await logsChannel.send({embeds: [channelUpdateEmbed]})
+		} // TODO Format time to represent so we put an h/m/s depending on the duration for better readability
 	}
 
 	const oldPerms = oldChannel.permissionOverwrites.cache;
@@ -133,34 +142,25 @@ module.exports = async (bot, oldChannel, newChannel) => {
 			entry.target?.id === oldChannel.id && Date.now() - entry.createdTimestamp < 5000
 		);
 
-		const executorPermissions = permissionsChannelLog?.executor || executor;
+		executor = permissionsChannelLog?.executor || executor;
 
-		const UpdateChannelPermissions = new Discord.EmbedBuilder()
-			.setColor(process.env.BOT_COLOR)
-			.setAuthor({
-				name: executorPermissions.displayName,
-				iconURL: executorPermissions.displayAvatarURL({dynamic: true})
-			})
-			.setDescription(`Les permissions du salon <#${oldChannel.id}> ont été modifiées par ${executorPermissions}.\n\nNom du salon : ${oldChannel.name}\nType du salon : ${oldReadableChannelType}\n\n${permChanges.join('\n')}\n`)
-			.setFooter({
-				text: process.env.EMBED_FOOTER,
-				iconURL: bot.user.displayAvatarURL({dynamic: true})
-			})
-			.setTimestamp()
+			channelUpdateEmbed.setTitle("Les permissions d'un salon on été modifié.")
+			channelUpdateEmbed.setDescription(`Les permissions du salon ${oldReadableChannelType} ${oldChannel} ont été modifiées par ${executor}, en voici la liste :\n\n${permChanges.join('\n')}\n`)
 
-		await logsChannel.send({embeds: [UpdateChannelPermissions]})
+		await logsChannel.send({embeds: [channelUpdateEmbed]})
 	}
 
 	if (oldChannel.nsfw !== newChannel.nsfw) {
-
 		if (oldChannel.nsfw === false) {
 
-			channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} vient d'être soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Oui\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			channelUpdateEmbed.setTitle("Un salon vient d'être soumis à une limite d'âge.")
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} vient d'être soumis à une limite d'âge par ${executor}.`)
 
 			await logsChannel.send({embeds: [channelUpdateEmbed]})
 		} else if (oldChannel.nsfw === true) {
 
-			channelUpdateEmbed.setDescription(`Le salon ${oldChannel.name} n'est plus soumis à une limite d'âge par ${executor}.\n\nNom du salon : ${oldChannel}\nType du salon : ${oldReadableChannelType}\nPassage en mode NSFW : Non\n\n**ID** :\nSalon : \`${oldChannel.id}\`\nUtilisateur : \`${executor.id}\``)
+			channelUpdateEmbed.setTitle("Un salon n'est plus soumis à une limite d'âge.")
+			channelUpdateEmbed.setDescription(`Le salon ${oldReadableChannelType} ${oldChannel} n'est plus soumis à une limite d'âge par ${executor}.`)
 
 			await logsChannel.send({embeds: [channelUpdateEmbed]})
 		}

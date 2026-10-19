@@ -1,16 +1,16 @@
 const channelTypeName = {
-	0: "Salon textuel",
+	0: "textuel",
 	1: "Message privé",
-	2: "Salon vocal",
+	2: "vocal",
 	3: "Groupe privé",
 	4: "Catégorie",
-	5: "Salon d'annonces",
+	5: "d'annonces",
 	10: "Fil d'annonce",
 	11: "Fil public",
 	12: "Fil privé",
-	13: "Salon de conférence",
+	13: "de conférence",
 	15: "Forum",
-	16: "Salon média",
+	16: "média",
 };
 
 module.exports = channelTypeName;
