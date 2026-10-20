@@ -49,14 +49,15 @@ node main
 ```
 █───Project folder
 │
-│   main.js
+│   .env.example
 │   .gitignore
 │   .gitattributes
-│   package-lock.json
+│   LICENSE
+│   main.js
 │   package.json
-│   README.md
-│   .env.example
+│   package-lock.json
 │   peperehobbits01_s_bot.sql
+│   README.md
 │
 └───src
     │
