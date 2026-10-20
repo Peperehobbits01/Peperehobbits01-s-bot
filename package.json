@@ -4,7 +4,7 @@
 	"description": "A Discord bot developed by Peperehobbits01 for usage on his Discord at first.",
 	"main": "main.js",
 	"scripts": {
-		"test": "node main",
+		"dev": "node main",
 		"debug": "node --inspect main.js"
 	},
 	"author": "Peperehobbits01",

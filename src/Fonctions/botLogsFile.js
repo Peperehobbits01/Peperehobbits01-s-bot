@@ -10,8 +10,7 @@ const runId = `${new Date().toISOString().replace(/[:.]/g, "-")}-${crypto
 	.toString("hex")}`;
 
 const logFile = path.join(logsDir, `run-${runId}.log`);
-const debugEnabled =
-	process.env.DEBUG_MODE === "true"
+const debugEnabled = process.env.npm_lifecycle_event === "debug";
 
 function formatError(error) {
 	if (error instanceof Error) {
