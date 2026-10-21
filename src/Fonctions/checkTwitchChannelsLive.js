@@ -1,25 +1,44 @@
-const Discord = require('discord.js');
+const Discord = require("discord.js");
+const path = require("node:path");
 const {getGuildConfig} = require("./guildConfig");
 
-let lastLiveByLogin = new Map();
-let hasBaseline = false;
+const TWITCH_STREAMS_URL = "https://api.twitch.tv/helix/streams";
+const TWITCH_TOKEN_URL = "https://id.twitch.tv/oauth2/token";
+const TWITCH_USERNAMES_PER_REQUEST = 100;
+const REQUEST_TIMEOUT_MS = 15_000;
 
+let notifiedStreamByGuildLogin = new Map();
+let hasBaseline = false;
+let isChecking = false;
 let twitchToken;
 let twitchTokenExpiresAt = 0;
 
-async function getTwitchAppToken() {
-	if (twitchToken && Date.now() < twitchTokenExpiresAt - 60_000) {
+function getTwitchCredentials() {
+	const clientId = process.env.TWITCH_CLIENT_ID || process.env.TWITCH_TOKEN;
+	const clientSecret = process.env.TWITCH_CLIENT_SECRET || process.env.TWITCH_SECRET;
+
+	if (!clientId || !clientSecret) {
+		throw new Error("Twitch credentials are missing. Set TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET.");
+	}
+
+	return {clientId, clientSecret};
+}
+
+async function getTwitchAppToken(forceRefresh = false) {
+	if (!forceRefresh && twitchToken && Date.now() < twitchTokenExpiresAt - 60_000) {
 		return twitchToken;
 	}
 
-	const response = await fetch('https://id.twitch.tv/oauth2/token', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	const {clientId, clientSecret} = getTwitchCredentials();
+	const response = await fetch(TWITCH_TOKEN_URL, {
+		method: "POST",
+		headers: {"Content-Type": "application/x-www-form-urlencoded"},
 		body: new URLSearchParams({
-			client_id: process.env.TWITCH_TOKEN,
-			client_secret: process.env.TWITCH_SECRET,
-			grant_type: 'client_credentials',
+			client_id: clientId,
+			client_secret: clientSecret,
+			grant_type: "client_credentials",
 		}),
+		signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
 	});
 
 	if (!response.ok) {
@@ -27,126 +46,170 @@ async function getTwitchAppToken() {
 	}
 
 	const data = await response.json();
-	twitchToken = data.access_token;
-	twitchTokenExpiresAt = Date.now() + data.expires_in * 1000;
+	if (!data.access_token || !Number.isFinite(Number(data.expires_in))) {
+		throw new Error("Twitch token response did not include a valid access token and expiry.");
+	}
 
+	twitchToken = data.access_token;
+	twitchTokenExpiresAt = Date.now() + Number(data.expires_in) * 1000;
 	return twitchToken;
 }
 
-async function getLiveStreams() {
-	const token = await getTwitchAppToken();
-	const url = new URL('https://api.twitch.tv/helix/streams');
+function parseTwitchLogins(rawValue) {
+	const values = Array.isArray(rawValue) ? rawValue : String(rawValue ?? "").split(/[,\s]+/);
+	return [...new Set(values
+		.map((login) => String(login).trim().toLowerCase())
+		.filter((login) => /^[a-z0-9_]{1,25}$/.test(login)))];
+}
 
-	const response = await fetch(url, {
-		headers: {
-			'Client-ID': process.env.TWITCH_TOKEN,
-			Authorization: `Bearer ${token}`,
-		},
-	});
+async function getLiveStreams(logins) {
+	const {clientId} = getTwitchCredentials();
+	const streams = [];
 
-	if (!response.ok) {
-		throw new Error(`Twitch streams request failed: ${response.status} ${await response.text()}`);
+	for (let index = 0; index < logins.length; index += TWITCH_USERNAMES_PER_REQUEST) {
+		const batch = logins.slice(index, index + TWITCH_USERNAMES_PER_REQUEST);
+		const url = new URL(TWITCH_STREAMS_URL);
+		for (const login of batch) {
+			url.searchParams.append("user_login", login);
+		}
+
+		let response;
+		for (let attempt = 0; attempt < 2; attempt += 1) {
+			const token = await getTwitchAppToken(attempt === 1);
+			response = await fetch(url, {
+				headers: {
+					"Client-ID": clientId,
+					Authorization: `Bearer ${token}`,
+				},
+				signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+			});
+
+			if (response.status !== 401 || attempt === 1) break;
+			twitchToken = undefined;
+			twitchTokenExpiresAt = 0;
+		}
+
+		if (!response.ok) {
+			throw new Error(`Twitch streams request failed: ${response.status} ${await response.text()}`);
+		}
+
+		const data = await response.json();
+		if (!Array.isArray(data.data)) {
+			throw new Error("Twitch streams response did not contain a data array.");
+		}
+		streams.push(...data.data);
 	}
 
-	const data = await response.json();
-	return data.data;
+	return streams;
 }
 
 function buildLiveEmbed(stream) {
-	const thumbnail = stream.thumbnail_url
-		.replace('{width}', '640')
-		.replace('{height}', '360');
-
 	const embed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
 		.setTitle(`🔴 ${stream.user_name} est en direct !`)
 		.setURL(`https://www.twitch.tv/${stream.user_login}`)
 		.setDescription(stream.title)
 		.addFields(
-			{name: 'Catégorie', value: stream.game_name || 'Inconnue', inline: true},
-			{name: 'Spectateurs', value: String(stream.viewers ?? 0), inline: true},
+			{name: "Catégorie", value: stream.game_name, inline: true},
+			{name: "Spectateurs", value: String(stream.viewer_count ?? 0), inline: true},
 		)
-		.setImage(thumbnail)
 		.setFooter({
-			text: 'Twitch',
-			iconURL: 'attachment://twitch-footer.webp',
+			text: "Twitch",
+			iconURL: "attachment://twitch-footer.webp",
 		});
 
-	if (stream.started_at) {
+	if (stream.thumbnail_url) {
+		embed.setImage(stream.thumbnail_url.replace("{width}", "640").replace("{height}", "360"));
+	}
+
+	if (stream.started_at && !Number.isNaN(Date.parse(stream.started_at))) {
 		embed.setTimestamp(new Date(stream.started_at));
 	}
 
 	return embed;
 }
 
-async function sendLiveEmbedForGuild(bot, guild, stream) {
-	const config = await getGuildConfig(bot, guild.id);
-
-	if (!config.twitchAnnouncementChannel || !config.twitchNotifRole) {
-		return;
-	}
-
-	const watchedLogins = String(config.twitchChannelUsernames ?? '')
-		.split(/[,\s]+/)
-		.map((login) => login.trim().toLowerCase())
-		.filter(Boolean);
-
-	if (!watchedLogins.includes(stream.user_login.toLowerCase())) {
-		return;
-	}
-
+async function sendLiveEmbedForGuild(guild, stream, config) {
 	const channel = guild.channels.cache.get(config.twitchAnnouncementChannel);
+	const role = guild.roles.cache.get(config.twitchNotifRole);
 
-	if (!channel || typeof channel.send !== 'function') {
-		return;
+	if (!channel || typeof channel.send !== "function") {
+		throw new Error(`Configured Twitch announcement channel was not found in guild ${guild.id}.`);
+	}
+	if (!role) {
+		throw new Error(`Configured Twitch notification role was not found in guild ${guild.id}.`);
 	}
 
-	const notifRole = guild.roles.cache.get(config.twitchNotifRole);
-	const embed = buildLiveEmbed(stream);
-	const twitchFooter = new Discord.AttachmentBuilder('./src/Assets/twitch-footer.webp');
-
+	const attachment = new Discord.AttachmentBuilder(
+		path.join(__dirname, "../Assets/twitch-footer.webp"),
+	);
 	await channel.send({
-		content: `${stream.user_name} est en direct sur Twitch ! ${notifRole}`,
-		embeds: [embed],
-		files: [twitchFooter],
+		content: `${stream.user_name} est en direct sur Twitch ! <@&${role.id}>`,
+		embeds: [buildLiveEmbed(stream)],
+		files: [attachment],
+		allowedMentions: {parse: [], roles: [role.id]},
 	});
 }
 
 module.exports = async (bot) => {
-	const streams = await getLiveStreams();
-	const currentLiveByLogin = new Map(
-		streams.map(stream => [stream.user_login.toLowerCase(), stream]),
-	);
+	if (isChecking) return;
+	isChecking = true;
 
-	const newLiveStreams = [];
+	try {
+		const guildsByLogin = new Map();
 
-	if (hasBaseline) {
-		for (const [login, stream] of currentLiveByLogin) {
-			const previousStream = lastLiveByLogin.get(login);
+		for (const guild of bot.guilds.cache.values()) {
+			const config = await getGuildConfig(bot, guild.id);
+			if (!config.twitchAnnouncementChannel || !config.twitchNotifRole) continue;
 
-			if (!previousStream || previousStream.id !== stream.id) {
-				newLiveStreams.push(stream);
+			for (const login of parseTwitchLogins(config.twitchChannelUsernames)) {
+				if (!guildsByLogin.has(login)) guildsByLogin.set(login, []);
+				guildsByLogin.get(login).push({guild, config});
 			}
 		}
-	}
 
-	lastLiveByLogin = currentLiveByLogin;
-	hasBaseline = true;
+		const logins = [...guildsByLogin.keys()];
+		const streams = logins.length > 0 ? await getLiveStreams(logins) : [];
+		const activeGuildLogins = new Set();
 
-	if (newLiveStreams.length === 0) {
-		return;
-	}
-
-	for (const guild of bot.guilds.cache.values()) {
-		for (const stream of newLiveStreams) {
-			try {
-				await sendLiveEmbedForGuild(bot, guild, stream);
-			} catch (error) {
-				bot.function.botLogsFile.error(
-					`Échec de la notification Twitch pour ${stream.user_login} (serveur ${guild.id}) :`,
-					error
-				);
+		for (const [login, subscribers] of guildsByLogin) {
+			for (const {guild} of subscribers) {
+				activeGuildLogins.add(`${guild.id}:${login}`);
 			}
 		}
+		for (const key of notifiedStreamByGuildLogin.keys()) {
+			if (!activeGuildLogins.has(key)) notifiedStreamByGuildLogin.delete(key);
+		}
+
+		if (!hasBaseline) {
+			for (const stream of streams) {
+				const login = stream.user_login.toLowerCase();
+				for (const {guild} of guildsByLogin.get(login) ?? []) {
+					notifiedStreamByGuildLogin.set(`${guild.id}:${login}`, stream.id);
+				}
+			}
+			hasBaseline = true;
+			return;
+		}
+
+		for (const stream of streams) {
+			const login = stream.user_login.toLowerCase();
+			for (const {guild, config} of guildsByLogin.get(login) ?? []) {
+				const key = `${guild.id}:${login}`;
+				if (notifiedStreamByGuildLogin.get(key) === stream.id) continue;
+
+				try {
+					await sendLiveEmbedForGuild(guild, stream, config);
+					notifiedStreamByGuildLogin.set(key, stream.id);
+				} catch (error) {
+					bot.function.botLogsFile.error(
+						`Échec de la notification Twitch pour ${login} (serveur ${guild.id}) :`,
+						error,
+					);
+				}
+			}
+		}
+	} finally {
+		isChecking = false;
 	}
-}
+};
