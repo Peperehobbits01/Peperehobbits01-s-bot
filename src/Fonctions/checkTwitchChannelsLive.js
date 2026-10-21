@@ -13,23 +13,23 @@ let isChecking = false;
 let twitchToken;
 let twitchTokenExpiresAt = 0;
 
-function getTwitchCredentials() {
+function getTwitchCredentials(bot) {
 	const clientId = process.env.TWITCH_CLIENT_ID || process.env.TWITCH_TOKEN;
 	const clientSecret = process.env.TWITCH_CLIENT_SECRET || process.env.TWITCH_SECRET;
 
 	if (!clientId || !clientSecret) {
-		throw new Error("Twitch credentials are missing. Set TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET.");
+		bot.function.botLogsFile.warn("Les identifiants Twitch n'ont pas été trouver")
 	}
 
 	return {clientId, clientSecret};
 }
 
-async function getTwitchAppToken(forceRefresh = false) {
+async function getTwitchAppToken(forceRefresh = false, bot) {
 	if (!forceRefresh && twitchToken && Date.now() < twitchTokenExpiresAt - 60_000) {
 		return twitchToken;
 	}
 
-	const {clientId, clientSecret} = getTwitchCredentials();
+	const {clientId, clientSecret} = getTwitchCredentials(bot);
 	const response = await fetch(TWITCH_TOKEN_URL, {
 		method: "POST",
 		headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -42,12 +42,12 @@ async function getTwitchAppToken(forceRefresh = false) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`Twitch token request failed: ${response.status} ${await response.text()}`);
+		throw new Error(`La requête du token auprès de Twitch a échoué : ${response.status} ${await response.text()}`);
 	}
 
 	const data = await response.json();
 	if (!data.access_token || !Number.isFinite(Number(data.expires_in))) {
-		throw new Error("Twitch token response did not include a valid access token and expiry.");
+		throw new Error("La réponse de Twitch ne contenait pas un token ou une date d'expiration valide.");
 	}
 
 	twitchToken = data.access_token;
@@ -62,8 +62,8 @@ function parseTwitchLogins(rawValue) {
 		.filter((login) => /^[a-z0-9_]{1,25}$/.test(login)))];
 }
 
-async function getLiveStreams(logins) {
-	const {clientId} = getTwitchCredentials();
+async function getLiveStreams(logins, bot) {
+	const {clientId} = getTwitchCredentials(bot);
 	const streams = [];
 
 	for (let index = 0; index < logins.length; index += TWITCH_USERNAMES_PER_REQUEST) {
@@ -75,7 +75,7 @@ async function getLiveStreams(logins) {
 
 		let response;
 		for (let attempt = 0; attempt < 2; attempt += 1) {
-			const token = await getTwitchAppToken(attempt === 1);
+			const token = await getTwitchAppToken(attempt === 1, bot);
 			response = await fetch(url, {
 				headers: {
 					"Client-ID": clientId,
@@ -90,12 +90,12 @@ async function getLiveStreams(logins) {
 		}
 
 		if (!response.ok) {
-			throw new Error(`Twitch streams request failed: ${response.status} ${await response.text()}`);
+			throw new Error(`Requête des streams auprès de Twitch échoué : ${response.status} ${await response.text()}`);
 		}
 
 		const data = await response.json();
 		if (!Array.isArray(data.data)) {
-			throw new Error("Twitch streams response did not contain a data array.");
+			throw new Error("La réponse de Twitch ne contenait pas data.");
 		}
 		streams.push(...data.data);
 	}
@@ -169,7 +169,7 @@ module.exports = async (bot) => {
 		}
 
 		const logins = [...guildsByLogin.keys()];
-		const streams = logins.length > 0 ? await getLiveStreams(logins) : [];
+		const streams = logins.length > 0 ? await getLiveStreams(logins, bot) : [];
 		const activeGuildLogins = new Set();
 
 		for (const [login, subscribers] of guildsByLogin) {
