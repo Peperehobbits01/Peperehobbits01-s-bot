@@ -67,8 +67,16 @@ module.exports = {
 		const valeur = args.getString("valeur");
 
 		if (!cle) {
-			const config = await getGuildConfig(bot, guildId);
-			return message.editReply({embeds: [buildListEmbed(bot, config)]});
+			try {
+				const config = await getGuildConfig(bot, guildId);
+				return message.editReply({embeds: [buildListEmbed(bot, config)]});
+			} catch (error) {
+				bot.function.botLogsFile.error(`Impossible de lire la configuration du serveur ${guildId} :`, error);
+				return message.editReply({
+					content: "Impossible de lire la configuration pour le moment.",
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
 		}
 
 		if (!GUILD_CONFIG_SCHEMA[cle]) {
@@ -82,21 +90,28 @@ module.exports = {
 			[cle]: valeur === null ? (GUILD_CONFIG_SCHEMA[cle].type === "list" ? [] : null) : valeur
 		};
 
-		if (valeur === null) {
-			return message.editReply({
-				content: `Paramètre \`${cle}\` réinitialisée.`,
-				flags: [Discord.MessageFlags.Ephemeral]
-			});
-		}
-
 		try {
 			const updated = await setGuildConfig(bot, guildId, changes);
+
+			if (valeur === null) {
+				return message.editReply({
+					content: `Paramètre \`${cle}\` réinitialisé.`,
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
 
 			return message.editReply({
 				content: `Paramètre \`${cle}\` définie sur ${formatValue(updated[cle])}.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		} catch (error) {
+			if (error.code === "INVALID_GUILD_CONFIG") {
+				return message.editReply({
+					content: error.message,
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
+			bot.function.botLogsFile.error(`Impossible d'enregistrer la configuration du serveur ${guildId} :`, error);
 			return message.editReply({
 				content: "Une erreur est survenue lors de la sauvegarde.",
 				flags: [Discord.MessageFlags.Ephemeral]
