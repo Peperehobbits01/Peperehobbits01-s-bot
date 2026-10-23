@@ -3,6 +3,7 @@ const path = require("node:path");
 const {getGuildConfig} = require("./guildConfig");
 
 const TWITCH_STREAMS_URL = "https://api.twitch.tv/helix/streams";
+const TWITCH_GAMES_URL = "https://api.twitch.tv/helix/games";
 const TWITCH_TOKEN_URL = "https://id.twitch.tv/oauth2/token";
 const TWITCH_USERNAMES_PER_REQUEST = 100;
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -55,6 +56,27 @@ async function getTwitchAppToken(forceRefresh = false, bot) {
 	return twitchToken;
 }
 
+async function fetchTwitchApi(url, bot) {
+	const {clientId} = getTwitchCredentials(bot);
+	let response;
+	for (let attempt = 0; attempt < 2; attempt += 1) {
+		const token = await getTwitchAppToken(attempt === 1, bot);
+		response = await fetch(url, {
+			headers: {
+				"Client-ID": clientId,
+				Authorization: `Bearer ${token}`,
+			},
+			signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+		});
+
+		if (response.status !== 401 || attempt === 1) break;
+		twitchToken = undefined;
+		twitchTokenExpiresAt = 0;
+	}
+
+	return response;
+}
+
 function parseTwitchLogins(rawValue) {
 	const values = Array.isArray(rawValue) ? rawValue : String(rawValue ?? "").split(/[,\s]+/);
 	return [...new Set(values
@@ -63,7 +85,6 @@ function parseTwitchLogins(rawValue) {
 }
 
 async function getLiveStreams(logins, bot) {
-	const {clientId} = getTwitchCredentials(bot);
 	const streams = [];
 
 	for (let index = 0; index < logins.length; index += TWITCH_USERNAMES_PER_REQUEST) {
@@ -73,21 +94,7 @@ async function getLiveStreams(logins, bot) {
 			url.searchParams.append("user_login", login);
 		}
 
-		let response;
-		for (let attempt = 0; attempt < 2; attempt += 1) {
-			const token = await getTwitchAppToken(attempt === 1, bot);
-			response = await fetch(url, {
-				headers: {
-					"Client-ID": clientId,
-					Authorization: `Bearer ${token}`,
-				},
-				signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-			});
-
-			if (response.status !== 401 || attempt === 1) break;
-			twitchToken = undefined;
-			twitchTokenExpiresAt = 0;
-		}
+		const response = await fetchTwitchApi(url, bot);
 
 		if (!response.ok) {
 			throw new Error(`Requête des streams auprès de Twitch échoué : ${response.status} ${await response.text()}`);
@@ -103,20 +110,54 @@ async function getLiveStreams(logins, bot) {
 	return streams;
 }
 
-function buildLiveEmbed(stream) {
+async function getGameImages(streams, bot) {
+	const gameIds = [...new Set(streams.map((stream) => stream.game_id).filter(Boolean))];
+	const gameImages = new Map();
+	if (gameIds.length === 0) return gameImages;
+
+	for (let index = 0; index < gameIds.length; index += TWITCH_USERNAMES_PER_REQUEST) {
+		const url = new URL(TWITCH_GAMES_URL);
+		for (const gameId of gameIds.slice(index, index + TWITCH_USERNAMES_PER_REQUEST)) {
+			url.searchParams.append("id", gameId);
+		}
+
+		const response = await fetchTwitchApi(url, bot);
+
+		if (!response.ok) {
+			throw new Error(`Requête des catégories auprès de Twitch échouée : ${response.status} ${await response.text()}`);
+		}
+
+		const data = await response.json();
+		if (!Array.isArray(data.data)) {
+			throw new Error("La réponse des catégories Twitch ne contenait pas data.");
+		}
+
+		for (const game of data.data) {
+			if (game.box_art_url) gameImages.set(game.id, game.box_art_url);
+		}
+	}
+
+	return gameImages;
+}
+
+function buildLiveEmbed(stream, gameImageUrl) {
 	const embed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
-		.setTitle(`🔴 ${stream.user_name} est en direct !`)
+		.setTitle(stream.title)
 		.setURL(`https://www.twitch.tv/${stream.user_login}`)
-		.setDescription(stream.title)
+		.setDescription(`🔴 ${stream.user_name} est en direct !`)
 		.addFields(
 			{name: "Catégorie", value: stream.game_name, inline: true},
-			{name: "Spectateurs", value: String(stream.viewer_count ?? 0), inline: true},
+			{name: "Spectateurs", value: String(stream.viewer_count), inline: true},
 		)
 		.setFooter({
 			text: "Twitch",
 			iconURL: "attachment://twitch-footer.webp",
 		});
+
+	if (gameImageUrl) {
+		embed.setThumbnail(gameImageUrl.replace("{width}", "285").replace("{height}", "380"));
+	}
 
 	if (stream.thumbnail_url) {
 		embed.setImage(stream.thumbnail_url.replace("{width}", "640").replace("{height}", "360"));
@@ -129,7 +170,7 @@ function buildLiveEmbed(stream) {
 	return embed;
 }
 
-async function sendLiveEmbedForGuild(guild, stream, config) {
+async function sendLiveEmbedForGuild(guild, stream, config, gameImages) {
 	const channel = guild.channels.cache.get(config.twitchAnnouncementChannel);
 	const role = guild.roles.cache.get(config.twitchNotifRole);
 
@@ -145,7 +186,7 @@ async function sendLiveEmbedForGuild(guild, stream, config) {
 	);
 	await channel.send({
 		content: `${stream.user_name} est en direct sur Twitch ! <@&${role.id}>`,
-		embeds: [buildLiveEmbed(stream)],
+		embeds: [buildLiveEmbed(stream, gameImages.get(stream.game_id))],
 		files: [attachment],
 		allowedMentions: {parse: [], roles: [role.id]},
 	});
@@ -192,14 +233,29 @@ module.exports = async (bot) => {
 			return;
 		}
 
-		for (const stream of streams) {
+		const streamsToNotify = streams.filter((stream) => {
+			const login = stream.user_login.toLowerCase();
+			return (guildsByLogin.get(login) ?? []).some(({guild}) =>
+				notifiedStreamByGuildLogin.get(`${guild.id}:${login}`) !== stream.id);
+		});
+
+		let gameImages = new Map();
+		if (streamsToNotify.length > 0) {
+			try {
+				gameImages = await getGameImages(streamsToNotify, bot);
+			} catch (error) {
+				bot.function.botLogsFile.error("Échec de la récupération des images de catégories Twitch :", error);
+			}
+		}
+
+		for (const stream of streamsToNotify) {
 			const login = stream.user_login.toLowerCase();
 			for (const {guild, config} of guildsByLogin.get(login) ?? []) {
 				const key = `${guild.id}:${login}`;
 				if (notifiedStreamByGuildLogin.get(key) === stream.id) continue;
 
 				try {
-					await sendLiveEmbedForGuild(guild, stream, config);
+					await sendLiveEmbedForGuild(guild, stream, config, gameImages);
 					notifiedStreamByGuildLogin.set(key, stream.id);
 				} catch (error) {
 					bot.function.botLogsFile.error(
