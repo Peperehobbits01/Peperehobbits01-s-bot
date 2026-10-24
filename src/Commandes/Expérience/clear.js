@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const {executeQuery} = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 	name: "clear",
@@ -23,13 +22,10 @@ module.exports = {
 
 		await message.deferReply()
 
-		const queryAllClearSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-		const AllClearResults = await executeQuery(queryAllClearSearch)
-
+		const AllClearResults = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot)
 		if (AllClearResults.length < 1) return message.followUp(`Le membre ${member} n'est pas dans la base de données !`)
 
-		const queryAllClear = `DELETE FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-		await executeQuery(queryAllClear)
+		await bot.function.executeQuery(`DELETE FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot)
 
 		const succesAllClear = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)

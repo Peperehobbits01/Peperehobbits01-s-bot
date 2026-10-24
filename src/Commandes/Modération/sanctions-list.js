@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 
@@ -34,16 +33,14 @@ module.exports = {
 				iconURL: bot.user.displayAvatarURL({dynamic: true})
 			})
 
-		const queryUserSanctions = `SELECT * FROM sanctions_list WHERE guildId = '${message.guildId}' AND userId = '${user.id}'`
-		const UserSanctionsList = await executeQuery(queryUserSanctions)
+		const UserSanctionsList = await bot.function.executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${message.guildId}' AND userId = '${user.id}'`, bot)
 		if (UserSanctionsList.length < 1) return message.followUp("Cette utilisateur n'a pas d'infraction à sont actif !")
 		const sanctionTypes = new Set(
 			UserSanctionsList.map(sanction => sanction.sanction_type)
 		);
 
 		if (sanctionTypes.has(`NOTE`)) {
-			const queryNoteSearch = `SELECT * FROM note WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-			const NoteResults = await executeQuery(queryNoteSearch)
+			const NoteResults = await bot.function.executeQuery(`SELECT * FROM note WHERE guild = '${message.guildId}' AND user = '${user.id}'`, bot)
 			await NoteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < NoteResults.length; i++) {
@@ -56,8 +53,7 @@ module.exports = {
 		}
 
 		if (sanctionTypes.has(`WARN`)) {
-			const queryWarnSearch = `SELECT * FROM warn WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-			const WarnResults = await executeQuery(queryWarnSearch)
+			const WarnResults = await bot.function.executeQuery(`SELECT * FROM warn WHERE guild = '${message.guildId}' AND user = '${user.id}'`, bot)
 			await WarnResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < WarnResults.length; i++) {
@@ -70,8 +66,7 @@ module.exports = {
 		}
 
 		if (sanctionTypes.has(`MUTE`)) {
-			const queryMuteSearch = `SELECT * FROM mute WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-			const MuteResults = await executeQuery(queryMuteSearch)
+			const MuteResults = await bot.function.executeQuery(`SELECT * FROM mute WHERE guild = '${message.guildId}' AND user = '${user.id}'`, bot)
 			await MuteResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < MuteResults.length; i++) {
@@ -84,8 +79,7 @@ module.exports = {
 		}
 
 		if (sanctionTypes.has(`KICK`)) {
-			const queryKickSearch = `SELECT * FROM kick WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-			const KickResults = await executeQuery(queryKickSearch)
+			const KickResults = await bot.function.executeQuery(`SELECT * FROM kick WHERE guild = '${message.guildId}' AND user = '${user.id}'`, bot)
 			await KickResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < KickResults.length; i++) {
@@ -98,8 +92,7 @@ module.exports = {
 		}
 
 		if (sanctionTypes.has(`BAN`)) {
-			const queryBanSearch = `SELECT * FROM ban WHERE guild = '${message.guildId}' AND user = '${user.id}'`
-			const BanResults = await executeQuery(queryBanSearch)
+			const BanResults = await bot.function.executeQuery(`SELECT * FROM ban WHERE guild = '${message.guildId}' AND user = '${user.id}'`, bot)
 			await BanResults.sort((a, b) => parseInt(b.date) - parseInt(a.date))
 
 			for (let i = 0; i < BanResults.length; i++) {

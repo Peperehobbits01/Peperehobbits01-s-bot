@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 
@@ -42,12 +41,11 @@ module.exports = {
 
 		if (!(await message.guild.bans.fetch()).get(user.id)) return message.reply("Il est déjà débanni !")
 
-		const querySearch = `SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`
-		const results = await executeQuery(querySearch)
+		const results = await bot.function.executeQuery(`SELECT * FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = '${id}'`, bot)
 		if (results.length < 1) return message.reply('Aucun bannissement pour ce membre/ID du ban invalide.');
 
-		await executeQuery(`DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`)
-		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
+		await bot.function.executeQuery(`DELETE FROM ban WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND ban = "${id}"`, bot)
+		await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`, bot)
 
 		try {
 			const Unban1 = new Discord.EmbedBuilder()

@@ -131,6 +131,7 @@ CREATE TABLE `xp` (
 CREATE TABLE `guild_config` (
   `guild_id` varchar(255) NOT NULL,
   `config` json NOT NULL,
+  `version` int NOT NULL DEFAULT 0,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -147,6 +148,17 @@ CREATE TABLE `sanctions_list`(
     expired		  int(11) null default 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Structure de la table `subscribed_youtube_channels`
+--
+
+create table subscribed_youtube_channels
+(
+	guildId     varchar(255) not null,
+	channelId   varchar(255) not null,
+	lastVideoId varchar(255) not null,
+	primary key (guildId, channelId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Index pour les tables déchargées

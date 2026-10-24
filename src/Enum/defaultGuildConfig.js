@@ -17,6 +17,9 @@ const DEFAULT_GUILD_CONFIG = {
 	youtubeChannelIds: [],
 	youtubeAnnouncementChannel: null,
 	youtubeNotifRole: null,
+	twitchChannelUsernames: [],
+	twitchAnnouncementChannel: null,
+	twitchNotifRole: null,
 };
 
 const GUILD_CONFIG_SCHEMA = {
@@ -98,6 +101,8 @@ const GUILD_CONFIG_SCHEMA = {
 	youtubeChannelIds: {
 		type: "list",
 		description: "Liste des ID de chaînes YouTube à surveiller (séparés par des virgules).",
+		itemPattern: /^UC[a-zA-Z0-9_-]{22}$/,
+		itemDescription: "Un ID de chaîne YouTube au format UC suivi de 22 caractères",
 		nullable: true,
 	},
 	youtubeAnnouncementChannel: {
@@ -110,14 +115,27 @@ const GUILD_CONFIG_SCHEMA = {
 		description: "Rôle à mentionner lors d'une nouvelle vidéo YouTube.",
 		nullable: true,
 	},
+	twitchChannelUsernames: {
+		type: "list",
+		description: "Liste des noms d'utilisateur Twitch à surveiller (séparés par des virgules).",
+		itemPattern: /^[a-z0-9_]{1,25}$/i,
+		itemDescription: "Un nom d'utilisateur Twitch de 1 à 25 lettres, chiffres ou underscores",
+		lowercase: true,
+		nullable: true,
+	},
+	twitchAnnouncementChannel: {
+		type: "snowflake",
+		description: "Salon de publication lors du commencement d'un direct sur Twitch.",
+		nullable: true,
+	},
+	twitchNotifRole: {
+		type: "snowflake",
+		description: "Rôle à mentionner lors du commencement d'un direct sur Twitch.",
+		nullable: true,
+	},
 };
-
-function  	getGuildConfigDefaults() {
-	return {...DEFAULT_GUILD_CONFIG};
-}
 
 module.exports = {
 	DEFAULT_GUILD_CONFIG,
 	GUILD_CONFIG_SCHEMA,
-	getGuildConfigDefaults,
 };

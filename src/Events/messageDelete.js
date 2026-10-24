@@ -1,18 +1,16 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, message) => {
 
 	if(message.partial || message.channel.type === Discord.ChannelType.DM) return;
 
-	const config = await getGuildConfig(message.guild.id);
+	const config = await getGuildConfig(bot, message.guild.id);
 
 	if (config.countingChannel && message.channel.id === config.countingChannel) return;
 
-	const logsChannel = config.logsChannelMessage
-		? message.guild.channels.cache.get(config.logsChannelMessage)
-		: null;
+	const logsChannel = message.guild.channels.cache.get(config.logsChannelMessage)
+	if (!logsChannel) return;
 	const fetchedLogs = await message.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.messageDelete,
 		limit: 1,
@@ -28,11 +26,7 @@ module.exports = async (bot, message) => {
 		try {
 			if (message.components?.[0].components.find(c => c.customId.startsWith("giveaway_"))) {
 				const giveawayID = message.components?.[0].components.find(c => c.customId.startsWith("giveaway_")).customId.split("_")[1];
-				const giveawayCancel = `DELETE
-				                        FROM giveaway
-				                        WHERE guild = '${message.guild.id}'
-					                      AND ID = '${giveawayID}'`
-				await executeQuery(giveawayCancel)
+				await bot.function.executeQuery(`DELETE FROM giveaway WHERE guild = '${message.guild.id}' AND ID = '${giveawayID}'`, bot)
 
 				const GiveawayCanecelEmbed = new Discord.EmbedBuilder()
 					.setAuthor({
@@ -48,9 +42,7 @@ module.exports = async (bot, message) => {
 					})
 					.setTimestamp()
 
-				if (logsChannel) {
-					await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
-				}
+				await logsChannel.send({embeds: [GiveawayCanecelEmbed]})
 				return;
 			}
 		} catch {return;}
@@ -65,7 +57,8 @@ module.exports = async (bot, message) => {
 			iconURL: executor.displayAvatarURL({dynamic: true})
 		})
 		.setColor(process.env.BOT_COLOR)
-		.setDescription(`Un message de ${message.author} a été supprimé par ${executor}.\n\nMessage supprimer : ${message}\nAuteur : ${message.author.displayName}\nPar : ${executor.displayName}\n\n**ID** :\nAuteur : ${message.author.id}\nPar : ${executor.id}`)
+		.setTitle("Un message a été supprimé.")
+		.setDescription(`Un message de ${message.author} a été supprimé par ${executor} dont le contenue étais le suivant :\n\n${message}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -77,7 +70,5 @@ module.exports = async (bot, message) => {
 		MessageRemoveEmbed.setImage(deletedImage)
 	}
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [MessageRemoveEmbed]})
-	}
+	await logsChannel.send({embeds: [MessageRemoveEmbed]})
 }

@@ -5,12 +5,9 @@ module.exports = async (bot, message, oldMessage) => {
 
 	if (message.author.bot || message.channel.type === Discord.ChannelType.DM || message.partial || message.content === oldMessage.content) return;
 
-	const config = await getGuildConfig(message.guild.id);
-
-	const logsChannel = config.logsChannelMessage
-		? message.guild.channels.cache.get(config.logsChannelMessage)
-		: null
-
+	const config = await getGuildConfig(bot, message.guild.id);
+	const logsChannel = message.guild.channels.cache.get(config.logsChannelMessage)
+	if (!logsChannel) return;
 	const oldImage = bot.function.getMessageImage(oldMessage)
 	const newImage = bot.function.getMessageImage(message)
 
@@ -20,7 +17,8 @@ module.exports = async (bot, message, oldMessage) => {
 			iconURL: message.author.displayAvatarURL({dynamic: true})
 		})
 		.setColor(process.env.BOT_COLOR)
-		.setDescription(`${message.author.displayName} a modifié un de ces messages.\n\nAncien message : ${message.content}\nNouveau message : ${oldMessage.content}\nAuteur : ${oldMessage.author.displayName}\n\n**ID** :\nAuteur : ${message.author.id}`)
+		.setTitle("Un message a été modifier !")
+		.setDescription(`${message.author.displayName} a modifié un de ces messages, en voici l'ancienne version :\n${message.content}\n\nEn voici la nouvelle version :\n${oldMessage.content}`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
@@ -30,7 +28,5 @@ module.exports = async (bot, message, oldMessage) => {
 	if (oldImage) messageUpdateEmbed.setThumbnail(oldImage)
 	if (newImage) messageUpdateEmbed.setImage(newImage)
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [messageUpdateEmbed]});
-	}
+	await logsChannel.send({embeds: [messageUpdateEmbed]});
 }

@@ -10,10 +10,7 @@ const runId = `${new Date().toISOString().replace(/[:.]/g, "-")}-${crypto
 	.toString("hex")}`;
 
 const logFile = path.join(logsDir, `run-${runId}.log`);
-const debugEnabled =
-	process.env.DEBUG === "true" ||
-	process.env.DEBUG === "1" ||
-	process.env.NODE_ENV !== "production";
+const debugEnabled = process.env.npm_lifecycle_event === "debug";
 
 function formatError(error) {
 	if (error instanceof Error) {
@@ -75,13 +72,13 @@ function write(level, message, details) {
 	fs.appendFileSync(logFile, fileLine);
 }
 
-const botLogsFile = {
+module.exports = {
 	runId,
 	logFile,
 
-	/*debug(message, details) {
+	debug(message, details) {
 		write("DEBUG", message, details);
-	}, This is planned for later.*/
+	},
 
 	info(message, details) {
 		write("INFO", message, details);
@@ -95,5 +92,3 @@ const botLogsFile = {
 		write("ERROR", message, details);
 	},
 };
-
-module.exports = botLogsFile;

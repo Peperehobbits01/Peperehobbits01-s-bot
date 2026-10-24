@@ -1,6 +1,5 @@
 logs/
 cache/
 node_modules/
-.idea
 .env
 package-lock.json

@@ -1,5 +1,4 @@
 const fs = require('fs')
-const botLogsFile = require("../Fonctions/botLogsFile");
 
 module.exports = bot => {
 
@@ -7,6 +6,6 @@ module.exports = bot => {
 
 		const event = require(`../Events/${file}`)
 		bot.on(file.split(".js").join(""), event.bind(null, bot))
-		botLogsFile.info(`Evenement ${file} chargé avec succès!`)
+		bot.function.botLogsFile.info(`Evenement ${file} chargé avec succès!`)
 	}
 }

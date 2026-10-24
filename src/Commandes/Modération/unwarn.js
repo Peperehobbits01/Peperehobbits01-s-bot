@@ -39,13 +39,11 @@ module.exports = {
 		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply('Tu ne peux pas supprimer les avertissements de ce membre !');
 		if ((await message.guild.members.fetchMe()).roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply('Le bot ne peut pas supprimer les avertissements de ce membre !');
 
-		const querySearch = `SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`
-		const results = await executeQuery(querySearch)
-
+		const results = await bot.function.executeQuery(`SELECT * FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = '${id}'`, bot)
 		if (results.length < 1) return message.reply('Aucun avertissement pour ce membre/ID du warn.');
 
-		await executeQuery(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`)
-		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
+		await bot.function.executeQuery(`DELETE FROM warn WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND warn = "${id}"`, bot)
+		await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`, bot)
 
 		try {
 			const unwarn1 = new Discord.EmbedBuilder()

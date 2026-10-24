@@ -1,6 +1,4 @@
 const Discord = require("discord.js")
-const ms = require("ms");
-const {executeQuery} = require("../../Fonctions/databaseConnect");
 
 module.exports = {
 
@@ -47,12 +45,11 @@ module.exports = {
 		if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply("Tu ne peux pas le démute !")
 		if (!member.isCommunicationDisabled()) return message.reply("Il n'est pas muet !")
 
-		const querySearch = `SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`
-		const results = await executeQuery(querySearch)
+		const results = await bot.function.executeQuery(`SELECT * FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = '${id}'`, bot)
 		if (results.length < 1) return message.reply('Aucune mise en silence pour ce membre/ID de mute.');
 
-		await executeQuery(`DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`)
-		await executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`)
+		await bot.function.executeQuery(`DELETE FROM mute WHERE guild = "${message.guild.id}" AND user = "${user.id}" AND mute = "${id}"`, bot)
+		await bot.function.executeQuery(`DELETE FROM sanctions_list WHERE guildId = "${message.guild.id}" AND userID = "${user.id}" AND sanctionID = "${id}"`, bot)
 
 		try {
 			const Unmute1 = new Discord.EmbedBuilder()

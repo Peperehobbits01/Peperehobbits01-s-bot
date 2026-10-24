@@ -8,12 +8,14 @@ const os = require("node:os");
 bot.commands = new Discord.Collection()
 bot.buttons = new Discord.Collection()
 bot.function = {
+	bigNumberFormatter: require("./src/Fonctions/bigNumberFormatter.js"),
 	botLogsFile: require("./src/Fonctions/botLogsFile"),
 	checkAllYouTubeChannels: require("./src/Fonctions/checkNewYouTubeVideos"),
 	processExpiredBans: require("./src/Fonctions/checkTempBanUsers"),
+	checkAllTwitchChannels: require("./src/Fonctions/checkTwitchChannelsLive.js"),
 	createId: require("./src/Fonctions/createId.js"),
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
-	databaseConnect: require("./src/Fonctions/databaseConnect.js"),
+	executeQuery: require("./src/Fonctions/databaseConnect.js"),
 	getMessageImage: require("./src/Fonctions/getMessageImage.js"),
 	shuffleArray: require("./src/Fonctions/shuffleArray.js"),
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
@@ -21,9 +23,10 @@ bot.function = {
 
 const botLogsFile = require("./src/Fonctions/botLogsFile.js");
 
+botLogsFile.debug("Le mode débogage est actif !")
 botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
-bot.login(process.env.TOKEN).then(() =>
+bot.login(process.env.DISCORD_TOKEN).then(() =>
 	loadCommands(bot, process.cwd() + '/src/Commandes'),
 	loadEvents(bot)
 )

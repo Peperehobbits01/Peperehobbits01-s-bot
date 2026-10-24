@@ -1,7 +1,6 @@
 const Discord = require('discord.js')
 const {REST} = require('@discordjs/rest')
 const {Routes} = require('discord.js')
-const botLogsFile = require('../Fonctions/botLogsFile.js');
 
 module.exports = async bot => {
 
@@ -9,7 +8,7 @@ module.exports = async bot => {
 
 	for (const [, command] of bot.commands) {
 		if (!command.name) {
-			botLogsFile.warn('Commande sans nom ignorée:', command)
+			bot.function.botLogsFile.warn('Commande sans nom ignorée:', command)
 			continue
 		}
 
@@ -27,8 +26,8 @@ module.exports = async bot => {
 		commands.push(slashcommand);
 	}
 
-	const rest = new REST({version: "10"}).setToken(process.env.TOKEN);
+	const rest = new REST({version: "10"}).setToken(process.env.DISCORD_TOKEN);
 
 	await rest.put(Routes.applicationCommands(bot.user.id), {body: commands})
-	botLogsFile.info("Les / Commandes sont crées avec succès!");
+	bot.function.botLogsFile.info("Les / Commandes sont crées avec succès!");
 }

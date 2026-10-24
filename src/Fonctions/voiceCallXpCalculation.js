@@ -1,9 +1,8 @@
-const {executeQuery} = require('./databaseConnect')
 const {getGuildConfig} = require('./guildConfig')
 
 const activeTimers = new Map()
 
-const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState, member) => {
+const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState, member, bot) => {
 	if (!newChannel) return
 
 	const existingTimer = activeTimers.get(member.id)
@@ -14,7 +13,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 
 	const xpGiver = setInterval(async () => {
 		const lookupUser = `SELECT * FROM xp WHERE guild = '${oldState.guild.id}' AND user = ${member.id}`
-		const lookUpUserResults = await executeQuery(lookupUser)
+		const lookUpUserResults = await bot.function.executeQuery(lookupUser, bot)
 
 		let xptogive = Math.floor(Math.random() * 25) + 10
 		const user = oldState.guild.members.cache.get(member.id)
@@ -23,13 +22,13 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 
 		if (config.boosterRole && user?.roles?.cache.has(config.boosterRole)) {
 			xptogive = Math.floor(xptogive * 1.5)
-		} else if ((config.momRole && user?.roles?.cache.has(config.momRole)) || (config.eventWinnerRole && user?.roles?.cache.has(config.eventWinnerRole))) {
+		} else if ((config.mdmRole && user?.roles?.cache.has(config.mdmRole)) || (config.eventWinnerRole && user?.roles?.cache.has(config.eventWinnerRole))) {
 			xptogive = Math.floor(xptogive * 1.25)
 		}
 
 		if (lookUpUserResults.length < 1) {
 			const queryAdd = `INSERT INTO xp (guild, user, xp, level, xptotal) VALUES ('${oldState.guild.id}', '${member.id}', '${xptogive}', '1', '${xptogive}')`
-			await executeQuery(queryAdd)
+			await bot.function.executeQuery(queryAdd, bot)
 
 		} else {
 			let levelChannel = oldState.guild.channels.cache.get(config.levelPassChannel)
@@ -42,14 +41,14 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 				const xpneeded = Math.round(100 * Math.pow(1.25, level))
 
 				const queryXpupdate = `UPDATE xp SET xp = '${xp + xptogive - xpneeded}', level = '${level + 1}', xptotal = '${xptotal + xptogive}' WHERE guild = '${oldState.guild.id}' AND user = '${member.id}'`
-				await executeQuery(queryXpupdate)
+				await bot.function.executeQuery(queryXpupdate, bot)
 
 			levelChannel.send(`Tu l'as fait ${user}, tu arrives au niveau ${level + 1}. Bien joué à toi !`)
 
 			} else {
 
 				const queryXpUpdate = `UPDATE xp SET xp = '${xp + xptogive}', xptotal = '${xptotal + xptogive}' WHERE guild = '${oldState.guild.id}' AND user = '${member.id}'`
-				await executeQuery(queryXpUpdate)
+				await bot.function.executeQuery(queryXpUpdate, bot)
 
 			}
 		}

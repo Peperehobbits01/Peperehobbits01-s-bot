@@ -1,6 +1,5 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
-const {executeQuery} = require(`../../Fonctions/databaseConnect.js`);
 const {registerFont} = require("canvas")
 
 module.exports = {
@@ -12,8 +11,7 @@ module.exports = {
 
 	async run(bot, message) {
 
-		const querySearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC LIMIT 10`
-		const leaderboard = await executeQuery(querySearch)
+		const leaderboard = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' ORDER BY level DESC, xp DESC LIMIT 10`, bot)
 
 		if(leaderboard.length < 1) return message.reply("Aucun utilisateur n'est enregistré sur ce serveur !")
 
@@ -63,7 +61,7 @@ module.exports = {
 			ctx.font = '28px "Permanent Marker"';
 			ctx.fillText(`Rang : ${i + 1 === 1 ? "1er" : `${i + 1}ème`}`, 200, (60 + (i * 128)));
 			ctx.fillText(`Niveau : ${leaderboard[i].level}`, 200, (90 + (i * 128)));
-			ctx.fillText(`Expérience : ${leaderboard[i].xp} / ${need}`, 200, (120 + (i * 128)));
+			ctx.fillText(`Expérience : ${bot.function.bigNumberFormatter(leaderboard[i].xp)} / ${bot.function.bigNumberFormatter(need)}`, 200, (120 + (i * 128)));
 		}
 
 		if (leaderboard.length > 5) {
@@ -105,7 +103,7 @@ module.exports = {
 				ctx.font = '28px "Permanent Marker"';
 				ctx.fillText(`Rang : ${i + 6 === 1 ? "1er" : `${i + 6}ème`}`, 840, (60 + (i * 128)));
 				ctx.fillText(`Niveau : ${leaderboard[leaderboardIndex].level}`, 840, (90 + (i * 128)));
-				ctx.fillText(`Expérience : ${leaderboard[leaderboardIndex].xp} / ${need}`, 840, (120 + (i * 128)));
+				ctx.fillText(`Expérience : ${bot.function.bigNumberFormatter(leaderboard[leaderboardIndex].xp)} / ${bot.function.bigNumberFormatter(need)}`, 840, (120 + (i * 128)));
 			}
 		}
 

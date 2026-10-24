@@ -1,14 +1,14 @@
 const Discord = require("discord.js")
 const {getGuildConfig, setGuildConfig} = require("../../Fonctions/guildConfig.js")
-const {GUILD_CONFIG_SCHEMA} = require("../../Fonctions/defaultGuildConfig.js")
+const {GUILD_CONFIG_SCHEMA} = require("../../Enum/defaultGuildConfig.js")
 
 function formatValue(value) {
-	if (value === null || value === undefined || value === "") return "_(vide)_"
-	if (Array.isArray(value)) return value.length > 0 ? value.map((v) => `\`${v}\``).join(", ") : "_(vide)_"
+	if (value === null || value === undefined || value === "") return "_(Aucune valeur)_"
+	if (Array.isArray(value)) return value.length > 0 ? value.map((v) => `\`${v}\``).join(", ") : "_(Aucune valeur)_"
 	return `\`${value}\``
 }
 
-function buildListEmbed(config) {
+function buildListEmbed(bot, config) {
 	const embed = new Discord.EmbedBuilder()
 		.setColor(process.env.BOT_COLOR)
 		.setTitle("Configuration du serveur")
@@ -23,7 +23,7 @@ function buildListEmbed(config) {
 
 	embed.setFooter({
 		text: process.env.EMBED_FOOTER,
-		iconURL: null,
+		iconURL: bot.user.displayAvatarURL({dynamic: true}),
 	})
 
 	return embed
@@ -38,14 +38,14 @@ module.exports = {
 		{
 			type: "string",
 			name: "cle",
-			description: "Clé de configuration à modifier (optionnel pour afficher toutes les valeurs).",
+			description: "Paramètres de la configuration à modifier (optionnel pour afficher toutes les valeurs).",
 			required: false,
 			autocomplete: true
 		},
 		{
 			type: "string",
 			name: "valeur",
-			description: "Nouvelle valeur pour la clé (omettre pour réinitialiser).",
+			description: "Nouvelle valeur pour le paramètres (omettre pour réinitialiser).",
 			required: false,
 			autocomplete: false
 		}
@@ -67,13 +67,21 @@ module.exports = {
 		const valeur = args.getString("valeur");
 
 		if (!cle) {
-			const config = await getGuildConfig(guildId);
-			return message.editReply({embeds: [buildListEmbed(config)]});
+			try {
+				const config = await getGuildConfig(bot, guildId);
+				return message.editReply({embeds: [buildListEmbed(bot, config)]});
+			} catch (error) {
+				bot.function.botLogsFile.error(`Impossible de lire la configuration du serveur ${guildId} :`, error);
+				return message.editReply({
+					content: "Impossible de lire la configuration pour le moment.",
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
 		}
 
 		if (!GUILD_CONFIG_SCHEMA[cle]) {
 			return message.editReply({
-				content: `Clé inconnue : \`${cle}\`. Utilisez /config sans clé pour lister les clés disponibles.`,
+				content: `Paramètre inconnue : \`${cle}\`. Utilisez /config sans paramètre pour lister tous les paramètres disponibles.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		}
@@ -82,21 +90,28 @@ module.exports = {
 			[cle]: valeur === null ? (GUILD_CONFIG_SCHEMA[cle].type === "list" ? [] : null) : valeur
 		};
 
-		if (valeur === null) {
-			return message.editReply({
-				content: `Clé \`${cle}\` réinitialisée.`,
-				flags: [Discord.MessageFlags.Ephemeral]
-			});
-		}
-
 		try {
-			const updated = await setGuildConfig(guildId, changes);
+			const updated = await setGuildConfig(bot, guildId, changes);
+
+			if (valeur === null) {
+				return message.editReply({
+					content: `Paramètre \`${cle}\` réinitialisé.`,
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
 
 			return message.editReply({
-				content: `Clé \`${cle}\` définie sur ${formatValue(updated[cle])}.`,
+				content: `Paramètre \`${cle}\` définie sur ${formatValue(updated[cle])}.`,
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		} catch (error) {
+			if (error.code === "INVALID_GUILD_CONFIG") {
+				return message.editReply({
+					content: error.message,
+					flags: [Discord.MessageFlags.Ephemeral]
+				});
+			}
+			bot.function.botLogsFile.error(`Impossible d'enregistrer la configuration du serveur ${guildId} :`, error);
 			return message.editReply({
 				content: "Une erreur est survenue lors de la sauvegarde.",
 				flags: [Discord.MessageFlags.Ephemeral]

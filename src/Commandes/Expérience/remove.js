@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const {executeQuery} = require("../../Fonctions/databaseConnect")
 
 module.exports = {
 	name: "remove",
@@ -33,8 +32,7 @@ module.exports = {
 
 		await message.deferReply()
 
-		const queryAddSearch = `SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`
-		const AddResults = await executeQuery(queryAddSearch)
+		const AddResults = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot)
 
 		if (AddResults.length < 1) return message.followUp({content: "Ce membre n'est pas dans la base de données !"})
 
@@ -63,8 +61,7 @@ module.exports = {
 
 		if (newXp < 0) newXp = 0;
 
-		const queryUpdate = `UPDATE xp SET xp = '${newXp}', level = '${newLevel}', xptotal = '${newXpTotal}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`;
-		await executeQuery(queryUpdate);
+		await bot.function.executeQuery(`UPDATE xp SET xp = '${newXp}', level = '${newLevel}', xptotal = '${newXpTotal}' WHERE guild = '${message.guildId}' AND user = '${member.id}'`, bot);
 
 		const succesRemoveEmbed = new Discord.EmbedBuilder()
 			.setColor(process.env.BOT_COLOR)

@@ -1,14 +1,11 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, ban) => {
 
-	const config = await getGuildConfig(ban.guild.id);
-	const logsChannel = config.logsChannelSanctions
-		? ban.guild.channels.cache.get(config.logsChannelSanctions)
-		: null;
-
+	const config = await getGuildConfig(bot, ban.guild.id);
+	const logsChannel = ban.guild.channels.cache.get(config.logsChannelSanctions)
+	if (!logsChannel) return;
 	const fetchedLogs = await ban.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.guildBanAdd,
 		limit: 5,
@@ -34,24 +31,21 @@ module.exports = async (bot, ban) => {
 			name: ban.user.displayName,
 			iconURL: ban.user.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`${ban.user.username} a été banni par ${executor} pour la raison ${ban.reason}\nNom de l'utilisateur : ${ban.user}\nRaison : ${ban.reason}\nPar l'utilisateur : ${executor.name}\n**ID** :\nL'utilisateur : \`${ban.user.id}\`\nPar l'utilisateur : \`${executor.id}\``)
+		.setTitle("Un membre vient d'être banni.")
+		.setDescription(`${ban.user} a été banni par ${executor} pour la raison :\n\n${ban.reason}.`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [BanEmbed], components: [unban]});
-	}
+	await logsChannel.send({embeds: [BanEmbed], components: [unban]});
 
-	const xpSystemSearch = `SELECT * FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
-	const xpSystemResults = await executeQuery(xpSystemSearch)
+	const xpSystemResults = await bot.function.executeQuery(`SELECT * FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`, bot)
 
 	if(xpSystemResults.length > 0) {
 		if(xpSystemResults.time !== null){
-			const removeUserFromXpSystem = `DELETE FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`
-			await executeQuery(removeUserFromXpSystem)
+			await bot.function.executeQuery(`DELETE FROM xp WHERE guild = '${ban.guild.id}' AND user = '${ban.user.id}'`, bot)
 		}
 	}
 }

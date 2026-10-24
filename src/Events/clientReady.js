@@ -1,32 +1,34 @@
 const loadSlashCommand = require("../Loaders/loadSlashCommands")
 const {ActivityType} = require("discord.js")
-const botLogsFile = require("../Fonctions/botLogsFile")
-const {migrateEnvToGuildConfig} = require("../Fonctions/migrateEnvToGuildConfig")
-const {migrateSanctionsSystem} = require("../Fonctions/migrateSanctionsSystem")
-const fs = require("node:fs");
-const path = require("node:path");
-const cacheDir = path.join(__dirname, "../../cache")
-const cacheFolderExists = fs.existsSync(cacheDir)
+const {CURRENT_VERSION, migrateAllGuildConfigs} = require("../Fonctions/guildConfigMigrations");
 
 module.exports = async bot => {
 
-	await migrateEnvToGuildConfig(bot)
-	await migrateSanctionsSystem(bot)
+	const result = await migrateAllGuildConfigs(bot);
 
-	await loadSlashCommand(bot)
-	if(cacheFolderExists === false) {
-		fs.mkdirSync(cacheDir, { recursive: true })
-		botLogsFile.info("Création du dossier de cache réussi !")
+	if (typeof result === "number") {
+		bot.function.botLogsFile.info(`Aucune ligne à migrer de la v0 → v${CURRENT_VERSION}.`);
+	} else {
+		bot.function.botLogsFile.info(`Terminé : ${result.migrated} mise(s) à jour, ${result.failed} échec(s).`);
 	}
 
-	bot.user.setPresence({activities: [{name: "la version 1.7.1", type: ActivityType.Watching}], status: "online"})
+	await loadSlashCommand(bot)
 
-	botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
+	bot.user.setPresence({activities: [{name: "la version 1.8.0", type: ActivityType.Watching}], status: "online"})
+
+	bot.function.botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
 	await bot.function.processExpiredBans(bot).then(() =>
 		setInterval(() => bot.function.processExpiredBans(bot), 60 * 60 * 1000)
 	)
 
 	await bot.function.checkAllYouTubeChannels(bot).then(() =>
-	setInterval(() => bot.function.checkAllYouTubeChannels(bot), 5 * 60 * 1000))
+		setInterval(() => bot.function.checkAllYouTubeChannels(bot), 5 * 60 * 1000)
+	)
+
+	await bot.function.checkAllTwitchChannels(bot).then(() =>
+		setInterval(() => bot.function.checkAllTwitchChannels(bot), 5 * 60 * 1000)
+	).catch((error) =>
+		bot.function.botLogsFile.error("La détection Twitch a échoué :", error),
+	);
 }

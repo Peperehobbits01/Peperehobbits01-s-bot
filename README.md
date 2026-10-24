@@ -36,6 +36,15 @@ Use the peperehobbits01_s_bot.sql file after creating a database and import the 
 
 You have to copy the .env.example and name the copy .env, you can then put the values you want for each setting.
 
+#### Twitch live notifications :
+
+1. Sign in to the [Twitch Developer Console](https://dev.twitch.tv/console/apps), register an application, and copy its **Client ID** and **Client Secret** into `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` in `.env`. The bot uses Twitch's app access token flow; no user login, OAuth scopes, or redirect URL are needed. Keep the secret private and never commit `.env`.
+2. In each Discord server, run `/config` as the server owner to set:
+   - `twitchChannelUsernames`: Twitch logins separated by commas (for example `channel_one,channel_two`).
+   - `twitchAnnouncementChannel`: the ID of the text channel for announcements.
+   - `twitchNotifRole`: the ID of the role to mention.
+3. Make sure the bot can view and send messages in that channel, embed links, and attach files. The bot checks for new live streams every five minutes. Its first successful check establishes a baseline, so streams already live when it starts are not announced.
+
 #### To test the application :
 
 Simply run :
@@ -49,14 +58,15 @@ node main
 ```
 █───Project folder
 │
-│   main.js
+│   .env.example
 │   .gitignore
 │   .gitattributes
-│   package-lock.json
+│   LICENSE
+│   main.js
 │   package.json
-│   README.md
-│   .env.example
+│   package-lock.json
 │   peperehobbits01_s_bot.sql
+│   README.md
 │
 └───src
     │

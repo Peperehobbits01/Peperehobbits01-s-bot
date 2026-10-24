@@ -1,14 +1,11 @@
 const Discord = require("discord.js")
-const {executeQuery} = require("../Fonctions/databaseConnect");
 const {getGuildConfig} = require("../Fonctions/guildConfig.js");
 
 module.exports = async (bot, ban) => {
 
-	const config = await getGuildConfig(ban.guild.id);
-	const logsChannel = config.logsChannelSanctions
-		? ban.guild.channels.cache.get(config.logsChannelSanctions)
-		: null;
-
+	const config = await getGuildConfig(bot, ban.guild.id);
+	const logsChannel = ban.guild.channels.cache.get(config.logsChannelSanctions)
+	if (!logsChannel) return;
 	const fetchedLogs = await ban.guild.fetchAuditLogs({
 		type: Discord.AuditLogEvent.guildBanRemove,
 		limit: 5,
@@ -26,20 +23,19 @@ module.exports = async (bot, ban) => {
 			name: ban.user.displayName,
 			iconURL: ban.user.displayAvatarURL({dynamic: true})
 		})
-		.setDescription(`${ban.user.username} a été débanni par ${executor}\nNom de l'utilisateur : ${ban.user}\nRaison du ban : ${ban.reason}\nPar l'utilisateur : ${executor.name}\n**ID** :\nL'utilisateur : \`${ban.user.id}\`\nPar l'utilisateur : \`${executor.id}\``)
+		.setTitle("Un utilisateur a été débanni.")
+		.setDescription(`${ban.user} a été débanni par ${executor}, la raison du bannisement était :\n\n${ban.reason}.`)
 		.setFooter({
 			text: process.env.EMBED_FOOTER,
 			iconURL: bot.user.displayAvatarURL({dynamic: true})
 		})
 		.setTimestamp()
 
-	if (logsChannel) {
-		await logsChannel.send({embeds: [BanEmbed]})
-	}
+	await logsChannel.send({embeds: [BanEmbed]})
 
-	const searchForBanUser = await executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`)
+	const searchForBanUser = await bot.function.executeQuery(`SELECT * FROM sanctions_list WHERE guildId = '${ban.guild.id}' AND userID = '${ban.user}'`, bot)
 
 	if(searchForBanUser && searchForBanUser.sanctions_type === "TEMPBAN") {
-		await executeQuery(`UPDATE sanctions_list SET expired = 1 WHERE guildId = ${ban.guild.id} AND userID = '${ban.user.id}' AND sanctionID = '${searchForBanUser.sanctionID}'`)
+		await bot.function.executeQuery(`UPDATE sanctions_list SET expired = 1 WHERE guildId = ${ban.guild.id} AND userID = '${ban.user.id}' AND sanctionID = '${searchForBanUser.sanctionID}'`, bot)
 	}
 }
