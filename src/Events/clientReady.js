@@ -3,10 +3,14 @@ const {ActivityType} = require("discord.js")
 const {CURRENT_VERSION, migrateAllGuildConfigs} = require("../Fonctions/guildConfigMigrations");
 
 module.exports = async bot => {
+	let result;
+	try {
+		result = await migrateAllGuildConfigs(bot);
+	} catch (error) {
+		bot.function.botLogsFile.error("Échec des migrations de configuration :", error);
+	}
 
-	const result = await migrateAllGuildConfigs(bot);
-
-	if (typeof result === "number") {
+	if (result.migrated === 0) {
 		bot.function.botLogsFile.info(`Aucune ligne à migrer de la v0 → v${CURRENT_VERSION}.`);
 	} else {
 		bot.function.botLogsFile.info(`Terminé : ${result.migrated} mise(s) à jour, ${result.failed} échec(s).`);
