@@ -105,8 +105,15 @@ async function setGuildConfig(bot, guildId, changes) {
 	return cloneConfig(merged);
 }
 
+function removeGuildConfigFromCache(guildId) {
+	const id = String(guildId);
+	cache.delete(id);
+	cacheExpiresAt.delete(id);
+}
+
 module.exports = {
 	cache,
 	getGuildConfig,
+	removeGuildConfigFromCache,
 	setGuildConfig,
 };
