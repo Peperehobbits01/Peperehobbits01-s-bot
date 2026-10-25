@@ -26,10 +26,11 @@ const botLogsFile = require("./src/Fonctions/botLogsFile.js");
 botLogsFile.debug("Le mode débogage est actif !")
 botLogsFile.info(`Tourne sur ${os.type()} ${os.release()} sur l'architecture : ${os.arch()}.`)
 
-bot.login(process.env.DISCORD_TOKEN).then(() =>
-	loadCommands(bot, process.cwd() + '/src/Commandes'),
-	loadEvents(bot)
-)
+async function startBot() {
+	loadEvents(bot);
+	await loadCommands(bot, process.cwd() + "/src/Commandes");
+	await bot.login(process.env.DISCORD_TOKEN);
+}
 
 process.on("unhandledRejection", (reason) => {
 	botLogsFile.error("Unhandled promise rejection", reason);
@@ -54,4 +55,9 @@ process.on('SIGTERM', () => {
 		botLogsFile.info('Réception de SIGTERM. Déconnexion du bot réussie.')
 		process.exit(1);
 	});
+});
+
+startBot().catch((error) => {
+	botLogsFile.error("Le Bot n'a pas su démarrer", error);
+	process.exitCode = 1;
 });
