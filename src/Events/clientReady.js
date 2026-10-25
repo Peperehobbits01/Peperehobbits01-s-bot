@@ -27,7 +27,7 @@ module.exports = async bot => {
 	)
 
 	await bot.function.checkAllTwitchChannels(bot).then(() =>
-		setInterval(() => bot.function.checkAllTwitchChannels(bot), 5 * 60 * 1000)
+		setInterval(() => bot.function.checkAllTwitchChannels(bot).catch((error) => bot.function.botLogsFile.error("La détection Twitch a échoué :", error),), 5 * 60 * 1000)
 	).catch((error) =>
 		bot.function.botLogsFile.error("La détection Twitch a échoué :", error),
 	);
