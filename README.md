@@ -1,10 +1,8 @@
 # Presentation of Peperehobbits01's bot
 
 Peperehobbits01's bot is a multipurpose Discord bot using discord.js to connect to Discord. It is mostly made for the
-Discord server
-of the youtubeur Peperehobbits01, but it is designed to be usable on other servers. No system can be disabled, and it is
-not planned as a feature. So if a system isn't
-to your liking, I commanded looking for another Discord bot then Peperehobbits01's bot.
+Discord server of the youtubeur Peperehobbits01, but it is designed to be usable on other servers. No system can be disabled, and it is
+not planned as a feature. So if a system isn't to your liking, I commanded looking for another Discord bot then Peperehobbits01's bot.
 
 ## Requirements to run/program the software
 
@@ -13,22 +11,20 @@ to your liking, I commanded looking for another Discord bot then Peperehobbits01
 | Node.js  | 22.x or higher   | Bundles javaScript and npm |
 | MySQL    | 8.2.x or higher  | The database of the bot    |
 
-### All the dependecies in the packages.json files.
-
 ## Recommended to program this software
 
-| Software   | Version         | More information             |
-|------------|-----------------|------------------------------|
-| phpMyAdmin | 5.2.1 or higher | Interface for MySQL          |
-| XAMPP      | 8.2.4 or higher | Bundles MysQL and phpMyAdmin |
+| Software   | Version         | More information                                                               |
+|------------|-----------------|--------------------------------------------------------------------------------|
+| phpMyAdmin | 5.2.1 or higher | Interface for MySQL                                                            |
+| WebStorm   | 26.0 or higher  | Development IDE for javascript development that also integrates db connections |
 
-#### After pulling the repo, install dependencies (add the '-D' argument to install dev dependencies) :
+#### After pulling the repo, install dependencies:
 
 ```shell
 npm install
 ```
 
-#### Do database migrations :
+#### Database setup :
 
 Use the peperehobbits01_s_bot.sql file after creating a database and import the file into it.
 
@@ -47,11 +43,14 @@ You have to copy the .env.example and name the copy .env, you can then put the v
 
 #### To test the application :
 
-Simply run :
+If you are on WebStorm or any other JetBrains IDE, use the built-in run feature, you can choose between Dev Env (acts has prod env), or debug env to have the debug logging enabled.
+For the others simply run :
 
 ```shell
 node main
 ```
+
+VScode support for it's run feature is planned to be added in the feature, but there is no ETA for it.
 
 # Project architecture
 

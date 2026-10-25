@@ -31,7 +31,7 @@ module.exports = async (bot) => {
 			} catch {}
 
 		} catch (err) {
-			bot.function.botLogsFile.error(`[TempBan] Failed to unban ${row.user} in ${row.guild}:`, err);
+			throw new Error(`Echecs du débanissement de ${row.user} dans ${row.guild}:`);
 		}
 	}
 }

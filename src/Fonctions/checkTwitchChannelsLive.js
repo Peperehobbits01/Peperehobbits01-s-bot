@@ -19,7 +19,7 @@ function getTwitchCredentials(bot) {
 	const clientSecret = process.env.TWITCH_CLIENT_SECRET || process.env.TWITCH_SECRET;
 
 	if (!clientId || !clientSecret) {
-		bot.function.botLogsFile.warn("Les identifiants Twitch n'ont pas été trouver")
+		throw new Error("Les identifiants Twitch n'ont pas été trouver")
 	}
 
 	return {clientId, clientSecret};
