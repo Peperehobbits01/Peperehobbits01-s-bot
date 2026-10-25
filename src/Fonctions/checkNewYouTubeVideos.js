@@ -94,7 +94,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 
 		if (lastVideoId.length < 1) {
 			lastVideoId = videos[0].id;
-			await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
+			await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId, bot);
 
 			bot.function.botLogsFile.info(`Référence initiale YouTube définie sur ${lastVideoId} (${YouTubeChannelId}) pour le serveur ${guild.id}`);
 			return;
@@ -162,7 +162,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 		}
 
 		lastVideoId = videos[0].id;
-		await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId);
+		await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId, bot);
 	} catch (error) {
 		bot.function.botLogsFile.error("Une erreur est survenue pour la détection YouTube :", error);
 	}
