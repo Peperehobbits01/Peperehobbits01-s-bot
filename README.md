@@ -13,9 +13,10 @@ not planned as a feature. So if a system isn't to your liking, I commanded looki
 
 ## Recommended to program this software
 
-| Software   | Version         | More information             |
-|------------|-----------------|------------------------------|
-| phpMyAdmin | 5.2.1 or higher | Interface for MySQL          |
+| Software   | Version         | More information                                                               |
+|------------|-----------------|--------------------------------------------------------------------------------|
+| phpMyAdmin | 5.2.1 or higher | Interface for MySQL                                                            |
+| WebStorm   | 26.0 or higher  | Development IDE for javascript development that also integrates db connections |
 
 #### After pulling the repo, install dependencies:
 
