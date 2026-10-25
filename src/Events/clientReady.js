@@ -19,15 +19,19 @@ module.exports = async bot => {
 	bot.function.botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
 	await bot.function.processExpiredBans(bot).then(() =>
-		setInterval(() => bot.function.processExpiredBans(bot), 60 * 60 * 1000)
-	)
+		setInterval(() => bot.function.processExpiredBans(bot).catch((error) => bot.function.botLogsFile.error("La détection des débanissements a échoué :", error)), 60 * 60 * 1000)
+	).catch((error) =>
+		bot.function.botLogsFile.error("La détection des débanissements a échoué :", error),
+	);
 
 	await bot.function.checkAllYouTubeChannels(bot).then(() =>
-		setInterval(() => bot.function.checkAllYouTubeChannels(bot), 5 * 60 * 1000)
-	)
+		setInterval(() => bot.function.checkAllYouTubeChannels(bot).catch((error) => bot.function.botLogsFile.error("La détection YouTube a échoué :", error)), 5 * 60 * 1000)
+	).catch((error) =>
+		bot.function.botLogsFile.error("La détection YouTube a échoué :", error),
+	);
 
 	await bot.function.checkAllTwitchChannels(bot).then(() =>
-		setInterval(() => bot.function.checkAllTwitchChannels(bot).catch((error) => bot.function.botLogsFile.error("La détection Twitch a échoué :", error),), 5 * 60 * 1000)
+		setInterval(() => bot.function.checkAllTwitchChannels(bot).catch((error) => bot.function.botLogsFile.error("La détection Twitch a échoué :", error)), 5 * 60 * 1000)
 	).catch((error) =>
 		bot.function.botLogsFile.error("La détection Twitch a échoué :", error),
 	);
