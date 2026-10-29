@@ -1,6 +1,6 @@
 {
   "name": "peperehobbits01-bot",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "A Discord bot developed by Peperehobbits01 for usage on his Discord at first.",
   "main": "main.js",
   "scripts": {
