@@ -18,7 +18,7 @@ const voiceCallXpCalculation = async (oldChannel, newChannel, newState, oldState
 		let xptogive = Math.floor(Math.random() * 25) + 10
 		const user = oldState.guild.members.cache.get(member.id)
 
-		const config = await getGuildConfig(oldState.guild.id)
+		const config = await getGuildConfig(bot, oldState.guild.id)
 
 		if (config.boosterRole && user?.roles?.cache.has(config.boosterRole)) {
 			xptogive = Math.floor(xptogive * 1.5)

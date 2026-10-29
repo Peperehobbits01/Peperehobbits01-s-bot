@@ -27,6 +27,7 @@ module.exports = async (query, bot) => {
 		return rows;
 	} catch (error) {
 		bot.function.botLogsFile.error(`Erreur lors de l'exécution de la requête: \n`, error);
+		throw error
 	} finally {
 		if (connection) connection.release();
 	}

@@ -32,7 +32,6 @@ jobs:
             VERSION=$(node -p "require('./package.json').version")
           fi
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
-          echo "version=$VERSION_NO_V" >> $GITHUB_OUTPUT
           echo "Found version: $VERSION"
 
       - name: Get release body from PR
@@ -62,7 +61,7 @@ jobs:
             --latest
 
       - name: Cleanup release branch
-        if: always()
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
