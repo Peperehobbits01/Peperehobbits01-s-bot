@@ -18,7 +18,7 @@ module.exports = async bot => {
 
 	await loadSlashCommand(bot)
 
-	bot.user.setPresence({activities: [{name: "la version 1.8.1", type: ActivityType.Watching}], status: "online"})
+	bot.user.setPresence({activities: [{name: "la version 1.8.2", type: ActivityType.Watching}], status: "online"})
 
 	bot.function.botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 
