@@ -164,7 +164,11 @@ function buildLiveEmbed(stream, gameImageUrl) {
 	}
 
 	if (stream.thumbnail_url) {
-		embed.setImage(stream.thumbnail_url.replace("{width}", "640").replace("{height}", "360"));
+		const thumbnailUrl = new URL(
+			stream.thumbnail_url.replace("{width}", "640").replace("{height}", "360"),
+		);
+		thumbnailUrl.searchParams.set("stream_id", stream.id);
+		embed.setImage(thumbnailUrl.toString());
 	}
 
 	if (stream.started_at && !Number.isNaN(Date.parse(stream.started_at))) {
