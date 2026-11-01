@@ -19,7 +19,7 @@ function getTwitchCredentials(bot) {
 	const clientSecret = process.env.TWITCH_CLIENT_SECRET || process.env.TWITCH_SECRET;
 
 	if (!clientId || !clientSecret) {
-		throw new Error("Les identifiants Twitch n'ont pas été trouver")
+		bot.function.botLogsFile.warn("Les identifiants Twitch n'ont pas été trouver")
 	}
 
 	return {clientId, clientSecret};
@@ -31,6 +31,7 @@ async function getTwitchAppToken(forceRefresh = false, bot) {
 	}
 
 	const {clientId, clientSecret} = getTwitchCredentials(bot);
+	if(!clientId || !clientSecret) return;
 	const response = await fetch(TWITCH_TOKEN_URL, {
 		method: "POST",
 		headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -58,6 +59,7 @@ async function getTwitchAppToken(forceRefresh = false, bot) {
 
 async function fetchTwitchApi(url, bot) {
 	const {clientId} = getTwitchCredentials(bot);
+	if(!clientId) return;
 	let response;
 	for (let attempt = 0; attempt < 2; attempt += 1) {
 		const token = await getTwitchAppToken(attempt === 1, bot);
@@ -95,6 +97,8 @@ async function getLiveStreams(logins, bot) {
 		}
 
 		const response = await fetchTwitchApi(url, bot);
+
+		if(!response) return;
 
 		if (!response.ok) {
 			throw new Error(`Requête des streams auprès de Twitch échoué : ${response.status} ${await response.text()}`);
@@ -211,6 +215,7 @@ module.exports = async (bot) => {
 
 		const logins = [...guildsByLogin.keys()];
 		const streams = logins.length > 0 ? await getLiveStreams(logins, bot) : [];
+		if(!streams) return;
 		const activeGuildLogins = new Set();
 
 		for (const [login, subscribers] of guildsByLogin) {
