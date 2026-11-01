@@ -164,7 +164,7 @@ async function checkYouTubeChannel(bot, guild, YouTubeChannelId, config) {
 		lastVideoId = videos[0].id;
 		await saveLastVideoId(guild.id, YouTubeChannelId, lastVideoId, bot);
 	} catch (error) {
-		throw new Error("Le message sur YouTube n'a pas été envoyé.")
+		throw new Error("Le message de notifications Youtube n'a pas été envoyé.\n" + error)
 	}
 }
 
@@ -179,11 +179,7 @@ module.exports = async (bot) => {
 			const channelIds = parseYouTubeChannelIds(config.youtubeChannelIds);
 
 			for (const YouTubeChannelId of channelIds) {
-				try {
-					await checkYouTubeChannel(bot, guild, YouTubeChannelId, config);
-				} catch (error) {
-					throw new Error(`Erreur lors du check de ${YouTubeChannelId} (${guildId}) :`);
-				}
+				await checkYouTubeChannel(bot, guild, YouTubeChannelId, config);
 			}
 		}
 	} finally {
