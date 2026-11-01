@@ -1,75 +1,34 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
 const {getGuildConfig} = require("../../Fonctions/guildConfig.js");
 
 module.exports = {
-
 	name: "report",
 	description: "Envoyer un rapport à l'équipe.",
 	permission: "Aucune",
 	category: "🛡・Modération",
 
 	async run(bot, message) {
+		const reportInput = new Discord.TextInputBuilder()
+			.setCustomId("sayreport")
+			.setStyle(Discord.TextInputStyle.Paragraph)
+			.setPlaceholder("Indiquez votre signalement ici.")
+			.setRequired(true)
+			.setMaxLength(4000);
 
-		let question1 = new Discord.TextInputBuilder({
-			customId: 'sayreport',
-			label: 'Que souhaitez-vous signaler ?',
-			required: true,
-			placeholder: 'Indiquez votre signalement ici.',
-			style: Discord.TextInputStyle.Paragraph
-		})
+		const reportLabel = new Discord.LabelBuilder()
+			.setLabel("Que souhaitez-vous signaler ?")
+			.setTextInputComponent(reportInput);
 
-		const ActionRow1 = new Discord.ActionRowBuilder().addComponents(question1);
+		const reportModal = new Discord.ModalBuilder()
+			.setCustomId("report")
+			.setTitle("Signaler un problème")
+			.addTextDisplayComponents(
+				new Discord.TextDisplayBuilder().setContent(
+					"S'il s'agit d'un bug, vous pouvez [créer une issue sur GitHub](https://github.com/Peperehobbit01/Peperehobbits01-s-bot/issues/new?template=bug-report.yml).",
+				),
+			)
+			.addLabelComponents(reportLabel);
 
-		let Modal = new Discord.ModalBuilder({
-			customId: 'report',
-			title: "Signaler un problème.",
-			components: [ActionRow1]
-		})
-
-		await message.showModal(Modal)
-
-		try {
-
-			let reponse = await message.awaitModalSubmit({time: 300000})
-
-			let whatToReport = reponse.fields.getTextInputValue('sayreport')
-
-			const EmbedReport = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Votre rapport a bien été reçu.`)
-				.setDescription("Merci d'avoir effectué votre rapport. Nous regarderons à celui-ci dès que possible !")
-				.setFooter({
-					text: process.env.EMBED_FOOTER,
-					iconURL: bot.user.displayAvatarURL({dynamic: true})
-				})
-
-			const config = await getGuildConfig(message.guild.id);
-			const channel = config.reportChannel
-				? message.guild.channels.cache.get(config.reportChannel)
-				: null;
-
-			if (!channel) {
-				await reponse.reply({
-					content: "Aucun salon de signalement configuré pour ce serveur.",
-					flags: [Discord.MessageFlags.Ephemeral]
-				});
-				return;
-			}
-
-			const EmbedwhatToReport = new Discord.EmbedBuilder()
-				.setColor(process.env.BOT_COLOR)
-				.setTitle(`Rapport effectué par __${message.user.displayName}__`)
-				.setDescription(`${whatToReport}`)
-				.setFooter({
-					text: `${message.user.displayName}・ID : ${message.user.id}`,
-					iconURL: message.user.displayAvatarURL({dynamic: true})
-				})
-
-			await channel.send({embeds: [EmbedwhatToReport]});
-
-			await reponse.reply({embeds: [EmbedReport], flags: [Discord.MessageFlags.Ephemeral]})
-
-		} catch (err) {
-		}
-	}
-}
+		await message.showModal(reportModal);
+	},
+};
