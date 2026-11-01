@@ -44,8 +44,6 @@ function write(level, message, details) {
 		return;
 	}
 
-	const timestamp = new Date().toISOString();
-
 	let formattedDetails = "";
 
 	if (details !== undefined) {
