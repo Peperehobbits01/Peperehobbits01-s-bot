@@ -5,11 +5,10 @@ const logsDir = path.join(__dirname, "../../logs");
 
 fs.mkdirSync(logsDir, { recursive: true });
 
-const runId = `${new Date().toISOString().replace(/[:.]/g, "-")}-${crypto
-	.randomBytes(4)
-	.toString("hex")}`;
+const timestamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, "-");
+const runId = `${timestamp}-${crypto.randomBytes(4).toString("hex")}`;
 
-const logFile = path.join(logsDir, `run-${runId}.log`);
+const logFile = path.join(logsDir, `${runId}.log`);
 const debugEnabled = process.env.npm_lifecycle_event === "debug";
 
 function formatError(error) {
