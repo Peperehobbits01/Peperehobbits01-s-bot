@@ -74,7 +74,56 @@ jobs:
           [changelog]
           header = "# What's new in ${{ steps.bump.outputs.version }} ?\n"
           body = """
+          {% set breaking_commits = commits | filter(attribute='group', value='**🚨BREAKING CHANGES **') %}
+          {% if breaking_commits | length > 0 %}
+              ## **🚨BREAKING CHANGES**
+
+              {% for commit in breaking_commits %}
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+          {% set feature_commits = commits | filter(attribute='group', value='**🚀Features**') %}
+          {% if feature_commits | length > 0 %}
+              ## **🚀FEATURES**
+
+              {% for commit in feature_commits %}
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+          {% set refactor_commits = commits | filter(attribute='group', value='**🏗 Refactors**') %}
+          {% if refactor_commits | length > 0 %}
+              ## **🏗 REFACTORS**
+
+              {% for commit in refactor_commits %}
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+          {% set fix_commits = commits | filter(attribute='group', value='**🐛 Bug Fixes**') %}
+          {% if fix_commits | length > 0 %}
+              ## **🐛 BUG FIXES**
+
+              {% for commit in fix_commits %}
+                  {% if commit.scope %}
+                  - **{{ commit.scope }}**: {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% else %}
+                  - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
           {% for group, commits in commits | group_by(attribute='group') %}
+              {% if group != '**🚨BREAKING CHANGES **' and group != '**🚀Features**' and group != '**🏗 Refactors**' and group != '**🐛 Bug Fixes**' %}
               ## {{ group | striptags | trim | upper }}
 
               {% for commit in commits %}
@@ -84,6 +133,7 @@ jobs:
                   - {{ commit.message | trim }} ({{ commit.id | truncate(count=11) }})
                   {% endif %}
               {% endfor %}
+              {% endif %}
               {% endfor %}
           """
           trim = true
