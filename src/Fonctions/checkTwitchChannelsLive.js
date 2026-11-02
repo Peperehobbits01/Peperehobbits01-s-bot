@@ -11,33 +11,21 @@ const REQUEST_TIMEOUT_MS = 15_000;
 let notifiedStreamByGuildLogin = new Map();
 let hasBaseline = false;
 let isChecking = false;
+let missingCredentialsLogged = false;
 let twitchToken;
 let twitchTokenExpiresAt = 0;
 
-function getTwitchCredentials(bot) {
-	const clientId = process.env.TWITCH_CLIENT_ID || process.env.TWITCH_TOKEN;
-	const clientSecret = process.env.TWITCH_CLIENT_SECRET || process.env.TWITCH_SECRET;
-
-	if (!clientId || !clientSecret) {
-		bot.function.botLogsFile.warn("Les identifiants Twitch n'ont pas été trouver")
-	}
-
-	return {clientId, clientSecret};
-}
-
-async function getTwitchAppToken(forceRefresh = false, bot) {
+async function getTwitchAppToken(forceRefresh = false) {
 	if (!forceRefresh && twitchToken && Date.now() < twitchTokenExpiresAt - 60_000) {
 		return twitchToken;
 	}
 
-	const {clientId, clientSecret} = getTwitchCredentials(bot);
-	if(!clientId || !clientSecret) return;
 	const response = await fetch(TWITCH_TOKEN_URL, {
 		method: "POST",
 		headers: {"Content-Type": "application/x-www-form-urlencoded"},
 		body: new URLSearchParams({
-			client_id: clientId,
-			client_secret: clientSecret,
+			client_id: process.env.TWITCH_CLIENT_ID,
+			client_secret: process.env.TWITCH_CLIENT_SECRET,
 			grant_type: "client_credentials",
 		}),
 		signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -57,15 +45,13 @@ async function getTwitchAppToken(forceRefresh = false, bot) {
 	return twitchToken;
 }
 
-async function fetchTwitchApi(url, bot) {
-	const {clientId} = getTwitchCredentials(bot);
-	if(!clientId) return;
+async function fetchTwitchApi(url) {
 	let response;
 	for (let attempt = 0; attempt < 2; attempt += 1) {
-		const token = await getTwitchAppToken(attempt === 1, bot);
+		const token = await getTwitchAppToken(attempt === 1);
 		response = await fetch(url, {
 			headers: {
-				"Client-ID": clientId,
+				"Client-ID": process.env.TWITCH_CLIENT_ID,
 				Authorization: `Bearer ${token}`,
 			},
 			signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -86,7 +72,7 @@ function parseTwitchLogins(rawValue) {
 		.filter((login) => /^[a-z0-9_]{1,25}$/.test(login)))];
 }
 
-async function getLiveStreams(logins, bot) {
+async function getLiveStreams(logins) {
 	const streams = [];
 
 	for (let index = 0; index < logins.length; index += TWITCH_USERNAMES_PER_REQUEST) {
@@ -96,7 +82,7 @@ async function getLiveStreams(logins, bot) {
 			url.searchParams.append("user_login", login);
 		}
 
-		const response = await fetchTwitchApi(url, bot);
+		const response = await fetchTwitchApi(url);
 
 		if(!response) return;
 
@@ -114,7 +100,7 @@ async function getLiveStreams(logins, bot) {
 	return streams;
 }
 
-async function getGameImages(streams, bot) {
+async function getGameImages(streams) {
 	const gameIds = [...new Set(streams.map((stream) => stream.game_id).filter(Boolean))];
 	const gameImages = new Map();
 	if (gameIds.length === 0) return gameImages;
@@ -125,7 +111,7 @@ async function getGameImages(streams, bot) {
 			url.searchParams.append("id", gameId);
 		}
 
-		const response = await fetchTwitchApi(url, bot);
+		const response = await fetchTwitchApi(url);
 
 		if (!response.ok) {
 			throw new Error(`Requête des catégories auprès de Twitch échouée : ${response.status} ${await response.text()}`);
@@ -201,6 +187,15 @@ async function sendLiveEmbedForGuild(guild, stream, config, gameImages) {
 }
 
 module.exports = async (bot) => {
+	if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
+		if (!missingCredentialsLogged) {
+			bot.function.botLogsFile.info("La vérification Twitch est désactivée : les identifiants Twitch ne sont pas configurés.");
+			missingCredentialsLogged = true;
+		}
+		return;
+	}
+
+	missingCredentialsLogged = false;
 	if (isChecking) return;
 	isChecking = true;
 
@@ -218,7 +213,7 @@ module.exports = async (bot) => {
 		}
 
 		const logins = [...guildsByLogin.keys()];
-		const streams = logins.length > 0 ? await getLiveStreams(logins, bot) : [];
+		const streams = logins.length > 0 ? await getLiveStreams(logins) : [];
 		if(!streams) return;
 		const activeGuildLogins = new Set();
 
@@ -251,9 +246,9 @@ module.exports = async (bot) => {
 		let gameImages = new Map();
 		if (streamsToNotify.length > 0) {
 			try {
-				gameImages = await getGameImages(streamsToNotify, bot);
+				gameImages = await getGameImages(streamsToNotify);
 			} catch (error) {
-				bot.function.botLogsFile.error("Échec de la récupération des images de catégories Twitch :", error);
+				throw new Error("Échec de la récupération des images de catégories Twitch :\n" + error);
 			}
 		}
 
@@ -267,10 +262,7 @@ module.exports = async (bot) => {
 					await sendLiveEmbedForGuild(guild, stream, config, gameImages);
 					notifiedStreamByGuildLogin.set(key, stream.id);
 				} catch (error) {
-					bot.function.botLogsFile.error(
-						`Échec de la notification Twitch pour ${login} (serveur ${guild.id}) :`,
-						error,
-					);
+					throw new Error(`Échec de la notification Twitch pour ${login} (serveur ${guild.id}) :\n` + error,);
 				}
 			}
 		}
