@@ -3,6 +3,7 @@ const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
 const {getGuildConfig} = require("../Fonctions/guildConfig");
 
 module.exports = async (bot, interaction) => {
+	if (!interaction.guild) return await interaction.reply({ content: "Les commandes ne peuvent être utilisé que sur un serveur.", flags: Discord.MessageFlags.Ephemeral });
 
 	if (interaction.type === Discord.InteractionType.ApplicationCommand) {
 
