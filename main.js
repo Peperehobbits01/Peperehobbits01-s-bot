@@ -17,6 +17,7 @@ bot.function = {
 	levenshteinDistance: require("./src/Fonctions/levenshteinDistance.js"),
 	executeQuery: require("./src/Fonctions/databaseConnect.js"),
 	getMessageImage: require("./src/Fonctions/getMessageImage.js"),
+	secondsToHms: require("./src/Fonctions/secondsToHms"),
 	shuffleArray: require("./src/Fonctions/shuffleArray.js"),
 	voiceCallXpCalculation: require("./src/Fonctions/voiceCallXpCalculation.js"),
 }
