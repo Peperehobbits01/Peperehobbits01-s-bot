@@ -1,6 +1,7 @@
 const {opendir} = require('node:fs/promises');
 const {join: pathJoin} = require('node:path');
-const {Collection, Bot} = require('discord.js');
+const pathModule = require('node:path');
+const {Collection} = require('discord.js');
 
 /**
  * Log commands as individual INFO messages
@@ -42,10 +43,16 @@ function logCommandEntries(array, bot) {
 async function buildDirectoryTree(path) {
 	const result = [];
 	const dir = await opendir(path);
+	const dirents = [];
 	for await (const dirent of dir) {
+		dirents.push(dirent);
+	}
+
+	dirents.sort((a, b) => a.name.localeCompare(b.name));
+	for (const dirent of dirents) {
 		if (dirent.isDirectory()) {
 			result.push({name: dirent.name, sub: await buildDirectoryTree(pathJoin(path, dirent.name))});
-		} else {
+		} else if (dirent.isFile() && pathModule.extname(dirent.name) === '.js') {
 			result.push(dirent.name);
 		}
 	}
@@ -78,17 +85,26 @@ function buildPaths(basePath, directoryTree) {
 }
 
 /**
- * Load commands from a path
+ * Load command modules from the project's command directory
  * @param bot
- * @param {string} path
  * @returns {Promise<void>}
  */
-async function loadCommands(bot, path) {
-	const directoryTree = await buildDirectoryTree(path);
-	const paths = buildPaths(path, directoryTree);
+async function loadCommands(bot) {
+	const commandDirectory = pathModule.resolve(__dirname, "../Commandes");
+	const directoryTree = await buildDirectoryTree(commandDirectory);
+	const paths = buildPaths(commandDirectory, directoryTree);
 	if (!bot.commands) bot.commands = new Collection();
-	for (const path of paths) {
-		const command = require(path);
+	for (const commandPath of paths) {
+		const command = require(commandPath);
+		if (!command || typeof command !== "object" || typeof command.name !== "string" || command.name.trim() === "") {
+			throw new TypeError(`La commande ${commandPath} doit exporter un objet avec un nom non vide.`);
+		}
+		if (typeof command.run !== "function") {
+			throw new TypeError(`La commande "${command.name}" (${commandPath}) doit exporter une fonction run.`);
+		}
+		if (bot.commands.has(command.name)) {
+			throw new Error(`Le nom de commande "${command.name}" est déjà utilisé (${commandPath}).`);
+		}
 		bot.commands.set(command.name, command);
 	}
 	logDirectoryTree(directoryTree, bot);
