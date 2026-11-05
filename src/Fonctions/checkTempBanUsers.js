@@ -26,7 +26,11 @@ module.exports = async (bot) => {
 				const embed = new Discord.EmbedBuilder()
 					.setTitle("✅ Bannissement levé")
 					.setDescription(`Votre bannissement temporaire sur **${guild.name}** a expiré. Vous pouvez revenir !`)
-					.setColor(process.env.BOT_COLOR);
+					.setColor(process.env.BOT_COLOR)
+					.setFooter({
+						text: process.env.EMBED_FOOTER,
+						iconURL: bot.user.displayAvatarURL({ dynamic: true })
+					})
 				await user.send({ embeds: [embed] });
 			} catch {}
 

@@ -1,13 +1,51 @@
 const Discord = require("discord.js")
 const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
+const {getGuildConfig} = require("../Fonctions/guildConfig");
 
 module.exports = async (bot, interaction) => {
+	if (!interaction.guild) return await interaction.reply({ content: "Les commandes ne peuvent être utilisé que sur un serveur.", flags: Discord.MessageFlags.Ephemeral });
 
 	if (interaction.type === Discord.InteractionType.ApplicationCommand) {
 
 		const command = bot.commands.get(interaction.commandName);
 		command.run(bot, interaction, interaction.options, bot.db)
 
+	}
+
+	if (interaction.isModalSubmit() && interaction.customId === "report") {
+		const whatToReport = interaction.fields.getTextInputValue("sayreport");
+		const config = await getGuildConfig(bot, interaction.guild.id);
+		const channel = interaction.guild.channels.cache.get(config.reportChannel)
+
+		if (!channel || typeof channel.send !== "function") {
+			await interaction.reply({
+				content: "Aucun salon de signalement valide n'est configuré pour ce serveur.",
+				flags: [Discord.MessageFlags.Ephemeral]
+			});
+			return;
+		}
+
+		const reportEmbed = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setTitle(`Rapport effectué par __${interaction.user.displayName}__`)
+			.setDescription(whatToReport)
+			.setFooter({
+				text: `${interaction.user.displayName}・ID : ${interaction.user.id}`,
+				iconURL: interaction.user.displayAvatarURL({extension: "png"}),
+			});
+
+		await channel.send({embeds: [reportEmbed]});
+
+		const confirmationEmbed = new Discord.EmbedBuilder()
+			.setColor(process.env.BOT_COLOR)
+			.setTitle("Votre rapport a bien été reçu.")
+			.setDescription("Merci pour votre rapport. Nous le traiterons dès que possible.")
+			.setFooter({
+				text: process.env.EMBED_FOOTER,
+				iconURL: bot.user.displayAvatarURL({extension: "png"}),
+			});
+
+		await interaction.reply({embeds: [confirmationEmbed], flags: [Discord.MessageFlags.Ephemeral]});
 	}
 
 	if (interaction.type === Discord.InteractionType.ApplicationCommandAutocomplete) {
