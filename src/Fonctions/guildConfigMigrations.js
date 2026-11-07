@@ -3,16 +3,6 @@ const {GUILD_CONFIG_CATEGORIES} = require("../Enum/defaultGuildConfig");
 const CURRENT_VERSION = 2;
 const MIGRATIONS = [
 	{
-		from: 0,
-		to: 1,
-		up(stored) {
-			if (stored && typeof stored === "object") {
-				delete stored.momRole;
-			}
-			return stored;
-		},
-	},
-	{
 		from: 1,
 		to: 2,
 		up(stored) {
