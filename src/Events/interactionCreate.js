@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const {SeparatorSpacingSize, TextDisplayBuilder} = require("discord.js");
 const {getGuildConfig} = require("../Fonctions/guildConfig");
+const {GUILD_CONFIG_CATEGORIES, GUILD_CONFIG_SCHEMA} = require("../Enum/defaultGuildConfig");
 
 module.exports = async (bot, interaction) => {
 	if (!interaction.guild) return await interaction.reply({ content: "Les commandes ne peuvent être utilisé que sur un serveur.", flags: Discord.MessageFlags.Ephemeral });
@@ -90,6 +91,72 @@ module.exports = async (bot, interaction) => {
 			})))
 		}
 
+	}
+
+	if (interaction.isStringSelectMenu() && interaction.customId === "config-category") {
+		if (interaction.guild.ownerId !== interaction.user.id) {
+			return interaction.reply({
+				content: "Seul le propriétaire du serveur peut consulter la configuration.",
+				flags: Discord.MessageFlags.Ephemeral,
+			});
+		}
+
+		const categoryId = interaction.values[0];
+		const category = GUILD_CONFIG_CATEGORIES.find(({id}) => id === categoryId);
+		if (!category) {
+			return interaction.reply({
+				content: "Cette catégorie de configuration n'existe pas.",
+				flags: Discord.MessageFlags.Ephemeral,
+			});
+		}
+
+		await interaction.deferUpdate();
+
+		try {
+			const config = await getGuildConfig(bot, interaction.guild.id);
+			const settings = category.keys.map((key) => {
+				const value = config[key];
+				const formattedValue = value === null || value === undefined || value === ""
+					? "_(Aucune valeur)_"
+					: Array.isArray(value)
+						? value.length > 0 ? value.map(item => `\`${item}\``).join(", ") : "_(Aucune valeur)_"
+						: `\`${value}\``;
+
+				return `> **${key}** : ${formattedValue}\n> _${GUILD_CONFIG_SCHEMA[key].description}_`;
+			}).join("\n\n");
+
+			const container = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace("#", ""), 16))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(`# __Configuration : ${category.label}__`),
+					new TextDisplayBuilder().setContent(`Paramètres de la catégorie **${category.label}**.`),
+				)
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addTextDisplayComponents(new TextDisplayBuilder().setContent(settings))
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+				.addActionRowComponents(
+					new Discord.ActionRowBuilder().addComponents(
+						new Discord.StringSelectMenuBuilder()
+							.setCustomId("config-category")
+							.setPlaceholder("Quelle catégorie de configuration souhaitez-vous voir ?")
+							.addOptions(GUILD_CONFIG_CATEGORIES.map(({id, label}) => ({
+								label,
+								value: id,
+								default: id === category.id,
+							}))),
+					),
+				);
+
+			return interaction.editReply({components: [container]});
+		} catch (error) {
+			bot.function.botLogsFile.error(`Impossible de lire la configuration du serveur ${interaction.guild.id} :`, error);
+			const container = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace("#", ""), 16))
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent("Impossible de lire la configuration pour le moment."),
+				);
+			return interaction.editReply({components: [container]});
+		}
 	}
 
 	if (interaction.isButton()) {

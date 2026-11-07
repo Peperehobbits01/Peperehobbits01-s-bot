@@ -8,10 +8,11 @@ module.exports = async bot => {
 		result = await migrateAllGuildConfigs(bot);
 	} catch (error) {
 		bot.function.botLogsFile.error("Échec des migrations de configuration :", error);
+		return;
 	}
 
 	if (result.migrated === 0) {
-		bot.function.botLogsFile.info(`Aucune ligne à migrer de la v0 → v${CURRENT_VERSION}.`);
+		bot.function.botLogsFile.info(`Aucune ligne à migrer vers la v${CURRENT_VERSION}.`);
 	} else {
 		bot.function.botLogsFile.info(`Terminé : ${result.migrated} mise(s) à jour, ${result.failed} échec(s).`);
 	}
