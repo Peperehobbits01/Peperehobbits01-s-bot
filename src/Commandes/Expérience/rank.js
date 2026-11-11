@@ -1,6 +1,9 @@
 const Discord = require("discord.js")
 const Canvas = require("canvas")
-const {registerFont} = require("canvas");
+const path = require("node:path")
+const {registerFont} = require("canvas")
+
+registerFont(path.join(__dirname, "../../Assets/PermanentMarker.ttf"), {family: "Permanent Marker"})
 
 module.exports = {
 
@@ -12,7 +15,7 @@ module.exports = {
 		{
 			type: "user",
 			name: "utilisateur",
-			description: "L'utilisateur dont ont veux savoir l'xp",
+			description: "L'utilisateur dont on veut connaître l'XP",
 			required: false,
 			autocomplete: false
 		}
@@ -83,10 +86,7 @@ module.exports = {
 		const opacity = await Canvas.loadImage(`./src/Assets/rank_black.png`)
 		ctx.drawImage(opacity, 0, 0, canvas.width, canvas.height)
 
-		registerFont('./src/Assets/PermanentMarker.ttf', {family: 'Permanent Marker'})
-
 		const member = message.guild.members.cache.get(user.id);
-		const status = member?.presence?.status ?? "offline";
 
 		if (xp > need) xp = need
 		if (xp < 0) xp = 0
@@ -142,7 +142,15 @@ module.exports = {
 		ctx.beginPath()
 		ctx.arc(160, 150, 108, 0, 2 * Math.PI, true)
 		ctx.closePath()
-		ctx.fillStyle = status === "online" ? "#3ba55c" : status === "dnd" ? "#ed4245" : status === "stream" ? "#593695" : status === "idle" ? "#faa61a" : status === "offline" ? "#747f8d" : ""
+		ctx.fillStyle = member?.presence?.activities?.some(activity => activity.type === Discord.ActivityType.Streaming)
+			? "#593695"
+			: member?.presence?.status === "online"
+				? "#3ba55c"
+				: member?.presence?.status === "dnd"
+					? "#ed4245"
+					: member?.presence?.status === "idle"
+						? "#faa61a"
+						: "#747f8d"
 		ctx.fill()
 
 		//Avatar

@@ -135,7 +135,50 @@ const GUILD_CONFIG_SCHEMA = {
 	},
 };
 
+const GUILD_CONFIG_CATEGORIES = [
+	{
+		id: "general",
+		label: "🏠・Accueil et modération",
+		storageKey: "🏠・Accueil et modération",
+		keys: ["welcomeChannel", "countingChannel", "reportChannel"],
+	},
+	{
+		id: "experience",
+		label: "📈・Expérience",
+		storageKey: "📈・Expérience",
+		keys: ["levelPassChannel", "boosterChannel", "boosterRole", "mdmRole", "eventWinnerRole"],
+	},
+	{
+		id: "logs",
+		label: "📝・Journaux",
+		storageKey: "📝・Journaux",
+		keys: [
+			"logsChannelMember",
+			"logsChannelVoice",
+			"logsChannelChannel",
+			"logsChannelGuild",
+			"logsChannelSanctions",
+			"logsChannelMessage",
+			"logsChannelGateway",
+		],
+	},
+	{
+		id: "socialNotifications",
+		label: "📣・Notifications sociales",
+		storageKey: "📣・Notifications sociales",
+		keys: [
+			"youtubeChannelIds",
+			"youtubeAnnouncementChannel",
+			"youtubeNotifRole",
+			"twitchChannelUsernames",
+			"twitchAnnouncementChannel",
+			"twitchNotifRole",
+		],
+	},
+];
+
 module.exports = {
 	DEFAULT_GUILD_CONFIG,
+	GUILD_CONFIG_CATEGORIES,
 	GUILD_CONFIG_SCHEMA,
 };

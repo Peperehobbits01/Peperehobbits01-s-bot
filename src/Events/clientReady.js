@@ -8,17 +8,18 @@ module.exports = async bot => {
 		result = await migrateAllGuildConfigs(bot);
 	} catch (error) {
 		bot.function.botLogsFile.error("Échec des migrations de configuration :", error);
+		return;
 	}
 
 	if (result.migrated === 0) {
-		bot.function.botLogsFile.info(`Aucune ligne à migrer de la v0 → v${CURRENT_VERSION}.`);
+		bot.function.botLogsFile.info(`Aucune ligne à migrer vers la v${CURRENT_VERSION}.`);
 	} else {
 		bot.function.botLogsFile.info(`Terminé : ${result.migrated} mise(s) à jour, ${result.failed} échec(s).`);
 	}
 
 	await loadSlashCommand(bot)
 
-	bot.user.setPresence({activities: [{name: "la version 1.8.4", type: ActivityType.Watching}], status: "online"})
+	bot.user.setPresence({activities: [{name: "la version 1.9.0", type: ActivityType.Watching}], status: "online"})
 
 	bot.function.botLogsFile.info(`Je suis connecté à ${bot.user.tag}!`)
 

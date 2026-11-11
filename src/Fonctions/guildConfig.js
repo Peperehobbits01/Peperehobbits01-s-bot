@@ -1,4 +1,4 @@
-const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_SCHEMA} = require("../Enum/defaultGuildConfig");
+const {DEFAULT_GUILD_CONFIG, GUILD_CONFIG_CATEGORIES, GUILD_CONFIG_SCHEMA} = require("../Enum/defaultGuildConfig");
 const {CURRENT_VERSION} = require("./guildConfigMigrations");
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
@@ -10,6 +10,33 @@ function cloneConfig(config) {
 		key,
 		Array.isArray(value) ? [...value] : value,
 	]));
+}
+
+function flattenStoredConfig(stored) {
+	const config = {...stored};
+
+	for (const {id, storageKey, keys} of GUILD_CONFIG_CATEGORIES) {
+		const category = stored[storageKey] ?? stored[id];
+		if (!category || typeof category !== "object" || Array.isArray(category)) continue;
+
+		for (const key of keys) {
+			if (Object.hasOwn(category, key)) {
+				config[key] = category[key];
+			}
+		}
+		delete config[id];
+		delete config[storageKey];
+	}
+
+	return config;
+}
+
+function groupConfig(config) {
+	const grouped = {};
+	for (const {storageKey, keys} of GUILD_CONFIG_CATEGORIES) {
+		grouped[storageKey] = Object.fromEntries(keys.map((key) => [key, config[key]]));
+	}
+	return grouped;
 }
 
 function validationError(message) {
@@ -68,7 +95,7 @@ async function getGuildConfig(bot, guildId) {
 		try {
 			const stored = typeof rows[0].config === "string" ? JSON.parse(rows[0].config) : rows[0].config;
 			if (stored && typeof stored === "object" && !Array.isArray(stored)) {
-				config = {...config, ...stored};
+				config = {...config, ...flattenStoredConfig(stored)};
 			}
 		} catch (error) {
 			bot.function.botLogsFile.error(`Config invalide pour ${id}, utilisation des valeurs par défaut :`, error);
@@ -90,7 +117,7 @@ async function setGuildConfig(bot, guildId, changes) {
 		merged[key] = normalizeValue(key, value);
 	}
 
-	const configJson = JSON.stringify(merged);
+	const configJson = JSON.stringify(groupConfig(merged));
 	const result = await bot.function.executeQuery([
 		`INSERT INTO guild_config (guild_id, config, version) VALUES (?, ?, ?)
 		 ON DUPLICATE KEY UPDATE config = VALUES(config), version = VALUES(version)`,

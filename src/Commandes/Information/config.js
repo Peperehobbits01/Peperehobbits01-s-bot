@@ -1,6 +1,6 @@
 const Discord = require("discord.js")
-const {getGuildConfig, setGuildConfig} = require("../../Fonctions/guildConfig.js")
-const {GUILD_CONFIG_SCHEMA} = require("../../Enum/defaultGuildConfig.js")
+const {setGuildConfig} = require("../../Fonctions/guildConfig.js")
+const {GUILD_CONFIG_CATEGORIES, GUILD_CONFIG_SCHEMA} = require("../../Enum/defaultGuildConfig.js")
 
 function formatValue(value) {
 	if (value === null || value === undefined || value === "") return "_(Aucune valeur)_"
@@ -8,32 +8,11 @@ function formatValue(value) {
 	return `\`${value}\``
 }
 
-function buildListEmbed(bot, config) {
-	const embed = new Discord.EmbedBuilder()
-		.setColor(process.env.BOT_COLOR)
-		.setTitle("Configuration du serveur")
-		.setDescription("Valeurs actuelles (commandes : /config cle:<key> valeur:<val>)")
-
-	for (const [key, info] of Object.entries(GUILD_CONFIG_SCHEMA)) {
-		embed.addFields({
-			name: key,
-			value: `**${formatValue(config[key])}**\n_${info.description}_`
-		})
-	}
-
-	embed.setFooter({
-		text: process.env.EMBED_FOOTER,
-		iconURL: bot.user.displayAvatarURL({dynamic: true}),
-	})
-
-	return embed
-}
-
 module.exports = {
 	name: "config",
 	description: "Afficher ou modifier la configuration du serveur.",
 	permission: Discord.PermissionFlagsBits.Administrator,
-	category: "⚙️・Configuration",
+	category: "📚・Informations",
 	options: [
 		{
 			type: "string",
@@ -60,24 +39,53 @@ module.exports = {
 			});
 		}
 
-		await message.deferReply();
-
 		const guildId = message.guildId;
 		const cle = args.getString("cle");
 		const valeur = args.getString("valeur");
 
 		if (!cle) {
-			try {
-				const config = await getGuildConfig(bot, guildId);
-				return message.editReply({embeds: [buildListEmbed(bot, config)]});
-			} catch (error) {
-				bot.function.botLogsFile.error(`Impossible de lire la configuration du serveur ${guildId} :`, error);
-				return message.editReply({
-					content: "Impossible de lire la configuration pour le moment.",
-					flags: [Discord.MessageFlags.Ephemeral]
-				});
-			}
+			const container = new Discord.ContainerBuilder()
+				.setAccentColor(parseInt(process.env.BOT_COLOR.replace("#", ""), 16))
+				.addSectionComponents(
+					new Discord.SectionBuilder()
+						.addTextDisplayComponents(
+							new Discord.TextDisplayBuilder().setContent("# __Configuration du serveur__"),
+							new Discord.TextDisplayBuilder().setContent(
+								`Choisissez une catégorie pour afficher ses paramètres.\n\nCatégories : \`${GUILD_CONFIG_CATEGORIES.length}\`\nParamètres : \`${Object.keys(GUILD_CONFIG_SCHEMA).length}\``
+							),
+						)
+						.setThumbnailAccessory(
+							new Discord.ThumbnailBuilder().setURL(bot.user.displayAvatarURL({dynamic: true, extension: "png"}))
+						)
+				)
+				.addTextDisplayComponents(
+					new Discord.TextDisplayBuilder().setContent(
+						"Pour modifier ou réinitialiser une valeur, utilisez `/config cle:<clé> valeur:<valeur>`."
+					),
+				)
+
+			container
+				.addSeparatorComponents(new Discord.SeparatorBuilder().setDivider(true).setSpacing(Discord.SeparatorSpacingSize.Small))
+				.addActionRowComponents(
+					new Discord.ActionRowBuilder().addComponents(
+						new Discord.StringSelectMenuBuilder()
+							.setCustomId("config-category")
+							.setPlaceholder("Quelle catégorie de configuration souhaitez-vous voir ?")
+							.addOptions(GUILD_CONFIG_CATEGORIES.map(({id, label}) => ({
+								label,
+								value: id,
+							}))),
+					),
+				)
+
+			await message.reply({
+				flags: Discord.MessageFlags.IsComponentsV2,
+				components: [container],
+			});
+			return;
 		}
+
+		await message.deferReply({flags: Discord.MessageFlags.Ephemeral});
 
 		if (!GUILD_CONFIG_SCHEMA[cle]) {
 			return message.editReply({
@@ -105,17 +113,11 @@ module.exports = {
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		} catch (error) {
-			if (error.code === "INVALID_GUILD_CONFIG") {
-				return message.editReply({
-					content: error.message,
-					flags: [Discord.MessageFlags.Ephemeral]
-				});
-			}
 			bot.function.botLogsFile.error(`Impossible d'enregistrer la configuration du serveur ${guildId} :`, error);
 			return message.editReply({
 				content: "Une erreur est survenue lors de la sauvegarde.",
 				flags: [Discord.MessageFlags.Ephemeral]
 			});
 		}
-	}
+	},
 }

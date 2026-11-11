@@ -1,13 +1,26 @@
-const CURRENT_VERSION = 1;
+const {GUILD_CONFIG_CATEGORIES} = require("../Enum/defaultGuildConfig");
+
+const CURRENT_VERSION = 2;
 const MIGRATIONS = [
 	{
-		from: 0,
-		to: CURRENT_VERSION,
+		from: 1,
+		to: 2,
 		up(stored) {
-			if (stored && typeof stored === "object") {
-				delete stored.momRole;
+			if (!stored || typeof stored !== "object" || Array.isArray(stored)) return stored;
+
+			const grouped = {};
+			for (const {storageKey, keys} of GUILD_CONFIG_CATEGORIES) {
+				const category = {};
+				for (const key of keys) {
+					if (Object.hasOwn(stored, key)) {
+						category[key] = stored[key];
+						delete stored[key];
+					}
+				}
+				grouped[storageKey] = category;
 			}
-			return stored;
+
+			return {...stored, ...grouped};
 		},
 	},
 ];
@@ -71,9 +84,6 @@ async function migrateAllGuildConfigs(bot) {
 	for (const row of rows) {
 		try {
 			const fromVersion = Number(row.version);
-			if (!Number.isSafeInteger(fromVersion) || fromVersion < 0) {
-				throw new Error(`Version de configuration invalide : ${row.version}.`);
-			}
 			await migrateGuildConfigRow(row.guild_id, row.config, fromVersion, bot);
 			migrated += 1;
 		} catch (error) {
