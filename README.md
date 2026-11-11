@@ -43,7 +43,7 @@ You have to copy the .env.example and name the copy .env, you can then put the v
 
 #### To test the application :
 
-If you are on WebStorm or any other JetBrains IDE, use the built-in run feature, you can choose between Dev Env (acts has prod env), or debug env to have the debug logging enabled.
+If you are on Visual Studio code, WebStorm or any other JetBrains IDE, use the built-in run feature, you can choose between Dev Env (acts has prod env), or debug env to have the debug logging enabled.
 For the others simply run :
 
 ```shell
