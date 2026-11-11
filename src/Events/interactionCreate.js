@@ -160,6 +160,83 @@ module.exports = async (bot, interaction) => {
 	}
 
 	if (interaction.isButton()) {
+		if (interaction.customId.startsWith("sanctions-list:")) {
+			const match = interaction.customId.match(/^sanctions-list:(\d{17,20}):(\d{17,20}):(\d+)$/);
+			if (!match) {
+				return interaction.reply({
+					content: "Ce bouton de pagination n'est pas valide.",
+					flags: Discord.MessageFlags.Ephemeral,
+				});
+			}
+
+			const [, targetId, requesterId, requestedPageText] = match;
+			if (interaction.user.id !== requesterId) {
+				return interaction.reply({
+					content: "Seul la personne ayant demandé cette liste peut utiliser ces boutons.",
+					flags: Discord.MessageFlags.Ephemeral,
+				});
+			}
+			if (!interaction.memberPermissions?.has(Discord.PermissionFlagsBits.ModerateMembers)) {
+				return interaction.reply({
+					content: "Vous n'avez plus la permission nécessaire pour consulter cette liste.",
+					flags: Discord.MessageFlags.Ephemeral,
+				});
+			}
+
+			const requestedPage = Number(requestedPageText);
+			if (!Number.isSafeInteger(requestedPage)) {
+				return interaction.reply({
+					content: "La page demandée n'est pas valide.",
+					flags: Discord.MessageFlags.Ephemeral,
+				});
+			}
+
+			await interaction.deferUpdate();
+
+			try {
+				const command = bot.commands.get("sanctions-list");
+				const [{sanctions, users, sanctionMetadata}, user] = await Promise.all([
+					command.loadSanctionsData(bot, interaction.guild.id, targetId),
+					bot.users.fetch(targetId),
+				]);
+
+				if (sanctions.length === 0) {
+					const empty = new Discord.ContainerBuilder()
+						.setAccentColor(parseInt(process.env.BOT_COLOR.replace("#", ""), 16))
+						.addTextDisplayComponents(
+							new TextDisplayBuilder().setContent(`# __Sanctions de ${user.globalName ?? user.username}__`),
+							new TextDisplayBuilder().setContent("Ce membre n'a aucune infraction enregistrée."),
+						);
+					return interaction.editReply({components: [empty]});
+				}
+
+				const pageCount = Math.ceil(sanctions.length / command.PAGE_SIZE);
+				const page = Math.min(requestedPage, pageCount - 1);
+				const container = command.buildSanctionsContainer(
+					bot,
+					user,
+					requesterId,
+					sanctions,
+					users,
+					sanctionMetadata,
+					page,
+					pageCount,
+				);
+				return interaction.editReply({
+					allowedMentions: {parse: []},
+					components: [container],
+				});
+			} catch (error) {
+				bot.function.botLogsFile.error(`Impossible d'afficher la page des sanctions de ${targetId} sur le serveur ${interaction.guild.id} :`, error);
+				const errorContainer = new Discord.ContainerBuilder()
+					.setAccentColor(parseInt(process.env.BOT_COLOR.replace("#", ""), 16))
+					.addTextDisplayComponents(
+						new TextDisplayBuilder().setContent("Impossible de récupérer la liste des sanctions pour le moment."),
+					);
+				return interaction.editReply({components: [errorContainer]});
+			}
+		}
+
 		if (interaction.customId.startsWith("unnote_")) {
 
 			const noteID = interaction.customId.split("_")[1];
